@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard - Compliance &amp; Grievance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#dadada",
+                        "on-tertiary-fixed-variant": "#793100",
+                        "primary-fixed": "#d5e3ff",
+                        "secondary-fixed-dim": "#81d9a0",
+                        "surface-variant": "#e2e2e2",
+                        "on-primary-fixed-variant": "#004689",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-surface-variant": "#424751",
+                        "on-tertiary": "#ffffff",
+                        "voice-active": "#004B91",
+                        "tertiary": "#5c2400",
+                        "primary": "#003469",
+                        "surface-container": "#eeeeee",
+                        "on-secondary-fixed-variant": "#00522e",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#341100",
+                        "on-secondary-container": "#0f7142",
+                        "outline-variant": "#c2c6d2",
+                        "inverse-on-surface": "#f0f1f1",
+                        "tertiary-fixed": "#ffdbcb",
+                        "on-surface": "#1a1c1c",
+                        "emergency-red": "#D92D20",
+                        "inverse-primary": "#a7c8ff",
+                        "surface-container-low": "#f3f3f4",
+                        "secondary-fixed": "#9df5bb",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#7f3502",
+                        "surface-bright": "#f9f9f9",
+                        "focus-indicator": "#FFD600",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#255fa6",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#ffa678",
+                        "surface": "#ffffff", /* Ensuring pure white background */
+                        "primary-fixed-dim": "#a7c8ff",
+                        "secondary-container": "#9af3b8",
+                        "primary-container": "#004b91",
+                        "visual-active": "#006B3D",
+                        "inverse-surface": "#2f3131",
+                        "on-background": "#1a1c1c",
+                        "border-dark": "#333333",
+                        "on-error-container": "#93000a",
+                        "background": "#ffffff", /* Ensuring pure white background */
+                        "secondary": "#046d3f",
+                        "on-primary-container": "#95bdff",
+                        "error": "#ba1a1a",
+                        "high-contrast-text": "#1A1A1A",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "outline": "#727782",
+                        "surface-container-high": "#e8e8e8",
+                        "on-primary-fixed": "#001b3c",
+                        "on-secondary-fixed": "#00210f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "touch-target-min": "56px",
+                        "margin-mobile": "16px",
+                        "unit": "8px",
+                        "container-max": "1400px" /* Increased for lateral panel */
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Atkinson Hyperlegible Next"],
+                        "headline-lg": ["Atkinson Hyperlegible Next"],
+                        "headline-lg-mobile": ["Atkinson Hyperlegible Next"],
+                        "code-display": ["Atkinson Hyperlegible Next"],
+                        "label-bold": ["Atkinson Hyperlegible Next"],
+                        "body-md": ["Atkinson Hyperlegible Next"],
+                        "body-lg": ["Atkinson Hyperlegible Next"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "code-display": ["48px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "800" }],
+                        "label-bold": ["16px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Atkinson Hyperlegible Next', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col md:flex-row">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden lg:flex flex-col border-r-4 border-border-dark h-screen docked left-0 w-64 bg-surface dark:bg-on-background sticky top-0 shrink-0">
+<div class="p-6 border-b-4 border-border-dark flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-variant flex items-center justify-center border-2 border-border-dark shrink-0">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md text-primary">Student Portal</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Visual-Text Mode</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-4 flex flex-col gap-2">
+<a class="text-on-surface dark:text-surface-bright px-4 py-3 font-body-lg text-body-lg flex items-center gap-4 hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed">menu_book</span>
+                Curriculum
+            </a>
+<a class="bg-secondary text-on-secondary font-bold px-4 py-3 font-body-lg text-body-lg flex items-center gap-4 transition-none" href="#">
+<span class="material-symbols-outlined text-on-secondary" style="font-variation-settings: 'FILL' 1;">verified</span>
+                Compliance
+            </a>
+<a class="text-on-surface dark:text-surface-bright px-4 py-3 font-body-lg text-body-lg flex items-center gap-4 hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed">room_service</span>
+                Services
+            </a>
+<a class="text-on-surface dark:text-surface-bright px-4 py-3 font-body-lg text-body-lg flex items-center gap-4 hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed">psychology</span>
+                AI Tutor
+            </a>
+<a class="text-on-surface dark:text-surface-bright px-4 py-3 font-body-lg text-body-lg flex items-center gap-4 hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed">ambulance</span>
+                Ambulance
+            </a>
+</div>
+</nav>
+<div class="flex-1 flex flex-col min-w-0">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-touch-target-min border-b-2 border-border-dark bg-surface dark:bg-on-background docked full-width top-0 z-40 sticky">
+<div class="flex items-center gap-8">
+<div class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed">Saksham Setu</div>
+<nav class="hidden md:flex gap-6 h-full items-end">
+<a class="text-on-surface-variant dark:text-surface-variant font-label-bold text-label-bold pb-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-none" href="#">Dashboard</a>
+<a class="text-primary dark:text-primary-fixed border-b-4 border-primary dark:border-primary-fixed pb-1 font-label-bold text-label-bold transition-none" href="#">Portal</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-bold text-label-bold pb-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-none" href="#">Reports</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-bold text-label-bold pb-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-none" href="#">Help</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-bold text-label-bold text-primary dark:text-primary-fixed hidden md:block">Admin Role</span>
+<button class="w-touch-target-min h-touch-target-min flex items-center justify-center text-primary dark:text-primary-fixed hover:bg-surface-container dark:hover:bg-surface-variant transition-none">
+<span class="material-symbols-outlined text-[32px]">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full grid grid-cols-1 xl:grid-cols-12 gap-gutter items-start">
+<!-- Left Column: Main Dash -->
+<div class="xl:col-span-8 flex flex-col gap-8">
+<!-- Page Title -->
+<div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Compliance &amp; Grievance</h1>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Compliance Score Widget (Primary KPI) -->
+<section class="border-4 border-border-dark p-6 bg-surface">
+<h2 class="font-headline-md text-headline-md mb-6 border-b-2 border-border-dark pb-2">Compliance Score</h2>
+<div class="flex flex-col items-center justify-center py-4">
+<div class="text-[96px] font-extrabold text-secondary leading-none">82</div>
+<div class="font-label-bold text-label-bold text-on-surface-variant mt-2">/ 100 Overall Rating</div>
+</div>
+<div class="bg-surface-variant p-4 border-2 border-border-dark mt-4">
+<p class="font-body-md text-body-md font-bold text-error">Status: Requires Attention</p>
+<p class="font-body-md text-body-md mt-1 text-on-surface-variant">Based on current government accessibility mandates.</p>
+</div>
+</section>
+<!-- Grievance Statistics (Chart) -->
+<section class="border-4 border-border-dark p-6 bg-surface">
+<h2 class="font-headline-md text-headline-md mb-6 border-b-2 border-border-dark pb-2">Grievance Stats</h2>
+<div class="h-[220px] w-full flex items-center justify-center">
+<canvas id="grievanceChart"></canvas>
+</div>
+</section>
+</div>
+<!-- Rules Checklist -->
+<section class="border-4 border-border-dark p-6 bg-surface">
+<h2 class="font-headline-md text-headline-md mb-6 border-b-2 border-border-dark pb-2">Rules Checklist</h2>
+<div class="flex flex-col gap-4">
+<label class="flex items-start gap-4 p-4 border-2 border-border-dark hover:border-focus-indicator focus-within:border-focus-indicator focus-within:ring-4 focus-within:ring-focus-indicator cursor-pointer bg-surface">
+<input checked="" class="w-8 h-8 mt-1 border-2 border-border-dark text-secondary focus:ring-0 cursor-pointer" type="checkbox"/>
+<div>
+<span class="font-label-bold text-label-bold block">Wheelchair Accessible Ramps</span>
+<span class="font-body-md text-body-md text-on-surface-variant block mt-1">Mandate 4.1: All primary entrances must have compliant ramps.</span>
+</div>
+</label>
+<label class="flex items-start gap-4 p-4 border-2 border-border-dark hover:border-focus-indicator focus-within:border-focus-indicator focus-within:ring-4 focus-within:ring-focus-indicator cursor-pointer bg-surface">
+<input checked="" class="w-8 h-8 mt-1 border-2 border-border-dark text-secondary focus:ring-0 cursor-pointer" type="checkbox"/>
+<div>
+<span class="font-label-bold text-label-bold block">High Contrast Signage</span>
+<span class="font-body-md text-body-md text-on-surface-variant block mt-1">Mandate 4.2: Visual wayfinding must meet AAA contrast standards.</span>
+</div>
+</label>
+<label class="flex items-start gap-4 p-4 border-2 border-border-dark hover:border-focus-indicator focus-within:border-focus-indicator focus-within:ring-4 focus-within:ring-focus-indicator cursor-pointer bg-surface bg-error-container/20">
+<input class="w-8 h-8 mt-1 border-2 border-border-dark text-secondary focus:ring-0 cursor-pointer" type="checkbox"/>
+<div>
+<span class="font-label-bold text-label-bold block text-error">Audio-Descriptive Terminals</span>
+<span class="font-body-md text-body-md text-on-surface-variant block mt-1">Mandate 5.3: Library terminals must support text-to-speech.</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Grievance Tracker Table -->
+<section class="border-4 border-border-dark bg-surface overflow-x-auto">
+<div class="p-6 border-b-4 border-border-dark flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md">Grievance Tracker</h2>
+<button class="h-touch-target-min px-6 bg-primary text-on-primary font-label-bold text-label-bold flex items-center gap-2 hover:bg-inverse-surface border-2 border-transparent focus:border-focus-indicator active:bg-surface active:text-primary active:border-border-dark transition-none">
+<span class="material-symbols-outlined">download</span>
+                        Export Log
+                    </button>
+</div>
+<table class="w-full text-left border-collapse min-w-[700px]">
+<thead>
+<tr class="bg-surface-variant border-b-2 border-border-dark">
+<th class="p-4 font-label-bold text-label-bold uppercase border-r-2 border-border-dark w-1/4">Secret Code</th>
+<th class="p-4 font-label-bold text-label-bold uppercase border-r-2 border-border-dark">Registered Date</th>
+<th class="p-4 font-label-bold text-label-bold uppercase border-r-2 border-border-dark">Category</th>
+<th class="p-4 font-label-bold text-label-bold uppercase">Status</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md">
+<tr class="border-b-2 border-border-dark hover:bg-surface-container-low transition-none">
+<td class="p-4 border-r-2 border-border-dark">
+<span class="font-code-display text-[20px] tracking-[0.1em] font-extrabold">GRV-8921</span>
+</td>
+<td class="p-4 border-r-2 border-border-dark">Oct 12, 2023</td>
+<td class="p-4 border-r-2 border-border-dark">Mobility Access</td>
+<td class="p-4">
+<span class="inline-flex items-center px-3 py-1 border-2 border-border-dark bg-error-container text-on-error-container font-bold">Pending</span>
+</td>
+</tr>
+<tr class="border-b-2 border-border-dark hover:bg-surface-container-low transition-none">
+<td class="p-4 border-r-2 border-border-dark">
+<span class="font-code-display text-[20px] tracking-[0.1em] font-extrabold">GRV-3310</span>
+</td>
+<td class="p-4 border-r-2 border-border-dark">Oct 10, 2023</td>
+<td class="p-4 border-r-2 border-border-dark">Visual Aid</td>
+<td class="p-4">
+<span class="inline-flex items-center px-3 py-1 border-2 border-border-dark bg-secondary-container text-on-secondary-container font-bold">Resolved</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-none">
+<td class="p-4 border-r-2 border-border-dark">
+<span class="font-code-display text-[20px] tracking-[0.1em] font-extrabold">GRV-1004</span>
+</td>
+<td class="p-4 border-r-2 border-border-dark">Sep 28, 2023</td>
+<td class="p-4 border-r-2 border-border-dark">Sensory Support</td>
+<td class="p-4">
+<span class="inline-flex items-center px-3 py-1 border-2 border-border-dark bg-surface-variant text-on-surface font-bold">Completed</span>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</div>
+<!-- Right Column: Lateral Panel -->
+<div class="xl:col-span-4 flex flex-col gap-8 sticky top-24">
+<!-- Recommendations -->
+<aside class="border-4 border-border-dark p-6 bg-secondary-container">
+<div class="flex items-center gap-4 mb-6 border-b-2 border-on-secondary-container/20 pb-4">
+<span class="material-symbols-outlined text-[40px] text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<h2 class="font-headline-md text-headline-md text-on-secondary-container">Action Items</h2>
+</div>
+<ul class="flex flex-col gap-6">
+<li class="flex gap-4 items-start">
+<div class="w-8 h-8 rounded-full border-2 border-border-dark bg-surface flex items-center justify-center shrink-0 mt-1">
+<span class="font-label-bold text-on-surface">1</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-secondary-container">Terminal Upgrades</h3>
+<p class="font-body-md text-body-md text-on-secondary-container/90 mt-1">Install TTS software on 15 library terminals to meet Mandate 5.3.</p>
+</div>
+</li>
+<li class="flex gap-4 items-start">
+<div class="w-8 h-8 rounded-full border-2 border-border-dark bg-surface flex items-center justify-center shrink-0 mt-1">
+<span class="font-label-bold text-on-surface">2</span>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-secondary-container">Elevator Audit</h3>
+<p class="font-body-md text-body-md text-on-secondary-container/90 mt-1">Review grievance logs for building B elevator delays.</p>
+</div>
+</li>
+</ul>
+<button class="mt-8 w-full h-touch-target-min bg-surface border-2 border-border-dark font-label-bold text-label-bold text-on-surface hover:bg-surface-variant transition-none">
+    View All Recommendations
+</button>
+</aside>
+<!-- Quick Contacts -->
+<aside class="border-4 border-border-dark p-6 bg-surface">
+<h2 class="font-headline-md text-headline-md mb-6 border-b-2 border-border-dark pb-2">Support Contacts</h2>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4 p-3 border-2 border-border-dark">
+<span class="material-symbols-outlined text-primary text-[32px]">support_agent</span>
+<div>
+<div class="font-label-bold text-label-bold">Accessibility Officer</div>
+<div class="font-body-md text-body-md text-on-surface-variant">Ext. 4410</div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 border-2 border-border-dark">
+<span class="material-symbols-outlined text-primary text-[32px]">engineering</span>
+<div>
+<div class="font-label-bold text-label-bold">Facilities Maint.</div>
+<div class="font-body-md text-body-md text-on-surface-variant">Ext. 8820</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+</div>
+<script>
+    // Simple Chart.js initialization for Grievance Stats
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('grievanceChart').getContext('2d');
+        
+        // Use Tailwind colors directly in JS
+        const primaryColor = '#003469';
+        const errorColor = '#D92D20';
+        const secondaryColor = '#046d3f';
+        const surfaceVariant = '#e2e2e2';
+        const borderDark = '#333333';
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Pending', 'Resolved', 'In Progress', 'Closed'],
+                datasets: [{
+                    label: 'Grievances',
+                    data: [12, 19, 5, 25],
+                    backgroundColor: [
+                        errorColor,
+                        secondaryColor,
+                        primaryColor,
+                        surfaceVariant
+                    ],
+                    borderColor: borderDark,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: surfaceVariant
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Atkinson Hyperlegible Next',
+                                size: 14
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Atkinson Hyperlegible Next',
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+</body></html>

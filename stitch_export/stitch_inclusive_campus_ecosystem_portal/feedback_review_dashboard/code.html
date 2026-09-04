@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduAbility - Admin Feedback Review</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "visual-active": "#006B3D",
+                      "surface-tint": "#255fa6",
+                      "outline": "#727782",
+                      "secondary": "#046d3f",
+                      "surface-container-low": "#f3f3f4",
+                      "border-dark": "#333333",
+                      "surface-container-high": "#e8e8e8",
+                      "primary": "#003469",
+                      "outline-variant": "#c2c6d2",
+                      "on-secondary-fixed-variant": "#00522e",
+                      "error": "#ba1a1a",
+                      "error-container": "#ffdad6",
+                      "primary-fixed": "#d5e3ff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-fixed": "#001b3c",
+                      "surface": "#f9f9f9",
+                      "secondary-fixed-dim": "#81d9a0",
+                      "on-tertiary-fixed": "#341100",
+                      "on-tertiary-fixed-variant": "#793100",
+                      "surface-container-highest": "#e2e2e2",
+                      "on-secondary-fixed": "#00210f",
+                      "surface-bright": "#f9f9f9",
+                      "focus-indicator": "#FFD600",
+                      "secondary-fixed": "#9df5bb",
+                      "inverse-surface": "#2f3131",
+                      "background": "#f9f9f9",
+                      "primary-container": "#004b91",
+                      "tertiary-fixed-dim": "#ffb691",
+                      "high-contrast-text": "#1A1A1A",
+                      "surface-container": "#eeeeee",
+                      "on-background": "#1a1c1c",
+                      "secondary-container": "#9af3b8",
+                      "surface-dim": "#dadada",
+                      "surface-variant": "#e2e2e2",
+                      "on-tertiary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed-variant": "#004689",
+                      "tertiary": "#5c2400",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#f0f1f1",
+                      "primary-fixed-dim": "#a7c8ff",
+                      "on-surface-variant": "#424751",
+                      "on-secondary-container": "#0f7142",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "emergency-red": "#D92D20",
+                      "on-primary-container": "#95bdff",
+                      "on-tertiary-container": "#ffa678",
+                      "tertiary-fixed": "#ffdbcb",
+                      "tertiary-container": "#7f3502",
+                      "on-surface": "#1a1c1c",
+                      "inverse-primary": "#a7c8ff",
+                      "voice-active": "#004B91"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "touch-target-min": "56px",
+                      "margin-mobile": "16px",
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "unit": "8px",
+                      "container-max": "1200px"
+              },
+              "fontFamily": {
+                      "headline-lg": [
+                              "Atkinson Hyperlegible Next"
+                      ],
+                      "body-md": [
+                              "Atkinson Hyperlegible Next"
+                      ],
+                      "headline-lg-mobile": [
+                              "Atkinson Hyperlegible Next"
+                      ],
+                      "headline-md": [
+                              "Atkinson Hyperlegible Next"
+                      ],
+                      "code-display": [
+                              "Atkinson Hyperlegible Next"
+                      ],
+                      "label-bold": [
+                              "Atkinson Hyperlegible Next"
+                      ],
+                      "body-lg": [
+                              "Atkinson Hyperlegible Next"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "headline-md": [
+                              "28px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "code-display": [
+                              "48px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "label-bold": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "20px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+        body {
+            background-color: #ffffff; /* Pure white background request */
+        }
+        /* Custom Focus Styles for Accessibility */
+        *:focus-visible {
+            outline: 4px solid #FFD600 !important;
+            outline-offset: 2px !important;
+        }
+    </style>
+</head>
+<body class="text-on-background font-body-md min-h-screen flex flex-col md:flex-row">
+<!-- TopAppBar for Desktop -->
+<header class="hidden md:flex justify-between items-center w-full px-margin-desktop h-touch-target-min bg-surface dark:bg-on-background border-b-2 border-border-dark docked full-width top-0 z-50 fixed">
+<div class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed">
+            EduAbility
+        </div>
+<nav aria-label="Main Navigation" class="flex gap-gutter">
+<a class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-none px-4 py-2 font-label-bold text-label-bold flex items-center h-full" href="#">Dashboard</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-none px-4 py-2 font-label-bold text-label-bold flex items-center h-full" href="#">Portal</a>
+<a aria-current="page" class="text-primary dark:text-primary-fixed border-b-4 border-primary dark:border-primary-fixed pb-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-none px-4 py-2 font-label-bold text-label-bold flex items-center h-full" href="#">Reports</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-none px-4 py-2 font-label-bold text-label-bold flex items-center h-full" href="#">Help</a>
+</nav>
+<div class="flex items-center gap-unit">
+<span class="font-label-bold text-label-bold text-primary dark:text-primary-fixed">Admin Role</span>
+<button aria-label="Account Settings" class="h-touch-target-min w-touch-target-min flex items-center justify-center hover:bg-surface-container dark:hover:bg-surface-variant transition-none text-primary dark:text-primary-fixed">
+<span class="material-symbols-outlined" style="font-size: 28px;">account_circle</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar for Admin (Hidden on Mobile) - Assuming SideNav is present for deeper admin navigation based on the prompt's context, even though top nav exists -->
+<aside class="hidden lg:flex flex-col border-r-4 border-border-dark h-screen docked left-0 w-64 bg-surface dark:bg-on-background fixed top-[56px] z-40">
+<div class="p-4 border-b-2 border-border-dark">
+<h2 class="font-headline-md text-headline-md text-primary">Student Portal</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Visual-Text Mode</p>
+</div>
+<nav aria-label="Sidebar Navigation" class="flex-1 flex flex-col">
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-body-lg text-body-lg">Curriculum</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-body-lg text-body-lg">Compliance</span>
+</a>
+<a aria-current="page" class="flex items-center gap-4 bg-secondary text-on-secondary font-bold px-4 py-3 hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined">room_service</span>
+<span class="font-body-lg text-body-lg">Services</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-body-lg text-body-lg">AI Tutor</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined">ambulance</span>
+<span class="font-body-lg text-body-lg">Ambulance</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-[56px] lg:ml-64 p-margin-mobile md:p-margin-desktop bg-surface-container-lowest max-w-container-max mx-auto w-full mb-[56px] md:mb-0">
+<div class="mb-8">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-high-contrast-text mb-2">Service Feedback Review</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Aggregated data and recent comments from student service evaluations.</p>
+</div>
+<!-- Dashboard Widgets Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter mb-12">
+<!-- Bar Chart Widget -->
+<section aria-labelledby="bar-chart-title" class="border-2 border-border-dark p-6 bg-surface flex flex-col h-[400px]">
+<h2 class="font-headline-md text-headline-md text-primary mb-6" id="bar-chart-title">Average Ratings by Service Area</h2>
+<div class="relative flex-1 w-full h-full">
+<canvas aria-label="Bar chart showing average ratings for Transport, Facilities, and Academic Support" id="ratingsBarChart" role="img"></canvas>
+</div>
+</section>
+<!-- Pie Chart Widget -->
+<section aria-labelledby="pie-chart-title" class="border-2 border-border-dark p-6 bg-surface flex flex-col h-[400px]">
+<h2 class="font-headline-md text-headline-md text-primary mb-6" id="pie-chart-title">Feedback Distribution</h2>
+<div class="relative flex-1 w-full h-full flex justify-center items-center">
+<canvas aria-label="Pie chart showing proportion of positive, neutral, and negative feedback" id="feedbackPieChart" role="img"></canvas>
+</div>
+</section>
+</div>
+<!-- Filterable Feedback List Section -->
+<section aria-labelledby="feedback-list-title" class="border-2 border-border-dark bg-surface">
+<div class="p-6 border-b-2 border-border-dark flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<h2 class="font-headline-md text-headline-md text-primary" id="feedback-list-title">Recent Student Comments</h2>
+<!-- Filters -->
+<div class="flex flex-wrap gap-4 w-full md:w-auto">
+<div class="flex flex-col">
+<label class="font-label-bold text-label-bold mb-1 text-on-surface" for="serviceFilter">Filter by Service</label>
+<select class="border-2 border-border-dark bg-surface-container-lowest h-touch-target-min px-4 font-body-md text-body-md text-on-surface min-w-[200px] focus:ring-focus-indicator focus:border-focus-indicator rounded-none" id="serviceFilter">
+<option value="all">All Services</option>
+<option value="transport">Transport</option>
+<option value="facilities">Facilities</option>
+<option value="academic">Academic Support</option>
+</select>
+</div>
+<div class="flex flex-col">
+<label class="font-label-bold text-label-bold mb-1 text-on-surface" for="sentimentFilter">Filter by Sentiment</label>
+<select class="border-2 border-border-dark bg-surface-container-lowest h-touch-target-min px-4 font-body-md text-body-md text-on-surface min-w-[200px] focus:ring-focus-indicator focus:border-focus-indicator rounded-none" id="sentimentFilter">
+<option value="all">All Sentiments</option>
+<option value="positive">Positive</option>
+<option value="neutral">Neutral</option>
+<option value="negative">Needs Improvement</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Table Structure (Admin Style per guidelines) -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b-2 border-border-dark">
+<tr>
+<th class="p-4 font-label-bold text-label-bold uppercase text-on-surface min-w-[150px]" scope="col">Date</th>
+<th class="p-4 font-label-bold text-label-bold uppercase text-on-surface min-w-[150px]" scope="col">Service Area</th>
+<th class="p-4 font-label-bold text-label-bold uppercase text-on-surface min-w-[100px]" scope="col">Rating</th>
+<th class="p-4 font-label-bold text-label-bold uppercase text-on-surface min-w-[300px]" scope="col">Comment</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface">
+<tr class="border-b-[1px] border-border-dark">
+<td class="p-4 align-top">2023-10-27</td>
+<td class="p-4 align-top font-bold text-primary">Transport</td>
+<td class="p-4 align-top">
+<div class="flex items-center gap-1 text-visual-active">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span>5/5</span>
+</div>
+</td>
+<td class="p-4 align-top">Wheelchair ramp was deployed quickly and driver was very patient. Excellent service today.</td>
+</tr>
+<tr class="border-b-[1px] border-border-dark">
+<td class="p-4 align-top">2023-10-26</td>
+<td class="p-4 align-top font-bold text-primary">Facilities</td>
+<td class="p-4 align-top">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star_half</span>
+<span>3/5</span>
+</div>
+</td>
+<td class="p-4 align-top">The automatic door to the main library was malfunctioning again. Needs maintenance check.</td>
+</tr>
+<tr class="border-b-[1px] border-border-dark">
+<td class="p-4 align-top">2023-10-25</td>
+<td class="p-4 align-top font-bold text-primary">Academic Support</td>
+<td class="p-4 align-top">
+<div class="flex items-center gap-1 text-visual-active">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span>4/5</span>
+</div>
+</td>
+<td class="p-4 align-top">The screen reader software updates are working well, but the new interface takes some getting used to. Support staff was helpful.</td>
+</tr>
+<tr class="border-b-[1px] border-border-dark">
+<td class="p-4 align-top">2023-10-24</td>
+<td class="p-4 align-top font-bold text-primary">Transport</td>
+<td class="p-4 align-top">
+<div class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star_outline</span>
+<span>2/5</span>
+</div>
+</td>
+<td class="p-4 align-top">Bus arrived 20 minutes late with no notification. Waiting area lacks proper seating.</td>
+</tr>
+<tr class="">
+<td class="p-4 align-top">2023-10-23</td>
+<td class="p-4 align-top font-bold text-primary">Facilities</td>
+<td class="p-4 align-top">
+<div class="flex items-center gap-1 text-visual-active">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span>5/5</span>
+</div>
+</td>
+<td class="p-4 align-top">New braille signage in the science wing is extremely helpful and accurate. Thank you.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t-2 border-border-dark flex justify-between items-center bg-surface-container-low">
+<span class="font-body-md text-body-md text-on-surface-variant">Showing 1 to 5 of 24 entries</span>
+<div class="flex gap-2">
+<button aria-label="Previous Page" class="px-4 py-2 border-2 border-border-dark bg-surface text-on-surface font-label-bold text-label-bold min-h-touch-target-min hover:bg-surface-container transition-none">Prev</button>
+<button aria-label="Next Page" class="px-4 py-2 border-2 border-border-dark bg-primary text-on-primary font-label-bold text-label-bold min-h-touch-target-min hover:bg-primary-container transition-none">Next</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar for Mobile -->
+<nav aria-label="Mobile Navigation" class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-touch-target-min border-t-4 border-border-dark bg-surface dark:bg-on-background flat no shadows">
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high scale-100" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">home</span>
+<span class="font-label-bold text-label-bold text-[12px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high scale-100" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">mic</span>
+<span class="font-label-bold text-label-bold text-[12px]">Voice</span>
+</a>
+<a aria-current="page" class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-none h-full w-full scale-100" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">assignment_late</span>
+<span class="font-label-bold text-label-bold text-[12px]">Grievance</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high scale-100" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">emergency</span>
+<span class="font-label-bold text-label-bold text-[12px]">Emergency</span>
+</a>
+</nav>
+<!-- Chart.js Initialization Script -->
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Chart.js global defaults for accessibility and brand colors
+            Chart.defaults.font.family = "'Atkinson Hyperlegible Next', sans-serif";
+            Chart.defaults.color = '#1A1A1A'; // high-contrast-text
+            Chart.defaults.plugins.tooltip.backgroundColor = '#1A1A1A';
+            Chart.defaults.plugins.tooltip.titleFont = { size: 16, weight: 'bold' };
+            Chart.defaults.plugins.tooltip.bodyFont = { size: 14 };
+
+            // Data for Bar Chart
+            const ctxBar = document.getElementById('ratingsBarChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Transport', 'Facilities', 'Academic Support', 'Cafeteria'],
+                    datasets: [{
+                        label: 'Average Rating (out of 5)',
+                        data: [4.2, 3.8, 4.5, 3.2],
+                        backgroundColor: '#004b91', // primary-container
+                        borderColor: '#333333', // border-dark
+                        borderWidth: 2,
+                        borderRadius: 0, // Sharp corners per design principles
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            grid: {
+                                color: '#dadada' // surface-dim
+                            },
+                            ticks: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Data for Pie Chart
+            const ctxPie = document.getElementById('feedbackPieChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'doughnut', // Doughnut is often clearer than pie, but prompt said pie/bar. We'll use doughnut for better label legibility in center if needed, or pie. Sticking to pie to be literal, but adding borders.
+                data: {
+                    labels: ['Positive (4-5)', 'Neutral (3)', 'Needs Improvement (1-2)'],
+                    datasets: [{
+                        data: [65, 20, 15],
+                        backgroundColor: [
+                            '#006B3D', // visual-active (Greenish)
+                            '#f3f3f4', // surface-container-low (Grey) - Need better contrast? Let's use outline color
+                            '#D92D20'  // emergency-red
+                        ],
+                        borderColor: '#333333', // border-dark
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '0%', // make it a pie chart
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body></html>

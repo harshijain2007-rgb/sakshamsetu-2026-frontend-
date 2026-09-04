@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SakshamSetu — Voice Portal (Visual & Dyslexic Mode)</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Main Design System -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "navy-brand": "#0d2859",
+            "navy-dark": "#07193b",
+            "blue-accent": "#2563eb",
+            "ice-bg": "#f3f8fd",
+            "green-emerald": "#16a34a",
+            "red-crimson": "#ef4444"
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-ice-bg text-slate-800 min-h-screen flex flex-col justify-between">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Accessibility Bar -->
+  <aside class="a11y-bar px-4 md:px-12 py-2" aria-label="Accessibility controls">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm text-yellow-300">record_voice_over</span>
+      <span>Voice-First Assistive Mode Active (Web Speech API)</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" id="btn-dyslexia" class="a11y-btn">Dyslexia Font</button>
+      <button type="button" id="btn-contrast" class="a11y-btn">High Contrast</button>
+      <button type="button" id="btn-text-size" class="a11y-btn">Text Size</button>
+      <a href="index.html" class="a11y-btn">Switch Role</a>
+    </div>
+  </aside>
+
+  <!-- Global Header (Matches Voice portal.jpg) -->
+  <header class="bg-transparent px-6 md:px-16 py-5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="student-visual-dyslexic.html" class="text-2xl font-extrabold text-navy-brand tracking-tight font-heading flex items-center gap-2">
+        <span>SakshamSetu</span>
+      </a>
+
+      <!-- Center Navigation Links -->
+      <nav class="hidden md:flex items-center gap-8 font-semibold text-sm text-slate-600" aria-label="Main Navigation">
+        <a href="student-hearing-physical.html" class="hover:text-navy-brand transition-colors">Dashboard</a>
+        <a href="grievance.html" class="hover:text-navy-brand transition-colors">Grievance</a>
+        <a href="tutor.html" class="hover:text-navy-brand transition-colors">AI Tutor</a>
+        <a href="student-visual-dyslexic.html" class="text-navy-brand font-bold border-b-2 border-navy-brand pb-1">Voice Portal</a>
+      </nav>
+
+      <!-- Right Action Icons & Emergency -->
+      <div class="flex items-center gap-4">
+        <button id="voice-emergency-btn" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-full shadow-sm transition-all" aria-label="Trigger immediate emergency voice response">
+          <span class="material-symbols-outlined text-base">emergency</span>
+          <span>Emergency Assistance</span>
+        </button>
+
+        <a href="campus-alerts.html" class="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-navy-brand transition-colors" aria-label="Notifications">
+          <span class="material-symbols-outlined text-xl">notifications</span>
+        </a>
+
+        <div class="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600" aria-label="User Profile">
+          <span class="material-symbols-outlined text-xl">account_circle</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main id="main-content" class="flex-1 max-w-5xl w-full mx-auto px-4 py-8 md:py-12 flex flex-col items-center text-center space-y-12">
+    
+    <!-- User Subtitle / Compliance Info (Dynamic Binding Preserved) -->
+    <div class="flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-slate-500 bg-white/70 backdrop-blur-sm px-5 py-2 rounded-full border border-slate-200 shadow-sm">
+      <span>Welcome, <strong id="student-name-display" class="text-navy-brand">Student User</strong></span>
+      <span class="text-slate-300">•</span>
+      <span>Compliance: <strong id="student-compliance-score" class="text-green-600">88%</strong></span>
+    </div>
+
+    <!-- Hero Title & Speech Prompt -->
+    <div class="space-y-3 max-w-2xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-navy-brand font-heading tracking-tight leading-tight">
+        How can I help you today?
+      </h2>
+      <p class="text-base text-slate-600 font-medium">
+        Speak naturally. I can read your notifications, check your application status, or guide you through the portal.
+      </p>
+    </div>
+
+    <!-- Central Glowing Voice Visualizer (Pixel Perfect to Voice portal.jpg) -->
+    <div class="relative flex flex-col items-center justify-center my-4">
+      <div class="voice-hero-ring-outer">
+        <div class="voice-hero-ring-inner">
+          <button id="voice-toggle-btn" class="voice-mic-core" aria-label="Toggle Voice Commander">
+            <span class="material-symbols-outlined text-5xl">mic</span>
+          </button>
+        </div>
+        
+        <!-- Listening Status Pill Badge (Standby by Default) -->
+        <div class="voice-listening-pill" id="voice-pill-container">
+          <span id="voice-pulse-dot" class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+          <span id="voice-btn-label">STANDBY</span>
+        </div>
+      </div>
+
+      <!-- Hidden waveform bridge for audio state -->
+      <div id="voice-wave-status" class="sr-only"></div>
+      <p id="voice-status-text" class="text-xs text-slate-400 font-medium mt-6">
+        Microphone in standby. Say "Start", press Alt+V, or tap the microphone to activate.
+      </p>
+    </div>
+
+    <!-- Quick Grievance Actions: Spoken Alternative & Typed Form Side-by-Side -->
+    <div class="flex flex-wrap items-center justify-center gap-4 w-full max-w-xl mx-auto pt-1 pb-2">
+      <button type="button" id="speak-grievance-hero-btn" class="flex-1 min-w-[220px] px-6 py-3.5 bg-navy-brand hover:bg-navy-dark text-white font-bold text-sm rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2.5 group cursor-pointer" aria-label="Speak a Grievance using voice assistant">
+        <span class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-xl text-yellow-300">record_voice_over</span>
+        </span>
+        <div class="text-left">
+          <span class="block text-[10px] uppercase tracking-wider text-blue-200 font-bold">Voice-Guided</span>
+          <span class="text-sm font-extrabold">Speak a Grievance</span>
+        </div>
+      </button>
+
+      <button type="button" id="submit-grievance-hero-btn" class="flex-1 min-w-[220px] px-6 py-3.5 bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm rounded-2xl border border-slate-300 shadow-sm transition-all flex items-center justify-center gap-2.5 group cursor-pointer" aria-label="Submit Grievance using typed form">
+        <span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-xl text-blue-600">edit_document</span>
+        </span>
+        <div class="text-left">
+          <span class="block text-[10px] uppercase tracking-wider text-slate-400 font-bold">Standard Form</span>
+          <span class="text-sm font-extrabold">Submit Grievance</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Suggested Commands Section -->
+    <section class="w-full space-y-4 pt-4" aria-labelledby="suggested-commands-heading">
+      <div class="flex items-center justify-between">
+        <h3 id="suggested-commands-heading" class="text-2xl font-extrabold text-navy-brand font-heading">
+          Suggested Voice Commands
+        </h3>
+        <span class="text-xs font-semibold text-slate-500">Say or tap commands anytime</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-left">
+        
+        <!-- Card 1: Speak a Grievance -->
+        <button type="button" id="voice-file-grievance-card-btn" class="stitch-card stitch-card-interactive p-5 text-left space-y-2.5 cursor-pointer group bg-blue-50/50 border-blue-200">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">record_voice_over</span>
+            </div>
+            <span class="badge-pill bg-blue-100 text-blue-800 text-[10px] font-bold">Voice-Driven</span>
+          </div>
+          <div>
+            <h4 class="text-base font-bold text-navy-brand font-heading">"File a Grievance"</h4>
+            <p class="text-xs text-slate-500 font-medium mt-0.5">Spoken barrier reporting with anonymous code.</p>
+          </div>
+        </button>
+
+        <!-- Card 2: Emergency / Help -->
+        <button type="button" id="voice-emergency-card-btn" class="stitch-card stitch-card-interactive p-5 text-left space-y-2.5 cursor-pointer group bg-red-50/50 border-red-200">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">emergency</span>
+            </div>
+            <span class="badge-pill badge-open text-[10px]">High Priority</span>
+          </div>
+          <div>
+            <h4 class="text-base font-bold text-red-700 font-heading">"Emergency" / "Help"</h4>
+            <p class="text-xs text-red-600/80 font-medium mt-0.5">Trigger immediate campus response & dial hotline.</p>
+          </div>
+        </button>
+
+        <!-- Card 3: Read Notifications -->
+        <button type="button" id="read-all-notices-btn" class="stitch-card stitch-card-interactive p-5 text-left space-y-2.5 cursor-pointer group bg-white">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">campaign</span>
+            </div>
+            <span class="badge-pill badge-neutral text-[10px]">Audio Readout</span>
+          </div>
+          <div>
+            <h4 class="text-base font-bold text-navy-brand font-heading">"Read Notifications"</h4>
+            <p class="text-xs text-slate-500 font-medium mt-0.5">Hear your latest campus alerts & audio broadcasts.</p>
+          </div>
+        </button>
+
+        <!-- Card 4: Check Status -->
+        <a href="grievance.html#track-section" class="stitch-card stitch-card-interactive p-5 text-left space-y-2.5 block group bg-white">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">fact_check</span>
+            </div>
+            <span class="badge-pill badge-review text-[10px]">Status Tracker</span>
+          </div>
+          <div>
+            <h4 class="text-base font-bold text-navy-brand font-heading">"Check Status"</h4>
+            <p class="text-xs text-slate-500 font-medium mt-0.5">Look up real-time progress on submitted barriers.</p>
+          </div>
+        </a>
+
+        <!-- Card 5: How to apply? -->
+        <button type="button" id="read-timetable-action" class="stitch-card stitch-card-interactive p-5 text-left space-y-2.5 cursor-pointer group bg-white">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">help</span>
+            </div>
+            <span class="badge-pill badge-neutral text-[10px]">Guidance</span>
+          </div>
+          <div>
+            <h4 class="text-base font-bold text-navy-brand font-heading">"How to apply?"</h4>
+            <p class="text-xs text-slate-500 font-medium mt-0.5">Learn about exam scribes & accommodation process.</p>
+          </div>
+        </button>
+
+        <!-- Card 6: Visual Dashboard -->
+        <a href="student-hearing-physical.html" class="stitch-card stitch-card-interactive p-5 text-left space-y-2.5 block group bg-white">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">grid_view</span>
+            </div>
+            <span class="badge-pill badge-neutral text-[10px]">Portal View</span>
+          </div>
+          <div>
+            <h4 class="text-base font-bold text-navy-brand font-heading">"Dashboard"</h4>
+            <p class="text-xs text-slate-500 font-medium mt-0.5">Switch to visual learning & grievance dashboard.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Planned Platform Modules (3 Coming Soon Tiles) -->
+    <section class="w-full space-y-4 text-left" aria-labelledby="planned-modules-voice-heading">
+      <div class="flex items-center justify-between">
+        <h3 id="planned-modules-voice-heading" class="text-xl font-extrabold text-navy-brand font-heading">
+          Upcoming Platform Modules
+        </h3>
+        <span class="text-xs font-semibold text-slate-400">Phase 2 Roadmap</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Tile 1: AI Tutor -->
+        <a href="tutor.html" class="stitch-card stitch-card-interactive p-6 bg-white space-y-3 block group">
+          <div class="flex items-center justify-between">
+            <div class="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">psychology</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 text-indigo-700">AI Assistant</span>
+          </div>
+          <h4 class="text-base font-bold text-slate-800 font-heading">AI Tutor</h4>
+          <p class="text-xs text-slate-500 font-medium">Personalized accessible learning assistant & exam concept aid.</p>
+        </a>
+
+        <!-- Tile 2: Visual Map Route -->
+        <a href="coming-soon.html?feature=Visual%20Map%20Route" class="stitch-card stitch-card-interactive p-6 bg-white space-y-3 block group">
+          <div class="flex items-center justify-between">
+            <div class="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">alt_route</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-600">Coming Soon</span>
+          </div>
+          <h4 class="text-base font-bold text-slate-800 font-heading">Visual Map Route</h4>
+          <p class="text-xs text-slate-500 font-medium">Planned campus visual map & wheelchair accessible paths.</p>
+        </a>
+
+        <!-- Tile 3: Tracker -->
+        <a href="coming-soon.html?feature=Tracker" class="stitch-card stitch-card-interactive p-6 bg-white space-y-3 block group">
+          <div class="flex items-center justify-between">
+            <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">location_searching</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-600">Coming Soon</span>
+          </div>
+          <h4 class="text-base font-bold text-slate-800 font-heading">Tracker</h4>
+          <p class="text-xs text-slate-500 font-medium">Live status tracking for campus electric vans and medical responders.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Dynamic Nearby Services & Active Campus Notices (Data Binding Preserved) -->
+    <section class="w-full space-y-6 pt-6 border-t border-slate-200/60 text-left">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xl font-bold text-navy-brand font-heading">Nearby Accessible Facilities</h3>
+        <span class="text-xs font-semibold text-slate-500">Live Campus Infrastructure</span>
+      </div>
+
+      <div id="nearby-services-list" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Loaded dynamically from GET /api/dashboard/student -->
+      </div>
+
+      <div class="space-y-3 pt-4">
+        <h3 class="text-xl font-bold text-navy-brand font-heading">Active Campus Audio Notices</h3>
+        <div id="voice-notices-list" class="space-y-3">
+          <!-- Loaded dynamically from api.alerts.getAll() -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Soft Blue Footer (Matches Voice portal.jpg) -->
+  <footer class="bg-blue-50/70 border-t border-blue-100/60 py-8 px-6 text-center text-xs font-medium text-slate-600 mt-16">
+    <div class="max-w-4xl mx-auto space-y-3">
+      <p class="font-bold text-sm text-navy-brand font-heading">SakshamSetu</p>
+      <div class="flex flex-wrap justify-center gap-6">
+        <a href="privacy.html" class="hover:text-navy-brand transition-colors">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-navy-brand transition-colors">Terms of Service</a>
+        <a href="grievance.html" class="hover:text-navy-brand transition-colors">Contact Support</a>
+      </div>
+      <p class="text-slate-400">© 2024 SakshamSetu. Empowering Education.</p>
+    </div>
+  </footer>
+
+  <!-- Accessible Grievance Portal Modal (Dual Modality: Spoken Dictation & Visual Form) -->
+  <div id="grievanceModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs hidden" role="dialog" aria-modal="true" aria-labelledby="grievance-modal-title">
+    <div class="w-full max-w-lg bg-white rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in duration-150 max-h-[90vh] overflow-y-auto">
+      <button type="button" id="grievanceCloseBtn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors cursor-pointer" aria-label="Close grievance portal">
+        <span class="material-symbols-outlined text-base">close</span>
+      </button>
+
+      <div class="border-b border-slate-100 pb-4 mb-4">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full">
+            <span class="material-symbols-outlined text-sm">security</span> Zero-Identity Guaranteed
+          </span>
+          <div class="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+            <span id="modal-listening-dot" class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse hidden"></span>
+            <span id="grievanceVoiceStatus" class="text-slate-600 font-semibold text-[11px]">Ready</span>
+          </div>
+        </div>
+        <h3 id="grievance-modal-title" class="text-xl font-bold text-navy-brand font-heading">
+          Anonymous Grievance Filing
+        </h3>
+        <p class="text-xs text-slate-500 font-medium mt-0.5">
+          Speak your complaint naturally after the tone. Gemini AI will auto-categorize and determine urgency.
+        </p>
+      </div>
+
+      <!-- Success Tracking Code Banner -->
+      <div id="grievanceCodeBanner" class="hidden p-5 border border-green-200 bg-green-50/80 rounded-2xl space-y-3 mb-4" role="alert">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-2xl text-green-600">verified</span>
+          <h4 class="text-sm font-extrabold text-green-800">Grievance Lodged Anonymously!</h4>
+        </div>
+        <div class="p-4 bg-white border border-green-200 rounded-xl space-y-1 text-center">
+          <span class="text-[10px] font-bold text-slate-400 uppercase block tracking-wider">Your Secret Tracking Code:</span>
+          <span id="grievanceSecretCodeDisplay" class="text-2xl sm:text-3xl font-extrabold text-navy-brand tracking-widest font-mono select-all">SAK-2026-0000</span>
+        </div>
+        <p class="text-xs text-slate-600 text-center font-medium">Save this code to check resolution status anytime without logging in.</p>
+        <button type="button" id="grievanceCopyCodeBtn" class="w-full py-2.5 bg-navy-brand text-white font-bold text-xs rounded-xl hover:bg-navy-dark transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+          <span class="material-symbols-outlined text-base">content_copy</span>
+          <span id="grievanceCopyLabel">Copy Secret Code</span>
+        </button>
+      </div>
+
+      <form id="portal-grievance-form" class="space-y-4">
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="grievanceDescription" class="block text-xs font-bold text-slate-700">
+              Complaint Description <span class="text-red-500">*</span>
+            </label>
+            <div class="flex items-center gap-1.5">
+              <button type="button" id="modal-pause-btn" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold rounded-lg transition-colors flex items-center gap-1 cursor-pointer" title="Pause live dictation">
+                <span class="material-symbols-outlined text-xs">pause</span>
+                <span>Pause</span>
+              </button>
+              <button type="button" id="modal-resume-btn" class="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 text-[11px] font-bold rounded-lg transition-colors flex items-center gap-1 cursor-pointer" title="Resume live dictation">
+                <span class="material-symbols-outlined text-xs">play_arrow</span>
+                <span>Resume</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="grievanceDescription" name="description" rows="4" required placeholder="State what happened. For example: 'The elevator in Block B is broken and making loud noise.' Say 'Pause', 'Resume', or 'Submit' when done." class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="grievanceCategory" class="block text-xs font-bold text-slate-700 mb-1">
+              Barrier Category <span class="text-red-500">*</span>
+            </label>
+            <select id="grievanceCategory" name="category" required class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="physical_infra">Facilities / Physical Infrastructure</option>
+              <option value="academic_access">Academic / Scribe / Extra Time</option>
+              <option value="governance">Harassment / Social Audit / Governance</option>
+              <option value="digital_ict">Digital / Portal Accessibility</option>
+              <option value="transport">Transport / Mobility Assistance</option>
+              <option value="health">Medical / Health Center Support</option>
+              <option value="other">Other Campus Barrier</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="grievancePriority" class="block text-xs font-bold text-slate-700 mb-1">
+              Priority Level <span class="text-red-500">*</span>
+            </label>
+            <select id="grievancePriority" name="priority" required class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="Low">Low (Routine)</option>
+              <option value="Medium" selected>Medium (Standard)</option>
+              <option value="High">High (Urgent Barrier)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="grievanceLocation" class="block text-xs font-bold text-slate-700 mb-1">
+            Location on Campus
+          </label>
+          <input id="grievanceLocation" name="location" type="text" placeholder="e.g. Central Library West Wing, Ground Floor Ramp" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button id="grievanceSubmitBtn" type="submit" class="flex-1 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs py-3 px-6 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-base">send</span>
+            <span>Submit Anonymously</span>
+          </button>
+          <button type="button" id="closeGrievanceModalBtn" class="px-4 py-3 border border-slate-300 text-slate-600 font-bold text-xs rounded-xl hover:bg-slate-100 transition-all cursor-pointer">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { voice } from './js/voice.js';
+    import { emergency } from './js/emergency.js';
+    import { auth } from './js/auth.js';
+    import { api } from './js/api.js';
+
+    // Global helper for opening/closing the grievance modal
+    window.openTypedGrievanceForm = (prefillData = {}) => {
+      voice.stopGlobalRecognition();
+      voice.isModalOpen = true;
+
+      const modal = document.getElementById('grievanceModal');
+      const form = document.getElementById('portal-grievance-form');
+      const banner = document.getElementById('grievanceCodeBanner');
+      if (banner) banner.classList.add('hidden');
+
+      if (form) {
+        if (prefillData.category) {
+          const catEl = document.getElementById('grievanceCategory');
+          if (catEl) catEl.value = prefillData.category;
+        }
+        if (prefillData.priority) {
+          const priEl = document.getElementById('grievancePriority');
+          if (priEl) priEl.value = prefillData.priority;
+        }
+        if (prefillData.location_text || prefillData.location) {
+          const locEl = document.getElementById('grievanceLocation');
+          if (locEl) locEl.value = prefillData.location_text || prefillData.location;
+        }
+        if (prefillData.description) {
+          const descEl = document.getElementById('grievanceDescription');
+          if (descEl) descEl.value = prefillData.description;
+        }
+      }
+      if (modal) {
+        modal.style.display = 'block';
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+      }
+      voice.updateModalStatus('Ready. Speak or type your complaint.');
+    };
+
+    window.closeTypedGrievanceForm = () => {
+      voice.closeGrievanceModal();
+    };
+
+    // Load Student Dashboard data (name, nearby_services, institute_compliance_score)
+    async function loadStudentDashboard() {
+      try {
+        const res = await api.dashboard.getStudent();
+        if (res) {
+          const nameEl = document.getElementById('student-name-display');
+          const scoreEl = document.getElementById('student-compliance-score');
+          const servicesContainer = document.getElementById('nearby-services-list');
+
+          if (nameEl && res.name) nameEl.textContent = res.name;
+          if (scoreEl && res.institute_compliance_score !== undefined) {
+            scoreEl.textContent = `${res.institute_compliance_score}%`;
+          }
+
+          if (servicesContainer && Array.isArray(res.nearby_services)) {
+            servicesContainer.innerHTML = res.nearby_services.map(s => `
+              <div class="stitch-card p-4 flex justify-between items-center bg-white">
+                <div>
+                  <h4 class="font-bold text-slate-800 text-sm">${s.name || s.title || 'Facility'}</h4>
+                  <p class="text-xs text-slate-500 font-medium">${s.category || 'Access Route'}</p>
+                </div>
+                <span class="badge-pill badge-resolved text-[11px]">${s.status || 'Active'}</span>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Error loading student dashboard data', err);
+      }
+    }
+
+    async function loadNotices() {
+      const container = document.getElementById('voice-notices-list');
+      if (!container) return;
+
+      try {
+        const res = await api.alerts.getAll();
+        const alerts = res.alerts || res || [];
+
+        if (Array.isArray(alerts) && alerts.length > 0) {
+          container.innerHTML = alerts.map(a => `
+            <article class="stitch-card p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-white" data-voice-notice="${a.title}. ${a.description}">
+              <div class="space-y-0.5 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="badge-pill ${a.severity === 'Urgent' ? 'badge-open' : 'badge-resolved'} text-[10px] uppercase">${a.severity || 'Notice'}</span>
+                </div>
+                <h4 class="text-sm font-bold text-slate-800">${a.title}</h4>
+                <p class="text-xs text-slate-600">${a.description}</p>
+              </div>
+              <button class="audio-read-btn bg-slate-50 text-navy-brand font-bold py-1.5 px-3 rounded-lg border border-slate-200 text-xs shrink-0 hover:bg-slate-100 transition-all flex items-center gap-1.5 cursor-pointer" data-read="${a.audioText || a.title + ': ' + a.description}">
+                <span class="material-symbols-outlined text-base">volume_up</span>
+                Listen
+              </button>
+            </article>
+          `).join('');
+
+          document.querySelectorAll('.audio-read-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const text = btn.getAttribute('data-read');
+              if (text) voice.speak(text);
+            });
+          });
+        } else {
+          container.innerHTML = `
+            <div class="stitch-card p-6 bg-white text-center">
+              <p class="text-sm font-medium text-slate-500">No active campus notices broadcasted at this time.</p>
+            </div>
+          `;
+        }
+      } catch (err) {
+        container.innerHTML = `
+          <div class="stitch-card p-4 bg-white text-center">
+            <p class="text-xs font-semibold text-slate-500">Campus notices feed ready.</p>
+          </div>
+        `;
+      }
+    }
+
+    function initGrievanceModalHandlers() {
+      const form = document.getElementById('portal-grievance-form');
+      const closeBtn = document.getElementById('grievanceCloseBtn');
+      const cancelBtn = document.getElementById('closeGrievanceModalBtn');
+      const copyBtn = document.getElementById('grievanceCopyCodeBtn');
+      const copyLabel = document.getElementById('grievanceCopyLabel');
+      const codeDisplay = document.getElementById('grievanceSecretCodeDisplay');
+
+      closeBtn?.addEventListener('click', () => voice.closeGrievanceModal());
+      cancelBtn?.addEventListener('click', () => voice.closeGrievanceModal());
+
+      document.getElementById('modal-pause-btn')?.addEventListener('click', () => {
+        voice.pauseModalDictation();
+      });
+
+      document.getElementById('modal-resume-btn')?.addEventListener('click', () => {
+        voice.resumeModalDictation();
+      });
+
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await voice.submitVoiceGrievance();
+      });
+
+      copyBtn?.addEventListener('click', () => {
+        const code = codeDisplay?.textContent;
+        if (code) {
+          navigator.clipboard.writeText(code).then(() => {
+            if (copyLabel) copyLabel.textContent = 'Code Copied!';
+            setTimeout(() => {
+              if (copyLabel) copyLabel.textContent = 'Copy Secret Code';
+            }, 3000);
+          });
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      auth.initAccessibility();
+
+      // Quick Hero Actions
+      document.getElementById('speak-grievance-hero-btn')?.addEventListener('click', () => {
+        voice.triggerGrievanceFlow();
+      });
+
+      document.getElementById('voice-file-grievance-card-btn')?.addEventListener('click', () => {
+        voice.triggerGrievanceFlow();
+      });
+
+      document.getElementById('submit-grievance-hero-btn')?.addEventListener('click', () => {
+        window.openTypedGrievanceForm();
+      });
+
+      const voiceToggleBtn = document.getElementById('voice-toggle-btn');
+      voiceToggleBtn?.addEventListener('click', () => {
+        voice.toggleListening();
+      });
+
+      document.getElementById('voice-emergency-btn')?.addEventListener('click', () => {
+        emergency.triggerVoiceEmergency();
+      });
+
+      document.getElementById('voice-emergency-card-btn')?.addEventListener('click', () => {
+        emergency.triggerVoiceEmergency();
+      });
+
+      document.getElementById('read-all-notices-btn')?.addEventListener('click', () => {
+        voice.readNotices();
+      });
+
+      document.getElementById('read-timetable-action')?.addEventListener('click', () => {
+        voice.speak('Accommodation guidelines: Compensatory examination time and scribe assistance available at Equal Opportunity Cell.');
+      });
+
+      initGrievanceModalHandlers();
+      loadStudentDashboard();
+      loadNotices();
+    });
+  </script>
+</body>
+</html>

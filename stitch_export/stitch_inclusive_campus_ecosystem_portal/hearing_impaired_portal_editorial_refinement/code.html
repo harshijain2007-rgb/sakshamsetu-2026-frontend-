@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Student Portal - Hearing Impaired Mode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;family=Public+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "primary-container": "#3366cc",
+                "outline": "#737784",
+                "on-surface": "#1b1c1d",
+                "primary": "#094cb2",
+                "inverse-on-surface": "#f2f0f1",
+                "on-primary-fixed": "#001946",
+                "on-primary-fixed-variant": "#00419d",
+                "on-surface-variant": "#434653",
+                "on-secondary": "#ffffff",
+                "on-primary": "#ffffff",
+                "tertiary-fixed-dim": "#dcc661",
+                "on-tertiary-fixed": "#211b00",
+                "surface": "#faf9fa",
+                "tertiary-container": "#bfab49",
+                "on-tertiary-fixed-variant": "#524600",
+                "on-error-container": "#93000a",
+                "inverse-primary": "#b1c5ff",
+                "secondary": "#5a5f63",
+                "on-error": "#ffffff",
+                "secondary-fixed": "#dfe3e8",
+                "surface-variant": "#e3e2e3",
+                "on-primary-container": "#e7ebff",
+                "on-tertiary": "#ffffff",
+                "background": "#faf9fa",
+                "on-secondary-fixed": "#171c20",
+                "surface-tint": "#2259bf",
+                "error-container": "#ffdad6",
+                "surface-container-lowest": "#ffffff",
+                "secondary-fixed-dim": "#c2c7cc",
+                "surface-bright": "#faf9fa",
+                "on-tertiary-container": "#4a3f00",
+                "surface-container": "#efedee",
+                "error": "#ba1a1a",
+                "tertiary": "#6d5e00",
+                "primary-fixed-dim": "#b1c5ff",
+                "on-background": "#1b1c1d",
+                "on-secondary-container": "#606569",
+                "primary-fixed": "#d9e2ff",
+                "inverse-surface": "#303031",
+                "surface-dim": "#dbdadb",
+                "on-secondary-fixed-variant": "#42474b",
+                "secondary-container": "#dfe3e8",
+                "tertiary-fixed": "#f9e37a",
+                "surface-container-high": "#e9e8e9",
+                "surface-container-highest": "#e3e2e3",
+                "outline-variant": "#c3c6d5",
+                "surface-container-low": "#f5f3f4"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+            "margin-mobile": "1.5rem",
+            "margin-desktop": "3rem"
+        },
+        "fontFamily": {
+                "headline": [
+                        "Noto Serif"
+                ],
+                "display": [
+                        "Noto Serif"
+                ],
+                "body": [
+                        "Inter"
+                ],
+                "label": [
+                        "Public Sans"
+                ]
+        },
+        "fontSize": {
+            "display-lg": ["4rem", { lineHeight: "1.1", fontWeight: "700" }],
+            "display-md": ["3rem", { lineHeight: "1.15", fontWeight: "700" }],
+            "headline-lg": ["2.25rem", { lineHeight: "1.2", fontWeight: "700" }],
+            "headline-md": ["1.75rem", { lineHeight: "1.25", fontWeight: "700" }],
+            "body-lg": ["1.125rem", { lineHeight: "1.6", fontWeight: "400" }],
+            "body-md": ["1rem", { lineHeight: "1.6", fontWeight: "400" }],
+            "label-bold": ["0.875rem", { lineHeight: "1.4", fontWeight: "700", letterSpacing: "0.05em" }]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6, .font-headline {
+            font-family: 'Noto Serif', serif;
+        }
+        .font-label {
+            font-family: 'Public Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row font-body">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden lg:flex flex-col border-r border-outline-variant h-screen w-64 bg-surface dark:bg-on-background shrink-0 fixed left-0 top-0 z-40">
+<div class="p-8 flex flex-col items-center">
+<span class="material-symbols-outlined text-6xl text-primary mb-4" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<h2 class="font-headline text-headline-md text-primary text-center">Student Portal</h2>
+<p class="font-label text-label-bold text-on-surface-variant mt-2 text-center uppercase tracking-widest text-xs">Visual-Text Mode</p>
+</div>
+<div class="flex-1 overflow-y-auto py-8 flex flex-col gap-4">
+<a class="flex items-center gap-4 px-8 py-2 text-on-surface hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">verified</span>
+<span class="font-label text-label-bold uppercase">Compliance</span>
+</a>
+<a class="flex items-center gap-4 px-8 py-2 text-primary font-bold transition-colors border-l-4 border-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">room_service</span>
+<span class="font-label text-label-bold uppercase">Services</span>
+</a>
+<a class="flex flex-col justify-center gap-1 px-8 py-2 text-on-surface hover:text-primary transition-colors relative opacity-50 cursor-not-allowed" href="#">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">psychology</span>
+<span class="font-label text-label-bold uppercase">AI Tutor</span>
+</div>
+<span class="text-[9px] font-label font-bold text-secondary uppercase tracking-widest ml-10">Coming Soon</span>
+</a>
+<a class="flex flex-col justify-center gap-1 px-8 py-2 text-on-surface hover:text-primary transition-colors relative opacity-50 cursor-not-allowed" href="#">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">ambulance</span>
+<span class="font-label text-label-bold uppercase">Ambulance</span>
+</div>
+<span class="text-[9px] font-label font-bold text-secondary uppercase tracking-widest ml-10">Coming Soon</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-64 pb-24 md:pb-0 min-h-screen bg-surface">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin-desktop py-8 bg-surface dark:bg-on-background border-b border-outline-variant sticky top-0 z-30">
+<div class="flex items-center gap-4">
+<h1 class="text-headline-md font-headline font-bold text-on-surface">Saksham Setu</h1>
+</div>
+<div class="hidden md:flex gap-12">
+<a class="font-label text-label-bold uppercase text-on-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="font-label text-label-bold uppercase text-primary border-b border-primary pb-1" href="#">Portal</a>
+<a class="font-label text-label-bold uppercase text-on-surface-variant hover:text-primary transition-colors" href="#">Reports</a>
+<a class="font-label text-label-bold uppercase text-on-surface-variant hover:text-primary transition-colors" href="#">Help</a>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<button class="w-12 h-12 flex flex-col items-center justify-center rounded-full bg-secondary text-on-secondary hover:bg-secondary/90 transition-all" title="Text to Speech">
+<span class="material-symbols-outlined text-xl">record_voice_over</span>
+<span class="text-[8px] font-label font-bold uppercase tracking-widest">Speech</span>
+</button>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label text-label-bold uppercase text-on-surface hidden md:block">Admin Role</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<div class="max-w-6xl mx-auto p-margin-mobile md:p-margin-desktop space-y-20">
+<!-- Alert Banner -->
+<div class="bg-primary text-on-primary p-8 flex flex-col sm:flex-row items-center gap-8 shadow-sm">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">info</span>
+<div class="flex-1">
+<h2 class="font-headline text-headline-md mb-2">Visual Alerts Active</h2>
+<p class="font-body text-body-lg text-on-primary/90 font-light">All notifications will be displayed on screen. No audio cues are required.</p>
+</div>
+</div>
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16 pt-8">
+<!-- Campus Services -->
+<div class="lg:col-span-8 flex flex-col gap-12">
+<div class="flex items-center gap-4 border-b border-outline-variant pb-6">
+<span class="material-symbols-outlined text-3xl text-primary" style="font-variation-settings: 'FILL' 1;">room_service</span>
+<h2 class="font-headline text-headline-lg text-on-surface">Campus Services</h2>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-16">
+<div class="flex flex-col gap-4 group">
+<span class="material-symbols-outlined text-4xl text-primary mb-2" style="font-variation-settings: 'FILL' 0;">local_library</span>
+<h3 class="font-headline text-headline-md text-on-surface group-hover:text-primary transition-colors cursor-pointer">Library Access</h3>
+<p class="font-body text-body-md text-on-surface-variant">Browse catalogs and reserve study spaces.</p>
+<button class="mt-2 text-left font-label text-label-bold text-primary uppercase tracking-widest hover:underline flex items-center gap-1">Access <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+<div class="flex flex-col gap-4 group">
+<span class="material-symbols-outlined text-4xl text-primary mb-2" style="font-variation-settings: 'FILL' 0;">calendar_month</span>
+<h3 class="font-headline text-headline-md text-on-surface group-hover:text-primary transition-colors cursor-pointer">Class Schedule</h3>
+<p class="font-body text-body-md text-on-surface-variant">View your personalized timetable.</p>
+<button class="mt-2 text-left font-label text-label-bold text-primary uppercase tracking-widest hover:underline flex items-center gap-1">View <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+<div class="flex flex-col gap-4 opacity-50">
+<span class="material-symbols-outlined text-4xl text-primary mb-2" style="font-variation-settings: 'FILL' 0;">map</span>
+<div class="flex items-center gap-4">
+<h3 class="font-headline text-headline-md text-on-surface">Campus Map</h3>
+<span class="text-[9px] font-label font-bold text-secondary uppercase tracking-widest border border-secondary px-2 py-0.5">Coming Soon</span>
+</div>
+<p class="font-body text-body-md text-on-surface-variant">Interactive directions with visual cues.</p>
+</div>
+</div>
+</div>
+<!-- Emergency Action -->
+<div class="lg:col-span-4">
+<div class="bg-error text-on-error p-10 flex flex-col items-center justify-center gap-8 text-center h-full shadow-md">
+<span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<h2 class="font-headline text-headline-lg font-bold tracking-tight">EMERGENCY HELP</h2>
+<p class="font-body text-body-md">Press for immediate visual assistance.</p>
+<button class="bg-on-error text-error font-label text-label-bold uppercase tracking-widest px-8 py-4 w-full mt-4 hover:bg-surface-variant transition-colors border-2 border-transparent">
+                            ACTIVATE
+                        </button>
+</div>
+</div>
+<!-- Bottom Row -->
+<div class="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-20 pt-16 border-t border-outline-variant mt-8">
+<!-- Grievance Portal -->
+<div class="flex flex-col gap-8">
+<div class="flex items-center gap-4 border-b border-outline-variant pb-6">
+<span class="material-symbols-outlined text-3xl text-tertiary" style="font-variation-settings: 'FILL' 1;">assignment_late</span>
+<h2 class="font-headline text-headline-lg text-on-surface">Grievance Portal</h2>
+</div>
+<p class="font-body text-body-lg text-on-surface-variant flex-1 font-light">Submit complaints or issues via text. No verbal communication required.</p>
+<form class="flex flex-col gap-8">
+<div class="flex flex-col gap-4">
+<label class="font-label text-label-bold text-on-surface uppercase tracking-widest">Issue Type</label>
+<select class="border-b border-outline-variant pb-2 font-headline text-headline-md text-on-surface bg-transparent focus:border-primary focus:outline-none w-full appearance-none rounded-none cursor-pointer">
+<option>Select Issue...</option>
+<option>Accessibility Barrier</option>
+<option>Academic Support</option>
+<option>Other</option>
+</select>
+</div>
+<button class="bg-secondary text-on-secondary font-label text-label-bold uppercase tracking-widest px-8 py-4 w-fit hover:bg-secondary/90 transition-colors" type="button">
+                                START NEW REPORT
+                            </button>
+</form>
+</div>
+<!-- Ambulance Pooling -->
+<div class="flex flex-col gap-8">
+<div class="flex items-center gap-4 border-b border-outline-variant pb-6">
+<span class="material-symbols-outlined text-3xl text-secondary opacity-50" style="font-variation-settings: 'FILL' 1;">ambulance</span>
+<h2 class="font-headline text-headline-lg text-on-surface opacity-50">Ambulance Pool</h2>
+<span class="text-[9px] font-label font-bold text-secondary uppercase tracking-widest border border-secondary px-2 py-0.5 ml-auto">Coming Soon</span>
+</div>
+<p class="font-body text-body-lg text-on-surface-variant flex-1 font-light opacity-50">Request non-emergency medical transport via text coordination.</p>
+<div class="flex flex-col gap-8 opacity-50">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<span class="font-label text-label-bold text-on-surface uppercase tracking-widest">Current Status:</span>
+<span class="font-headline text-headline-md text-on-surface-variant">UNAVAILABLE</span>
+</div>
+<button class="bg-surface-variant text-on-surface-variant font-label text-label-bold uppercase tracking-widest px-8 py-4 w-fit cursor-not-allowed">
+                                REQUEST TRANSPORT
+                            </button>
+</div>
+</div>
+</div>
+<div class="lg:col-span-12 mt-16 pt-16 border-t border-outline-variant"><div class="flex flex-col gap-12"><div class="flex items-center gap-4 border-b border-outline-variant pb-6"><span class="material-symbols-outlined text-3xl text-primary">campaign</span><h2 class="font-headline text-headline-lg text-on-surface">Important Notices</h2></div><div class="grid grid-cols-1 md:grid-cols-2 gap-16"><div class="flex flex-col gap-4"><h3 class="font-headline text-headline-md text-primary">Upcoming Workshop</h3><p class="font-body text-body-lg text-on-surface font-light">Hearing Aid Maintenance &amp; Workshop - Friday, 10:00 AM in Hall B.</p></div><div class="flex flex-col gap-4"><h3 class="font-headline text-headline-md text-secondary">New Resource</h3><p class="font-body text-body-lg text-on-surface font-light">Visual transcripts for all recorded lectures are now available in the Portal.</p></div></div></div></div></div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-20 border-t border-outline-variant bg-surface dark:bg-on-background pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant h-full w-full hover:text-primary" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="text-[10px] font-label font-bold uppercase tracking-widest">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary h-full w-full" href="#">
+<div class="border-b-2 border-primary pb-1 mb-1">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">room_service</span>
+</div>
+<span class="text-[10px] font-label font-bold uppercase tracking-widest">Services</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant h-full w-full hover:text-primary" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" style="font-variation-settings: 'FILL' 0;">assignment_late</span>
+<span class="text-[10px] font-label font-bold uppercase tracking-widest">Grievance</span>
+</a>
+<a class="flex flex-col items-center justify-center text-error h-full w-full" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" style="font-variation-settings: 'FILL' 0;">emergency</span>
+<span class="text-[10px] font-label font-bold uppercase tracking-widest">Emergency</span>
+</a>
+</nav>
+<button class="fixed bottom-24 right-8 md:bottom-8 md:right-8 z-50 w-20 h-20 flex flex-col items-center justify-center rounded-full bg-primary text-on-primary hover:bg-primary/90 transition-all shadow-lg border-4 border-tertiary-fixed" title="Voice Input">
+<span class="material-symbols-outlined text-4xl">mic</span>
+<span class="text-xs font-label font-bold uppercase tracking-widest mt-1">Voice</span>
+</button></body></html>

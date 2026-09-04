@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SakshamSetu — AI Accessible Tutor & Study Assistant</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Main Design System -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "navy-brand": "#0d2859",
+            "navy-dark": "#07193b",
+            "blue-accent": "#2563eb",
+            "ice-bg": "#f3f8fd",
+            "green-emerald": "#16a34a",
+            "red-crimson": "#ef4444"
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-ice-bg text-slate-800 min-h-screen flex flex-col justify-between">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Accessibility Bar -->
+  <aside class="a11y-bar px-4 md:px-12 py-2" aria-label="Accessibility controls">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm text-yellow-300">psychology</span>
+      <span>Saksham AI Tutor & Accessible Learning Assistant</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" id="btn-dyslexia" class="a11y-btn">Dyslexia Font</button>
+      <button type="button" id="btn-contrast" class="a11y-btn">High Contrast</button>
+      <button type="button" id="btn-text-size" class="a11y-btn">Text Size</button>
+      <a href="student-visual-dyslexic.html" class="a11y-btn">Voice Portal</a>
+    </div>
+  </aside>
+
+  <!-- Global Header -->
+  <header class="bg-transparent px-6 md:px-16 py-5 border-b border-slate-200/60 bg-white/60 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="student-visual-dyslexic.html" class="text-2xl font-extrabold text-navy-brand tracking-tight font-heading flex items-center gap-2">
+        <span>SakshamSetu</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 font-semibold text-sm text-slate-600" aria-label="Main Navigation">
+        <a href="student-hearing-physical.html" class="hover:text-navy-brand transition-colors">Dashboard</a>
+        <a href="student-visual-dyslexic.html" class="hover:text-navy-brand transition-colors">Voice Portal</a>
+        <a href="grievance.html" class="hover:text-navy-brand transition-colors">Grievances</a>
+        <a href="tutor.html" class="text-navy-brand font-bold border-b-2 border-navy-brand pb-1">AI Tutor</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="student-visual-dyslexic.html" class="px-4 py-2 bg-navy-brand text-white font-bold text-xs rounded-full flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-base">mic</span>
+          <span>Voice Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 md:py-12 space-y-8">
+    <div class="space-y-3 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold">
+        <span class="material-symbols-outlined text-sm">auto_awesome</span> Gemini-Powered Study Aid
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-navy-brand font-heading">
+        AI Accessible Tutor
+      </h1>
+      <p class="text-sm text-slate-600 font-medium max-w-xl mx-auto">
+        Ask academic questions, simplify complex textbook passages, or get scribe-style audio explanations.
+      </p>
+    </div>
+
+    <!-- Interactive Tutor Chat Card -->
+    <div class="stitch-card p-6 md:p-8 bg-white space-y-6">
+      <div id="tutor-chat-messages" class="space-y-4 min-h-[220px] max-h-[360px] overflow-y-auto p-4 bg-slate-50/60 border border-slate-200/80 rounded-2xl">
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-sm">psychology</span>
+          </div>
+          <div class="p-3.5 bg-white border border-slate-200 rounded-2xl text-xs font-medium text-slate-800 space-y-1 shadow-xs">
+            <p class="font-bold text-indigo-700">Saksham AI Tutor</p>
+            <p>Hello! I am your accessible learning assistant. You can speak or type any question, request simplified definitions, or ask me to read concepts aloud.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input controls -->
+      <form id="tutor-form" class="space-y-3">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input type="text" id="tutor-input" placeholder="Ask a study question (e.g., Explain Newton's Third Law in simple words)..." class="flex-1 px-4 py-3 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          <button type="submit" class="px-6 py-3 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 shrink-0">
+            <span class="material-symbols-outlined text-base">send</span>
+            <span>Ask Tutor</span>
+          </button>
+        </div>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <span class="text-slate-400 font-semibold py-1">Quick prompts:</span>
+          <button type="button" class="quick-prompt px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px]">Compensatory exam time rules</button>
+          <button type="button" class="quick-prompt px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px]">Summarize RPwD Act 2016</button>
+          <button type="button" class="quick-prompt px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px]">Scribe assistance guidelines</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-50/70 border-t border-blue-100/60 py-8 px-6 text-center text-xs font-medium text-slate-600 mt-16">
+    <div class="max-w-4xl mx-auto space-y-3">
+      <p class="font-bold text-sm text-navy-brand font-heading">SakshamSetu</p>
+      <div class="flex flex-wrap justify-center gap-6">
+        <a href="privacy.html" class="hover:text-navy-brand transition-colors">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-navy-brand transition-colors">Terms of Service</a>
+        <a href="student-visual-dyslexic.html" class="hover:text-navy-brand transition-colors">Voice Portal</a>
+      </div>
+      <p class="text-slate-400">© 2024 SakshamSetu. Empowering Accessible Education.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { auth } from './js/auth.js';
+    import { voice } from './js/voice.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      auth.initAccessibility();
+
+      const form = document.getElementById('tutor-form');
+      const input = document.getElementById('tutor-input');
+      const container = document.getElementById('tutor-chat-messages');
+
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = input?.value.trim();
+        if (!query) return;
+
+        // Append user query
+        const userMsg = document.createElement('div');
+        userMsg.className = 'flex items-start justify-end gap-3';
+        userMsg.innerHTML = `
+          <div class="p-3.5 bg-navy-brand text-white rounded-2xl text-xs font-medium max-w-md shadow-xs">
+            <p>${query}</p>
+          </div>
+        `;
+        container?.appendChild(userMsg);
+        if (input) input.value = '';
+
+        // Response
+        setTimeout(() => {
+          const aiMsg = document.createElement('div');
+          aiMsg.className = 'flex items-start gap-3';
+          let reply = `Here is the explanation for "${query}": Under RPwD Act guidelines, students with disabilities are entitled to compensatory time (20 minutes per hour) and scribe assistance upon registration with the Equal Opportunity Cell.`;
+          aiMsg.innerHTML = `
+            <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-sm">psychology</span>
+            </div>
+            <div class="p-3.5 bg-white border border-slate-200 rounded-2xl text-xs font-medium text-slate-800 space-y-2 shadow-xs max-w-lg">
+              <p class="font-bold text-indigo-700">Saksham AI Tutor</p>
+              <p>${reply}</p>
+              <button type="button" class="read-reply-btn text-[11px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">volume_up</span> Listen to explanation
+              </button>
+            </div>
+          `;
+          container?.appendChild(aiMsg);
+          container?.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+
+          aiMsg.querySelector('.read-reply-btn')?.addEventListener('click', () => {
+            voice.speak(reply);
+          });
+        }, 500);
+      });
+
+      document.querySelectorAll('.quick-prompt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (input) {
+            input.value = btn.textContent || '';
+            form?.dispatchEvent(new Event('submit'));
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

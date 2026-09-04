@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SakshamSetu — Updates & Alerts Management</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Main Design System -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "navy-brand": "#0d2859",
+            "navy-dark": "#07193b",
+            "blue-accent": "#2563eb",
+            "sidebar-bg": "#ffffff",
+            "green-emerald": "#16a34a",
+            "red-crimson": "#ef4444"
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col md:flex-row">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Admin Sidebar Navigation -->
+  <aside class="w-full md:w-64 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between shrink-0" aria-label="Admin Navigation">
+    <div class="space-y-6">
+      
+      <!-- Brand Header -->
+      <div class="px-2 pt-1">
+        <h1 class="text-xl font-extrabold text-navy-brand font-heading tracking-tight">SakshamSetu</h1>
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Admin Dashboard</p>
+      </div>
+
+      <!-- Navigation Sections -->
+      <nav class="space-y-5 text-xs font-bold" aria-label="Admin Sections">
+        
+        <!-- Section: MAIN -->
+        <div class="space-y-1">
+          <p class="px-2.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Main</p>
+          
+          <a href="admin-dashboard.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">grid_view</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="admin-alerts.html" class="flex items-center gap-3 px-3.5 py-2.5 bg-slate-100 text-navy-brand font-extrabold rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg text-blue-600">campaign</span>
+            <span>Updates & Alerts</span>
+          </a>
+          <a href="admin-assign-grievance.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">assignment</span>
+            <span>Assign Grievances</span>
+          </a>
+          <a href="admin-checklist.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">verified_user</span>
+            <span>Compliance</span>
+          </a>
+        </div>
+
+        <!-- Section: MANAGEMENT -->
+        <div class="space-y-1">
+          <p class="px-2.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Management</p>
+          
+          <a href="admin-users.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">group</span>
+            <span>Users & Roles</span>
+          </a>
+          <a href="service-feedback.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">forum</span>
+            <span>Student Feedback</span>
+          </a>
+          <a href="admin-feedback.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">rate_review</span>
+            <span>Admin Feedback Review</span>
+          </a>
+          <a href="transport-tracking.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">directions_bus</span>
+            <span>Request Transport</span>
+          </a>
+        </div>
+
+        <!-- Section: SYSTEM -->
+        <div class="space-y-1">
+          <p class="px-2.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">System</p>
+          
+          <a href="admin-settings.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">settings</span>
+            <span>Settings</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Bottom Sidebar Profile Widget -->
+    <div class="pt-5 border-t border-slate-100 space-y-3">
+      <div class="flex items-center gap-3 px-1">
+        <div class="w-9 h-9 rounded-xl bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs">
+          AK
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-bold text-slate-800 truncate">Admin Officer</p>
+          <p class="text-[10px] text-slate-500 truncate">Compliance Desk</p>
+        </div>
+      </div>
+      <a href="index.html" class="flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-red-600 px-1 transition-colors">
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main id="main-content" class="flex-1 p-4 md:p-8 space-y-6 overflow-y-auto">
+    
+    <!-- Top Header Bar -->
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <h2 class="text-lg font-extrabold text-navy-brand font-heading">
+        SakshamSetu Admin
+      </h2>
+
+      <!-- Search & Right Badges & Accessibility Toggles -->
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end flex-wrap">
+        <div class="relative max-w-xs w-full sm:w-48">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+          <input type="text" placeholder="Search..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-transparent rounded-full text-xs font-medium text-slate-700 focus:bg-white focus:border-slate-300 focus:outline-none transition-all">
+        </div>
+        
+        <!-- Accessibility Controls -->
+        <div class="flex items-center gap-1.5" aria-label="Accessibility Bar">
+          <button type="button" id="btn-dyslexia" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Dyslexia</button>
+          <button type="button" id="btn-contrast" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Contrast</button>
+          <button type="button" id="btn-text-size" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Text Size</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button class="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-navy-brand">
+            <span class="material-symbols-outlined text-lg">notifications</span>
+          </button>
+          <button class="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-navy-brand">
+            <span class="material-symbols-outlined text-lg">help_outline</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Title -->
+    <section class="pt-2">
+      <h3 class="text-2xl md:text-3xl font-extrabold text-navy-brand font-heading">Updates & Alerts</h3>
+      <p class="text-xs text-slate-500 font-medium mt-0.5">
+        Publish campus-wide accessibility advisories and manage active disruption notices.
+      </p>
+    </section>
+
+    <!-- Two Column Form & Active List Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- Section 1: Post New Alert Form -->
+      <section class="stitch-card p-6 md:p-8 bg-white space-y-5" aria-labelledby="post-alert-heading">
+        <div class="border-b border-slate-100 pb-3">
+          <h4 id="post-alert-heading" class="text-base font-bold text-navy-brand font-heading">Broadcast New Alert</h4>
+          <p class="text-xs text-slate-500 font-medium">Instant push to student portal and audio notification feeds.</p>
+        </div>
+
+        <form id="create-alert-form" class="space-y-4">
+          <div>
+            <label for="alert-title" class="block text-xs font-bold text-slate-700 mb-1">
+              Alert Title <span class="text-red-500">*</span>
+            </label>
+            <input id="alert-title" name="title" type="text" required placeholder="e.g. Auditorium Lift #2 Hydraulic Servicing" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <div>
+            <label for="alert-severity" class="block text-xs font-bold text-slate-700 mb-1">
+              Severity Level <span class="text-red-500">*</span>
+            </label>
+            <select id="alert-severity" name="severity" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="Urgent">Urgent / Critical Disruption</option>
+              <option value="Warning">Warning / Partial Route Closure</option>
+              <option value="Notice" selected>General Notice</option>
+              <option value="Info">Informational Advisory</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="alert-description" class="block text-xs font-bold text-slate-700 mb-1">
+              Detailed Description <span class="text-red-500">*</span>
+            </label>
+            <textarea id="alert-description" name="description" rows="3" required placeholder="Provide accessible alternative routes, expected repair timeframe, or direct instructions." class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          </div>
+
+          <div>
+            <label for="alert-audioText" class="block text-xs font-bold text-slate-700 mb-1">
+              Spoken Audio Narration Text (Optional)
+            </label>
+            <input id="alert-audioText" name="audioText" type="text" placeholder="Clean text optimized for text-to-speech engine playback" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <button id="submit-alert-btn" type="submit" class="w-full bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs py-3 px-6 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-base">send</span>
+            <span>Broadcast Alert Now</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Section 2: Active Alerts List with Mark Resolved -->
+      <section class="stitch-card p-6 md:p-8 bg-white space-y-5" aria-labelledby="active-broadcasts-heading">
+        <div class="border-b border-slate-100 pb-3 flex justify-between items-center">
+          <h4 id="active-broadcasts-heading" class="text-base font-bold text-navy-brand font-heading">Active Broadcasts</h4>
+          <span id="active-alert-count" class="badge-pill badge-neutral text-[11px]">0 Active</span>
+        </div>
+
+        <div class="space-y-3" id="admin-alerts-list">
+          <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl text-center">
+            <p class="text-xs font-bold text-slate-500">Loading broadcasts...</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer Bar -->
+    <footer class="pt-6 border-t border-slate-200/80 text-xs font-medium text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p>© 2024 SakshamSetu Educational Platform. All rights reserved.</p>
+      <div class="flex gap-4">
+        <a href="privacy.html" class="hover:text-navy-brand">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-navy-brand">Terms of Service</a>
+        <a href="admin-alerts.html" class="hover:text-navy-brand">Campus Advisories</a>
+      </div>
+    </footer>
+  </main>
+
+  <script type="module">
+    import { api } from './js/api.js';
+    import { auth } from './js/auth.js';
+
+    function timeAgo(dateString) {
+      if (!dateString) return 'Recently';
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return dateString;
+      const seconds = Math.floor((new Date() - date) / 1000);
+      if (seconds < 60) return 'Just now';
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return `${minutes}m ago`;
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return `${hours}h ago`;
+      const days = Math.floor(hours / 24);
+      return `${days}d ago`;
+    }
+
+    async function loadAlerts() {
+      try {
+        const res = await api.alerts.getAll();
+        const alerts = res.alerts || res || [];
+        renderList(Array.isArray(alerts) ? alerts : []);
+      } catch (err) {
+        console.error('Error loading alerts', err);
+      }
+    }
+
+    function renderList(alerts) {
+      const countEl = document.getElementById('active-alert-count');
+      if (countEl) countEl.textContent = `${alerts.length} Broadcast${alerts.length === 1 ? '' : 's'}`;
+
+      const container = document.getElementById('admin-alerts-list');
+      if (!container) return;
+
+      if (alerts.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 bg-slate-50 border border-slate-200 rounded-2xl text-center space-y-1">
+            <p class="font-bold text-slate-700 text-sm">No active broadcasts</p>
+            <p class="text-xs text-slate-500 font-medium">Use the form on the left to post a new campus alert.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = alerts.map(a => `
+        <div class="p-4 border border-slate-200 bg-white rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div class="space-y-1 flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="badge-pill ${a.severity === 'Urgent' ? 'badge-open' : 'badge-resolved'} text-[10px] uppercase">
+                ${a.severity || 'Notice'}
+              </span>
+              <span class="text-[11px] font-semibold text-slate-400">${timeAgo(a.createdAt || a.date)}</span>
+              ${a.status === 'Resolved' ? '<span class="badge-pill badge-neutral text-[10px]">RESOLVED</span>' : ''}
+            </div>
+            <h4 class="text-sm font-bold text-slate-800 truncate">${a.title}</h4>
+            <p class="text-xs text-slate-600 font-medium line-clamp-2">${a.description}</p>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            ${a.status !== 'Resolved' ? `
+              <button class="resolve-alert-btn px-3 py-1.5 bg-green-600 text-white font-bold text-xs rounded-lg hover:bg-green-700 transition-all flex items-center gap-1" data-id="${a.id || a._id}">
+                <span class="material-symbols-outlined text-base">check_circle</span>
+                <span>Resolve</span>
+              </button>
+            ` : `
+              <span class="badge-pill badge-resolved text-xs">
+                Resolved
+              </span>
+            `}
+          </div>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.resolve-alert-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-id');
+          btn.disabled = true;
+          btn.textContent = 'Resolving...';
+          try {
+            await api.alerts.resolve(id);
+            await loadAlerts();
+          } catch (err) {
+            alert('Could not update alert status.');
+            btn.disabled = false;
+            btn.textContent = 'Resolve';
+          }
+        });
+      });
+    }
+
+    document.getElementById('create-alert-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = document.getElementById('submit-alert-btn');
+      
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="material-symbols-outlined animate-spin text-base">progress_activity</span> Broadcasting...`;
+
+      const data = {
+        title: form.title.value.trim(),
+        severity: form.severity.value,
+        description: form.description.value.trim(),
+        audioText: form.audioText.value.trim() || form.description.value.trim()
+      };
+
+      try {
+        const res = await api.alerts.create(data);
+        if (res.success || res.id) {
+          form.reset();
+          await loadAlerts();
+        }
+      } catch (err) {
+        alert('Failed to broadcast alert. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span class="material-symbols-outlined text-base">send</span> <span>Broadcast Alert Now</span>`;
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      auth.initAccessibility();
+      loadAlerts();
+    });
+  </script>
+</body>
+</html>

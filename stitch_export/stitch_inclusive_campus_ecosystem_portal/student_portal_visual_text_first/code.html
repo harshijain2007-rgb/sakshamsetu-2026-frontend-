@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduAbility Student Portal - Visual-Text Mode</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS Setup -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#ffdad6",
+                    "surface-dim": "#dadada",
+                    "on-tertiary-fixed-variant": "#793100",
+                    "primary-fixed": "#d5e3ff",
+                    "secondary-fixed-dim": "#81d9a0",
+                    "surface-variant": "#e2e2e2",
+                    "on-primary-fixed-variant": "#004689",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-surface-variant": "#424751",
+                    "on-tertiary": "#ffffff",
+                    "voice-active": "#004B91",
+                    "tertiary": "#5c2400",
+                    "primary": "#003469",
+                    "surface-container": "#eeeeee",
+                    "on-secondary-fixed-variant": "#00522e",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#341100",
+                    "on-secondary-container": "#0f7142",
+                    "outline-variant": "#c2c6d2",
+                    "inverse-on-surface": "#f0f1f1",
+                    "tertiary-fixed": "#ffdbcb",
+                    "on-surface": "#1a1c1c",
+                    "emergency-red": "#D92D20",
+                    "inverse-primary": "#a7c8ff",
+                    "surface-container-low": "#f3f3f4",
+                    "secondary-fixed": "#9df5bb",
+                    "on-primary": "#ffffff",
+                    "tertiary-container": "#7f3502",
+                    "surface-bright": "#f9f9f9",
+                    "focus-indicator": "#FFD600",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-tint": "#255fa6",
+                    "on-error": "#ffffff",
+                    "on-tertiary-container": "#ffa678",
+                    "surface": "#f9f9f9",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "secondary-container": "#9af3b8",
+                    "primary-container": "#004b91",
+                    "visual-active": "#006B3D",
+                    "inverse-surface": "#2f3131",
+                    "on-background": "#1a1c1c",
+                    "border-dark": "#333333",
+                    "on-error-container": "#93000a",
+                    "background": "#f9f9f9",
+                    "secondary": "#046d3f",
+                    "on-primary-container": "#95bdff",
+                    "error": "#ba1a1a",
+                    "high-contrast-text": "#1A1A1A",
+                    "tertiary-fixed-dim": "#ffb691",
+                    "outline": "#727782",
+                    "surface-container-high": "#e8e8e8",
+                    "on-primary-fixed": "#001b3c",
+                    "on-secondary-fixed": "#00210f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "touch-target-min": "56px",
+                    "margin-mobile": "16px",
+                    "unit": "8px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Atkinson Hyperlegible Next"],
+                    "headline-lg": ["Atkinson Hyperlegible Next"],
+                    "headline-lg-mobile": ["Atkinson Hyperlegible Next"],
+                    "code-display": ["Atkinson Hyperlegible Next"],
+                    "label-bold": ["Atkinson Hyperlegible Next"],
+                    "body-md": ["Atkinson Hyperlegible Next"],
+                    "body-lg": ["Atkinson Hyperlegible Next"]
+            },
+            "fontSize": {
+                    "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                    "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                    "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                    "code-display": ["48px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "800" }],
+                    "label-bold": ["16px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                    "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                    "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Base strict minimalism overrides */
+        body {
+            font-family: 'Atkinson Hyperlegible Next', sans-serif;
+            background-color: #f9f9f9;
+        }
+        /* Remove default outlines and use our highly visible one */
+        *:focus-visible {
+            outline: 4px solid #FFD600 !important;
+            outline-offset: 2px !important;
+        }
+        /* Custom Checkbox styles for high visibility */
+        input[type="checkbox"] {
+            appearance: none;
+            background-color: #f9f9f9;
+            margin: 0;
+            border: 2px solid #333333;
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-content: center;
+        }
+        input[type="checkbox"]::before {
+            content: "";
+            width: 16px;
+            height: 16px;
+            background-color: #003469; /* primary */
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+        }
+        input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="bg-background text-high-contrast-text min-h-screen flex flex-col md:flex-row antialiased selection:bg-focus-indicator selection:text-high-contrast-text">
+<!-- TopAppBar (Mobile / Tablet) -->
+<header class="md:hidden flex justify-between items-center w-full px-margin-mobile h-touch-target-min border-b-2 border-border-dark bg-surface dark:bg-on-background top-0 z-40 sticky">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-size: 32px;">school</span>
+<span class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed">EduAbility</span>
+</div>
+<button aria-label="Open Menu" class="min-h-touch-target-min min-w-touch-target-min flex items-center justify-center text-primary bg-transparent border-2 border-transparent focus:border-focus-indicator focus:bg-surface-container">
+<span class="material-symbols-outlined" style="font-size: 32px;">menu</span>
+</button>
+</header>
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden md:flex flex-col border-r-4 border-border-dark h-screen w-64 bg-surface dark:bg-on-background sticky top-0 shrink-0">
+<div class="p-6 border-b-4 border-border-dark flex items-center gap-4 h-24">
+<span class="material-symbols-outlined text-primary" style="font-size: 40px; font-variation-settings: 'FILL' 1;">account_circle</span>
+<div>
+<h2 class="font-label-bold text-label-bold text-high-contrast-text">Student Portal</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Visual-Text Mode</p>
+</div>
+</div>
+<ul class="flex flex-col flex-1 py-4">
+<!-- Curriculum (Inactive) -->
+<li>
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 min-h-touch-target-min hover:bg-surface-container-highest border-l-8 border-transparent transition-none" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-body-lg text-body-lg">Curriculum</span>
+</a>
+</li>
+<!-- Compliance (Inactive) -->
+<li>
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 min-h-touch-target-min hover:bg-surface-container-highest border-l-8 border-transparent transition-none" href="#">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-body-lg text-body-lg">Compliance</span>
+</a>
+</li>
+<!-- Services (Active Tab matching intent) -->
+<li>
+<a aria-current="page" class="flex items-center gap-4 bg-secondary text-on-secondary font-bold px-4 py-3 min-h-touch-target-min border-l-8 border-border-dark transition-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">room_service</span>
+<span class="font-body-lg text-body-lg">Services</span>
+</a>
+</li>
+<!-- AI Tutor (Inactive) -->
+<li>
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 min-h-touch-target-min hover:bg-surface-container-highest border-l-8 border-transparent transition-none" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-body-lg text-body-lg">AI Tutor</span>
+</a>
+</li>
+<!-- Ambulance (Inactive) -->
+<li>
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 min-h-touch-target-min hover:bg-surface-container-highest border-l-8 border-transparent transition-none" href="#">
+<span class="material-symbols-outlined">ambulance</span>
+<span class="font-body-lg text-body-lg">Ambulance</span>
+</a>
+</li>
+</ul>
+<div class="p-4 border-t-4 border-border-dark">
+<button class="w-full min-h-touch-target-min flex items-center justify-center gap-2 bg-surface text-high-contrast-text font-label-bold text-label-bold border-4 border-border-dark hover:bg-surface-container transition-none">
+<span class="material-symbols-outlined">logout</span>
+                LOG OUT
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-container-max mx-auto p-margin-mobile md:p-margin-desktop pb-32 md:pb-margin-desktop space-y-12">
+<!-- Header -->
+<div class="border-b-4 border-border-dark pb-6">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-high-contrast-text">Campus Overview</h1>
+<p class="font-body-lg text-body-lg mt-4 text-on-surface-variant max-w-2xl">Visual and text-based interface optimized for readability and clear actionable targets.</p>
+</div>
+<!-- EMERGENCY BLOCK (Highest Priority) -->
+<section aria-label="Emergency Actions">
+<button class="w-full min-h-[96px] bg-emergency-red text-on-error font-headline-md text-headline-md border-4 border-emergency-red flex items-center justify-center gap-6 focus:ring-4 focus:ring-focus-indicator hover:bg-surface hover:text-emergency-red transition-none active:bg-surface active:text-emergency-red group">
+<span class="material-symbols-outlined text-[48px]" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<span class="tracking-wide">EMERGENCY HELP / AMBULANCE</span>
+</button>
+</section>
+<!-- Services Map & List Grid -->
+<section aria-label="Campus Services" class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Map Area -->
+<div class="lg:col-span-8 border-4 border-border-dark bg-surface p-6 flex flex-col">
+<div class="flex items-center gap-4 mb-6 border-b-4 border-border-dark pb-4">
+<span class="material-symbols-outlined text-primary text-[32px]">map</span>
+<h2 class="font-headline-md text-headline-md text-primary">Services Map</h2>
+</div>
+<!-- Highly detailed map placeholder requiring 50-100 words in data-alt -->
+<div class="w-full flex-1 min-h-[400px] bg-cover bg-center border-4 border-border-dark relative" data-alt="A striking, high-contrast digital map illustration of a university campus designed specifically for accessibility. The map features a pristine white background with bold, 4px thick black outlines delineating buildings and pathways. Key service locations are marked with massive, solid primary blue and secondary green geographic pins. The design completely omits shadows, gradients, and 3D effects, relying entirely on a strict minimalist flat construction to ensure absolute visual clarity. The aesthetic is professional, highly functional, and perfectly aligns with a light mode, high-visibility UI standard." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQd1v3ELCwxqLLS4qM5DNILV62SqFkPTDQcTd4HJJdI326FblzdvGb0Djrts-nhF9UtFC7nRNHEfiNzeYL2n409orRHkaJhaD-NADowX8V8NymE0rf9Bf6b6tF9E2pDsJro6TuHf9DM4fHh2yaK7YTxN6QTtjc_nsDqppS4WsxyBDF65bDRrxO9G6u3D91VNPhM9pcf_2MjLwhJsM-NaPeMvznG8ynodjInilJA4_pEpw5f-aSvSnQ1w')">
+<!-- Example Accessible Map Markers overlay -->
+<button aria-label="Library Services Location" class="absolute top-1/4 left-1/4 min-w-touch-target-min min-h-touch-target-min bg-secondary text-on-secondary border-4 border-border-dark flex items-center justify-center font-label-bold text-label-bold hover:bg-surface hover:text-secondary focus:ring-4 focus:ring-focus-indicator">
+<span class="material-symbols-outlined">local_library</span>
+</button>
+<button aria-label="Medical Center Location" class="absolute top-1/2 right-1/3 min-w-touch-target-min min-h-touch-target-min bg-primary text-on-primary border-4 border-border-dark flex items-center justify-center font-label-bold text-label-bold hover:bg-surface hover:text-primary focus:ring-4 focus:ring-focus-indicator">
+<span class="material-symbols-outlined">medical_services</span>
+</button>
+</div>
+</div>
+<!-- Services List Area -->
+<div class="lg:col-span-4 border-4 border-border-dark bg-surface p-6 flex flex-col">
+<div class="flex items-center gap-4 mb-6 border-b-4 border-border-dark pb-4">
+<span class="material-symbols-outlined text-primary text-[32px]">format_list_bulleted</span>
+<h2 class="font-headline-md text-headline-md text-primary">Directory</h2>
+</div>
+<ul class="flex flex-col gap-4 flex-1 overflow-y-auto">
+<!-- List Item 1 -->
+<li class="border-2 border-border-dark p-4 flex items-center justify-between min-h-[80px] bg-surface hover:bg-surface-container transition-none cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">accessible</span>
+<div>
+<span class="block font-label-bold text-label-bold text-high-contrast-text">Accessibility Hub</span>
+<span class="block font-body-md text-body-md text-on-surface-variant">Building A, Floor 1</span>
+</div>
+</div>
+<span class="material-symbols-outlined">chevron_right</span>
+</li>
+<!-- List Item 2 -->
+<li class="border-2 border-border-dark p-4 flex items-center justify-between min-h-[80px] bg-surface hover:bg-surface-container transition-none cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+<div>
+<span class="block font-label-bold text-label-bold text-high-contrast-text">Main Cafeteria</span>
+<span class="block font-body-md text-body-md text-on-surface-variant">Student Center</span>
+</div>
+</div>
+<span class="material-symbols-outlined">chevron_right</span>
+</li>
+<!-- List Item 3 -->
+<li class="border-2 border-border-dark p-4 flex items-center justify-between min-h-[80px] bg-surface hover:bg-surface-container transition-none cursor-pointer">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<div>
+<span class="block font-label-bold text-label-bold text-high-contrast-text">Counseling Center</span>
+<span class="block font-body-md text-body-md text-on-surface-variant">Health Annex</span>
+</div>
+</div>
+<span class="material-symbols-outlined">chevron_right</span>
+</li>
+</ul>
+</div>
+</section>
+<!-- Grievance Section (Form & Secret Code) -->
+<section aria-label="Grievance Submission" class="border-4 border-border-dark bg-surface grid grid-cols-1 lg:grid-cols-2">
+<!-- Form Area -->
+<div class="p-6 lg:p-8 lg:border-r-4 border-border-dark">
+<div class="flex items-center gap-4 mb-8 border-b-4 border-border-dark pb-4">
+<span class="material-symbols-outlined text-primary text-[32px]">assignment_late</span>
+<h2 class="font-headline-md text-headline-md text-primary">Submit Grievance</h2>
+</div>
+<form class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-high-contrast-text" for="issue-type">Category of Issue</label>
+<select class="min-h-touch-target-min border-2 border-border-dark bg-surface px-4 font-body-lg text-body-lg focus:border-4 focus:border-focus-indicator focus:outline-none appearance-none" id="issue-type">
+<option>Facility Accessibility</option>
+<option>Academic Support</option>
+<option>Transportation</option>
+<option>Other</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-high-contrast-text" for="issue-desc">Description of Issue</label>
+<textarea class="border-2 border-border-dark bg-surface p-4 font-body-lg text-body-lg focus:border-4 focus:border-focus-indicator focus:outline-none resize-none" id="issue-desc" rows="4"></textarea>
+</div>
+<div class="flex items-center gap-4 py-2">
+<input class="focus:ring-0" id="anonymous" type="checkbox"/>
+<label class="font-body-lg text-body-lg text-high-contrast-text cursor-pointer" for="anonymous">Submit Anonymously</label>
+</div>
+<button class="w-full min-h-touch-target-min bg-primary text-on-primary font-label-bold text-label-bold border-4 border-primary hover:bg-surface hover:text-primary transition-none flex justify-center items-center gap-3 active:bg-surface active:text-primary" type="button">
+<span class="material-symbols-outlined">send</span>
+                        SUBMIT GRIEVANCE
+                    </button>
+</form>
+</div>
+<!-- Secret Code Tracker Area -->
+<div class="p-6 lg:p-8 bg-surface-container flex flex-col justify-center items-center text-center">
+<div class="max-w-md w-full space-y-6">
+<span class="material-symbols-outlined text-[64px] text-high-contrast-text">lock</span>
+<h3 class="font-headline-md text-headline-md text-high-contrast-text">Active Secret Code</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Use this code to check the status of your previously submitted grievance anonymously.</p>
+<div class="font-code-display text-code-display border-4 border-border-dark p-6 bg-surface w-full tracking-widest my-8">
+                        GRV-847
+                    </div>
+<button class="w-full min-h-touch-target-min bg-surface text-high-contrast-text font-label-bold text-label-bold border-4 border-border-dark hover:bg-surface-container-highest transition-none flex justify-center items-center gap-3" id="copy-btn" onclick="copyCode()">
+<span class="material-symbols-outlined" id="copy-icon">content_copy</span>
+<span id="copy-text">COPY CODE</span>
+</button>
+<script>
+                        function copyCode() {
+                            const btnText = document.getElementById('copy-text');
+                            const btnIcon = document.getElementById('copy-icon');
+                            const btn = document.getElementById('copy-btn');
+                            
+                            btnText.innerText = "COPIED!";
+                            btnIcon.innerText = "check";
+                            btn.classList.add('bg-secondary', 'text-on-secondary', 'border-secondary');
+                            btn.classList.remove('bg-surface', 'text-high-contrast-text', 'border-border-dark');
+                            
+                            setTimeout(() => {
+                                btnText.innerText = "COPY CODE";
+                                btnIcon.innerText = "content_copy";
+                                btn.classList.remove('bg-secondary', 'text-on-secondary', 'border-secondary');
+                                btn.classList.add('bg-surface', 'text-high-contrast-text', 'border-border-dark');
+                            }, 3000);
+                        }
+                    </script>
+</div>
+</div>
+</section>
+<!-- Coming Soon Section -->
+<section aria-label="Upcoming Features" class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- AI Tutor -->
+<div class="border-4 border-border-dark border-dashed bg-surface p-8 flex flex-col items-center text-center gap-6">
+<div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center border-4 border-border-dark">
+<span class="material-symbols-outlined text-[48px] text-on-surface-variant">psychology</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-high-contrast-text">AI Tutor</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Personalized learning assistance adapted for text and visual feedback.</p>
+<div class="mt-auto px-6 py-2 bg-surface-dim border-2 border-border-dark font-label-bold text-label-bold">COMING SOON</div>
+</div>
+<!-- Ambulance Pooling -->
+<div class="border-4 border-border-dark border-dashed bg-surface p-8 flex flex-col items-center text-center gap-6">
+<div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center border-4 border-border-dark">
+<span class="material-symbols-outlined text-[48px] text-on-surface-variant">airport_shuttle</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-high-contrast-text">Transport Pool</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Request non-emergency specialized transport sharing across campus.</p>
+<div class="mt-auto px-6 py-2 bg-surface-dim border-2 border-border-dark font-label-bold text-label-bold">COMING SOON</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-touch-target-min border-t-4 border-border-dark bg-surface dark:bg-on-background">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-none h-full w-full border-r-2 border-border-dark" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-bold text-label-bold mt-1" style="font-size: 12px;">Home</span>
+</a>
+<!-- Voice (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high border-r-2 border-border-dark" href="#">
+<span class="material-symbols-outlined">mic</span>
+<span class="font-label-bold text-label-bold mt-1" style="font-size: 12px;">Voice</span>
+</a>
+<!-- Grievance (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high border-r-2 border-border-dark" href="#">
+<span class="material-symbols-outlined">assignment_late</span>
+<span class="font-label-bold text-label-bold mt-1" style="font-size: 12px;">Grievance</span>
+</a>
+<!-- Emergency (Inactive) -->
+<a class="flex flex-col items-center justify-center text-emergency-red h-full w-full hover:bg-error-container" href="#">
+<span class="material-symbols-outlined">emergency</span>
+<span class="font-label-bold text-label-bold mt-1" style="font-size: 12px;">Emergency</span>
+</a>
+</nav>
+</body></html>

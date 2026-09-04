@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Campus Overview - Saksham Setu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#7f3502",
+                    "visual-active": "#006B3D",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb691",
+                    "on-secondary-fixed-variant": "#00522e",
+                    "on-primary-fixed": "#001b3c",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-tertiary-fixed": "#341100",
+                    "inverse-surface": "#2f3131",
+                    "primary-fixed-dim": "#a7c8ff",
+                    "on-tertiary": "#ffffff",
+                    "secondary": "#046d3f",
+                    "on-secondary-container": "#0f7142",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#793100",
+                    "tertiary-fixed": "#ffdbcb",
+                    "secondary-fixed-dim": "#81d9a0",
+                    "surface-container-high": "#e8e8e8",
+                    "primary-fixed": "#d5e3ff",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#1a1c1c",
+                    "surface-tint": "#255fa6",
+                    "inverse-on-surface": "#f0f1f1",
+                    "secondary-container": "#9af3b8",
+                    "on-primary-fixed-variant": "#004689",
+                    "secondary-fixed": "#9df5bb",
+                    "voice-active": "#004B91",
+                    "surface-dim": "#dadada",
+                    "surface-bright": "#f9f9f9",
+                    "focus-indicator": "#FFD600",
+                    "error": "#ba1a1a",
+                    "primary-container": "#004b91",
+                    "surface-container-low": "#f3f3f4",
+                    "tertiary": "#5c2400",
+                    "surface": "#f9f9f9",
+                    "on-background": "#1a1c1c",
+                    "surface-container": "#eeeeee",
+                    "primary": "#003469",
+                    "on-tertiary-container": "#ffa678",
+                    "on-surface-variant": "#424751",
+                    "on-secondary-fixed": "#00210f",
+                    "border-dark": "#333333",
+                    "emergency-red": "#D92D20",
+                    "on-secondary": "#ffffff",
+                    "on-primary-container": "#95bdff",
+                    "outline-variant": "#c2c6d2",
+                    "outline": "#727782",
+                    "high-contrast-text": "#1A1A1A",
+                    "background": "#f9f9f9",
+                    "inverse-primary": "#a7c8ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "margin-desktop": "64px",
+                    "container-max": "1200px",
+                    "margin-mobile": "16px",
+                    "touch-target-min": "56px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "headline-lg": [
+                            "Atkinson Hyperlegible Next"
+                    ],
+                    "headline-md": [
+                            "Atkinson Hyperlegible Next"
+                    ],
+                    "headline-lg-mobile": [
+                            "Atkinson Hyperlegible Next"
+                    ],
+                    "label-bold": [
+                            "Atkinson Hyperlegible Next"
+                    ],
+                    "code-display": [
+                            "Atkinson Hyperlegible Next"
+                    ],
+                    "body-md": [
+                            "Atkinson Hyperlegible Next"
+                    ],
+                    "body-lg": [
+                            "Atkinson Hyperlegible Next"
+                    ]
+            },
+            "fontSize": {
+                    "headline-lg": [
+                            "40px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "800"
+                            }
+                    ],
+                    "headline-md": [
+                            "28px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "800"
+                            }
+                    ],
+                    "label-bold": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.4",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "code-display": [
+                            "48px",
+                            {
+                                    "lineHeight": "1",
+                                    "letterSpacing": "0.1em",
+                                    "fontWeight": "800"
+                            }
+                    ],
+                    "body-md": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "20px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface-container-lowest text-on-background antialiased flex flex-col md:flex-row min-h-screen">
+<nav class="hidden md:flex flex-col border-r-4 border-border-dark h-screen bg-surface w-64 flex-shrink-0 sticky top-0 left-0">
+<div class="p-4 border-b-4 border-border-dark flex items-center gap-4 h-touch-target-min">
+<span class="material-symbols-outlined text-headline-md font-headline-md text-primary" data-icon="account_circle" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<div>
+<h2 class="text-label-bold font-label-bold text-on-surface">Student Portal</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Visual-Text Mode</p>
+</div>
+</div>
+<ul class="flex-grow flex flex-col pt-4 space-y-2 px-2">
+<li class="">
+<a class="flex items-center gap-4 text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-none h-touch-target-min" href="#">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+<span class="font-body-lg text-body-lg">Compliance</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-4 bg-secondary text-on-secondary font-bold px-4 py-3 hover:bg-surface-container-highest transition-none h-touch-target-min" href="#">
+<span class="material-symbols-outlined" data-icon="room_service">room_service</span>
+<span class="font-body-lg text-body-lg">Services</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-4 text-on-surface px-4 py-3 hover:bg-surface-container-highest transition-none h-touch-target-min" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+<span class="font-body-lg text-body-lg">AI Tutor</span>
+</a>
+</li>
+<li class="mt-auto pb-4">
+<a class="flex items-center gap-4 bg-emergency-red text-on-error font-bold px-4 py-3 border-4 border-border-dark h-touch-target-min mx-2 active:bg-on-error active:text-emergency-red transition-none" href="#"><span class="material-symbols-outlined" data-icon="psychology">psychology</span><span class="font-body-lg text-body-lg">AI Tutor</span><span class="ml-auto bg-surface-container-highest text-on-surface-variant text-[12px] px-2 py-0.5 rounded-full font-bold">COMING SOON</span><span class="ml-auto bg-white text-emergency-red text-[12px] px-2 py-0.5 rounded-full font-bold">COMING SOON</span></a>
+</li>
+</ul>
+</nav>
+<header class="md:hidden flex justify-between items-center w-full px-margin-mobile h-touch-target-min bg-surface border-b-4 border-border-dark sticky top-0 z-40">
+<h1 class="text-headline-md-mobile font-headline-lg-mobile font-extrabold text-primary">EduAbility</h1>
+<button class="h-touch-target-min w-touch-target-min flex items-center justify-center text-primary bg-surface-container hover:bg-surface-variant transition-none border-2 border-border-dark active:bg-primary active:text-on-primary">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</header>
+<main class="flex-grow p-margin-mobile md:p-margin-desktop w-full max-w-container-max mx-auto pb-[100px] md:pb-margin-desktop">
+<div class="md:hidden w-full mb-8">
+<button class="w-full flex items-center justify-center gap-4 bg-emergency-red text-on-error font-bold px-4 py-4 border-4 border-border-dark h-touch-target-min active:bg-on-error active:text-emergency-red transition-none">
+<span class="material-symbols-outlined text-[32px]" data-icon="ambulance">ambulance</span>
+<span class="font-headline-md-mobile text-headline-md-mobile">EMERGENCY HELP</span>
+<span class="bg-white text-emergency-red text-[12px] px-2 py-0.5 rounded-full font-bold ml-2">COMING SOON</span></button>
+</div>
+<section class="mb-12 border-b-4 border-border-dark pb-8">
+<h1 class="font-headline-lg text-headline-lg md:font-headline-lg md:text-headline-lg text-high-contrast-text mb-4">Campus Overview</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">Visual and text-based interface optimized for readability and clear actionable targets.</p>
+</section>
+<section class="mb-12">
+<h2 class="font-headline-md text-headline-md text-high-contrast-text mb-6">Campus Map<span class="ml-4 bg-primary-container text-on-primary-container text-label-bold px-3 py-1 rounded-full">COMING SOON</span></h2>
+<div class="border-4 border-border-dark bg-surface p-2 w-full">
+<img alt="Campus Map" class="w-full h-auto object-contain bg-surface-container-lowest" src="https://lh3.googleusercontent.com/aida/AEtjO1XXXKTGpnKp7GEcrxRGbhlveA_jfFKHxlXI_sA8zx-BbuRBD6eyqltv3CT-5Ur6IjCnGYfYKGj7wZN18BdupgxbImltAsqsZnZRspyfYU_wVquJyAnwGicBwdVikT3CwMobItW_KLV2OJ01MpexV3K_v1uZyQiWeLw2m-OVQTbRtOqeQ0xRgqU7gJVeyR3fafA9Z9599vn4Ri2KpAoOV7oQYZGLhG4Ng8R85GJbYg_-Ud4t5KQOvvaizxTp"/>
+</div>
+<div class="mt-4 flex gap-4 flex-wrap">
+<button class="flex items-center gap-2 bg-primary text-on-primary px-6 h-touch-target-min border-2 border-border-dark font-label-bold text-label-bold active:bg-surface-container-lowest active:text-primary transition-none">
+<span class="material-symbols-outlined" data-icon="zoom_in">zoom_in</span> Zoom In
+                </button>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-6 h-touch-target-min border-2 border-border-dark font-label-bold text-label-bold active:bg-surface-container-lowest active:text-primary transition-none">
+<span class="material-symbols-outlined" data-icon="zoom_out">zoom_out</span> Zoom Out
+                </button>
+<button class="flex items-center gap-2 bg-secondary text-on-secondary px-6 h-touch-target-min border-2 border-border-dark font-label-bold text-label-bold active:bg-surface-container-lowest active:text-secondary transition-none">
+<span class="material-symbols-outlined" data-icon="my_location">my_location</span> Center Map
+                </button>
+</div>
+</section>
+<section>
+<h2 class="font-headline-md text-headline-md text-high-contrast-text mb-6">Campus Directory</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<article class="border-4 border-border-dark p-6 bg-surface flex flex-col h-full hover:bg-surface-container-high transition-none cursor-pointer group focus-within:ring-4 focus-within:ring-focus-indicator">
+<div class="flex items-start gap-4 mb-4">
+<div class="bg-primary-container text-on-primary-container p-3 border-2 border-border-dark">
+<span class="material-symbols-outlined text-[32px]" data-icon="accessibility_new">accessibility_new</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-high-contrast-text leading-tight mt-1 group-active:text-primary">Accessibility Hub</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow mb-6">Resource center for assistive technology, note-taking support, and exam accommodations.</p>
+<a class="inline-flex items-center gap-2 text-primary font-label-bold text-label-bold focus:outline-none" href="#">
+                        View Details <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</article>
+<article class="border-4 border-border-dark p-6 bg-surface flex flex-col h-full hover:bg-surface-container-high transition-none cursor-pointer group focus-within:ring-4 focus-within:ring-focus-indicator">
+<div class="flex items-start gap-4 mb-4">
+<div class="bg-tertiary-container text-on-tertiary-container p-3 border-2 border-border-dark">
+<span class="material-symbols-outlined text-[32px]" data-icon="psychology_alt">psychology_alt</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-high-contrast-text leading-tight mt-1 group-active:text-tertiary">Counseling Center</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow mb-6">Confidential mental health support, quiet rooms, and group therapy sessions.</p>
+<a class="inline-flex items-center gap-2 text-tertiary font-label-bold text-label-bold focus:outline-none" href="#">
+                        View Details <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</article>
+</div>
+</section>
+</main>
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-touch-target-min border-t-4 border-border-dark bg-surface">
+<a class="flex flex-col items-center justify-center text-on-surface h-full w-full hover:bg-surface-container-high scale-100 transition-none" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-bold text-label-bold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-none h-full w-full hover:bg-surface-container-high scale-100 transition-none" href="#">
+<span class="material-symbols-outlined" data-icon="mic" style="font-variation-settings: 'FILL' 1;">mic</span>
+<span class="font-label-bold text-label-bold">Voice</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface h-full w-full hover:bg-surface-container-high scale-100 transition-none" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_late">assignment_late</span>
+<span class="font-label-bold text-label-bold">Grievance</span>
+</a>
+<a class="flex flex-col items-center justify-center text-emergency-red h-full w-full hover:bg-error-container scale-100 transition-none" href="#">
+<span class="material-symbols-outlined" data-icon="emergency">emergency</span>
+<span class="font-label-bold text-label-bold">Emergency</span>
+</a>
+</nav>
+</body></html>

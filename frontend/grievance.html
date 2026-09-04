@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SakshamSetu — Grievance Tracker & Anonymous Redressal</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Main Design System -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "navy-brand": "#0d2859",
+            "navy-dark": "#07193b",
+            "blue-accent": "#2563eb",
+            "sidebar-bg": "#f8fafc",
+            "green-emerald": "#16a34a",
+            "red-crimson": "#ef4444"
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col md:flex-row">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Sidebar Navigation (Matches Grievance tracker.jpg) -->
+  <aside class="w-full md:w-64 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between shrink-0" aria-label="Grievance Navigation">
+    <div class="space-y-6">
+      
+      <!-- Brand Logo -->
+      <div class="px-2 pt-1 flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-navy-brand text-white flex items-center justify-center">
+          <span class="material-symbols-outlined text-lg">hub</span>
+        </div>
+        <a href="index.html" class="text-xl font-extrabold text-navy-brand font-heading tracking-tight">
+          SakshamSetu
+        </a>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="space-y-1 text-xs font-bold text-slate-600" aria-label="Portal Navigation">
+        <p class="px-2.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Administration</p>
+        
+        <a href="admin-dashboard.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+          <span class="material-symbols-outlined text-lg">grid_view</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="grievance.html" class="flex items-center gap-3 px-3.5 py-2.5 bg-navy-brand text-white font-extrabold rounded-xl shadow-xs transition-colors">
+          <span class="material-symbols-outlined text-lg">security</span>
+          <span>Grievance Tracker</span>
+        </a>
+        <a href="student-hearing-physical.html" class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-slate-50 rounded-xl transition-colors">
+          <span class="material-symbols-outlined text-lg">group</span>
+          <span>Students</span>
+        </a>
+        <a href="admin-checklist.html" class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-slate-50 rounded-xl transition-colors">
+          <span class="material-symbols-outlined text-lg">verified_user</span>
+          <span>Compliance</span>
+        </a>
+        <a href="campus-alerts.html" class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-slate-50 rounded-xl transition-colors">
+          <span class="material-symbols-outlined text-lg">campaign</span>
+          <span>Alerts Feed</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Bottom Profile Widget -->
+    <div class="pt-5 border-t border-slate-100 space-y-3">
+      <div class="flex items-center gap-3 px-1">
+        <div class="w-9 h-9 rounded-full bg-navy-brand text-white font-bold flex items-center justify-center text-xs">
+          AK
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-bold text-slate-800 truncate">Admin Officer</p>
+          <p class="text-[10px] text-slate-500 truncate">Compliance Officer</p>
+        </div>
+      </div>
+      <a href="index.html" class="flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-red-600 px-1 transition-colors">
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span>Sign out</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main id="main-content" class="flex-1 p-4 md:p-8 space-y-8 overflow-y-auto">
+    
+    <!-- Top Header Bar (Matches Grievance tracker.jpg) -->
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h2 class="text-2xl font-extrabold text-navy-brand font-heading">
+          Grievance Tracker
+        </h2>
+        <p class="text-xs text-slate-500 font-medium mt-0.5">
+          Anonymised overview of all logged grievances.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3 flex-wrap justify-end">
+        <!-- Accessibility Controls -->
+        <div class="flex items-center gap-1.5" aria-label="Accessibility Bar">
+          <button type="button" id="btn-dyslexia" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Dyslexia</button>
+          <button type="button" id="btn-contrast" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Contrast</button>
+          <button type="button" id="btn-text-size" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Text Size</button>
+        </div>
+
+        <span class="badge-pill badge-resolved text-xs">
+          <span class="w-2 h-2 rounded-full bg-green-500"></span>
+          <span>System operational</span>
+        </span>
+        <div class="w-8 h-8 rounded-full bg-navy-brand text-white font-bold flex items-center justify-center text-xs">
+          AK
+        </div>
+      </div>
+    </header>
+
+    <!-- 3 Key Metric Cards (Matches Grievance tracker.jpg) -->
+    <section aria-labelledby="tracker-metrics-title" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <h3 id="tracker-metrics-title" class="sr-only">Grievance Overview Metrics</h3>
+
+      <!-- Metric 1: Total Active -->
+      <div class="stitch-card p-6 bg-white space-y-2">
+        <div class="flex justify-between items-center text-slate-500">
+          <span class="text-xs font-semibold text-slate-500">Total Active</span>
+          <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <span class="material-symbols-outlined text-lg">layers</span>
+          </div>
+        </div>
+        <p class="text-3xl font-extrabold text-navy-brand font-heading">142</p>
+        <p class="text-xs text-slate-500 font-medium">↗ 12 new this week</p>
+      </div>
+
+      <!-- Metric 2: Avg. Resolution -->
+      <div class="stitch-card p-6 bg-white space-y-2">
+        <div class="flex justify-between items-center text-slate-500">
+          <span class="text-xs font-semibold text-slate-500">Avg. Resolution</span>
+          <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <span class="material-symbols-outlined text-lg">schedule</span>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-1">
+          <p class="text-3xl font-extrabold text-navy-brand font-heading">3.4</p>
+          <span class="text-xs font-medium text-slate-500">days</span>
+        </div>
+        <p class="text-xs text-green-600 font-semibold">↘ 0.6 days faster</p>
+      </div>
+
+      <!-- Metric 3: Critical Issues -->
+      <div class="stitch-card p-6 bg-white space-y-2 border-red-100">
+        <div class="flex justify-between items-center text-slate-500">
+          <span class="text-xs font-semibold text-red-600">Critical Issues</span>
+          <div class="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
+            <span class="material-symbols-outlined text-lg">warning</span>
+          </div>
+        </div>
+        <p class="text-3xl font-extrabold text-red-600 font-heading">8</p>
+        <p class="text-xs text-slate-500 font-medium">↗ 2 more than last week</p>
+      </div>
+    </section>
+
+    <!-- Public Tracking Lookup Section (Unauthenticated: requireAuth = false) -->
+    <section id="track-section" class="stitch-card p-6 md:p-8 bg-white space-y-4" aria-labelledby="track-heading">
+      <div class="border-b border-slate-100 pb-3">
+        <h3 id="track-heading" class="text-lg font-bold text-navy-brand font-heading">Public Grievance Status Tracker</h3>
+        <p class="text-xs text-slate-500 font-medium mt-0.5">
+          Enter any valid Secret Code to view live resolution timeline and assigned nodal department (No login required).
+        </p>
+      </div>
+
+      <form id="trackForm" class="flex flex-col sm:flex-row gap-3">
+        <input id="track-code-input" type="text" required placeholder="Enter Secret Code (e.g. SAK-2026-8891)" class="flex-1 px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase font-mono">
+        <button type="submit" class="px-6 py-3 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 shrink-0">
+          <span class="material-symbols-outlined text-base">search</span>
+          <span>Track Status</span>
+        </button>
+      </form>
+
+      <!-- Track Result Display Container -->
+      <div id="track-result-container" class="hidden space-y-4 pt-2">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- Submit Anonymous Barrier Report Section -->
+    <section class="stitch-card p-6 md:p-8 bg-white space-y-6" aria-labelledby="submit-heading">
+      <div class="border-b border-slate-100 pb-4">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full mb-1.5">
+          <span class="material-symbols-outlined text-sm">security</span> Zero-Identity Collection Guaranteed
+        </div>
+        <h3 id="submit-heading" class="text-xl font-bold text-navy-brand font-heading">
+          Submit Anonymous Accessibility Grievance
+        </h3>
+        <p class="text-xs text-slate-500 font-medium mt-0.5">
+          Your identity is never collected or stored. You will receive a unique <strong>Secret Tracking Code</strong>.
+        </p>
+      </div>
+
+      <!-- Secret Code Confirmation Banner -->
+      <div id="code-success-banner" class="hidden p-6 border border-green-200 bg-green-50/70 rounded-2xl space-y-3" role="alert">
+        <div class="flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-2xl text-green-600">verified</span>
+          <div>
+            <h4 class="text-base font-extrabold text-green-800">Grievance Registered Anonymously!</h4>
+            <p class="text-xs font-medium text-slate-600">Save your tracking code below to check status anytime.</p>
+          </div>
+        </div>
+
+        <div class="p-4 bg-white border border-green-200 rounded-xl flex flex-col sm:flex-row justify-between items-center gap-3">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase block">Your Secret Tracking Code:</span>
+            <span id="generated-secret-code" class="text-2xl font-extrabold text-navy-brand tracking-wider font-mono">SAK-2026-0000</span>
+          </div>
+          <button id="copy-code-btn" class="px-4 py-2 bg-navy-brand text-white font-bold text-xs rounded-lg hover:bg-navy-dark transition-all flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">content_copy</span>
+            <span id="copy-btn-label">Copy Code</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Grievance Form -->
+      <form id="grievanceForm" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="category" class="block text-xs font-bold text-slate-700 mb-1">
+              Barrier Category <span class="text-red-500">*</span>
+            </label>
+            <select id="category" name="category" required class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="Physical & Architectural Ramp">Physical & Architectural Ramp</option>
+              <option value="Elevator / Lift Defect">Elevator / Lift Defect</option>
+              <option value="Tactile Pathway Obstruction">Tactile Pathway Obstruction</option>
+              <option value="Accessible Restroom Issue">Accessible Restroom Issue</option>
+              <option value="Digital / Portal WCAG Defect">Digital / Screen Reader Defect</option>
+              <option value="Sign Language / Caption Delay">Sign Language / Caption Delay</option>
+              <option value="Academic / Exam Accommodation">Academic / Exam Accommodation</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="urgency" class="block text-xs font-bold text-slate-700 mb-1">
+              Urgency Level <span class="text-red-500">*</span>
+            </label>
+            <select id="urgency" name="urgency" required class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="Normal">Normal (Routine Academic Barrier)</option>
+              <option value="High">High (Immediate Class Barrier)</option>
+              <option value="Critical">Critical (Safety Hazard / Entrapment)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="location" class="block text-xs font-bold text-slate-700 mb-1">
+            Campus Location & Building <span class="text-red-500">*</span>
+          </label>
+          <input id="location" name="location" type="text" required placeholder="e.g. Central Library West Wing, Ground Floor Ramp" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+          <label for="description" class="block text-xs font-bold text-slate-700 mb-1">
+            Barrier Description Details <span class="text-red-500">*</span>
+          </label>
+          <textarea id="description" name="description" rows="3" required placeholder="Describe the barrier in detail. Do not mention your name or student ID to maintain strict anonymity." class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+
+        <button id="submit-grievance-btn" type="submit" class="w-full bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs py-3 px-6 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-base">send</span>
+          <span>Submit Anonymous Grievance</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- Recent Logs Table (Matches Grievance tracker.jpg) -->
+    <section class="stitch-card p-6 md:p-8 bg-white space-y-4" aria-labelledby="logs-title">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <h3 id="logs-title" class="text-lg font-bold text-navy-brand font-heading">Recent Logs</h3>
+          <p class="text-xs text-slate-400 font-medium">Anonymised entries — identified by tracking code only.</p>
+        </div>
+        <button class="px-3.5 py-1.5 border border-slate-200 text-slate-700 font-bold text-xs rounded-lg hover:bg-slate-50">
+          View all
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+              <th class="pb-3 font-semibold">Tracking Code</th>
+              <th class="pb-3 font-semibold">Category</th>
+              <th class="pb-3 font-semibold">Date Logged</th>
+              <th class="pb-3 font-semibold">Priority</th>
+              <th class="pb-3 font-semibold">Status</th>
+              <th class="pb-3 font-semibold text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr class="hover:bg-slate-50/70 transition-colors">
+              <td class="py-3 font-mono font-bold text-blue-600">#GRV-4091A</td>
+              <td class="py-3 font-semibold text-slate-800">Accessibility Tooling</td>
+              <td class="py-3 text-slate-500 font-medium">Aug 28, 2026</td>
+              <td class="py-3"><span class="badge-pill badge-open text-[10px]">! High</span></td>
+              <td class="py-3"><span class="badge-pill badge-open text-[10px]">Open</span></td>
+              <td class="py-3 text-right">
+                <a href="#track-section" class="text-slate-400 hover:text-navy-brand"><span class="material-symbols-outlined text-base">visibility</span></a>
+              </td>
+            </tr>
+            <tr class="hover:bg-slate-50/70 transition-colors">
+              <td class="py-3 font-mono font-bold text-blue-600">#GRV-4088C</td>
+              <td class="py-3 font-semibold text-slate-800">Exam Accommodation</td>
+              <td class="py-3 text-slate-500 font-medium">Aug 27, 2026</td>
+              <td class="py-3"><span class="badge-pill badge-open text-[10px]">! High</span></td>
+              <td class="py-3"><span class="badge-pill badge-review text-[10px]">In Review</span></td>
+              <td class="py-3 text-right">
+                <a href="#track-section" class="text-slate-400 hover:text-navy-brand"><span class="material-symbols-outlined text-base">visibility</span></a>
+              </td>
+            </tr>
+            <tr class="hover:bg-slate-50/70 transition-colors">
+              <td class="py-3 font-mono font-bold text-blue-600">#GRV-4085F</td>
+              <td class="py-3 font-semibold text-slate-800">Course Material Format</td>
+              <td class="py-3 text-slate-500 font-medium">Aug 26, 2026</td>
+              <td class="py-3"><span class="badge-pill bg-amber-100 text-amber-800 text-[10px]">Medium</span></td>
+              <td class="py-3"><span class="badge-pill badge-review text-[10px]">In Review</span></td>
+              <td class="py-3 text-right">
+                <a href="#track-section" class="text-slate-400 hover:text-navy-brand"><span class="material-symbols-outlined text-base">visibility</span></a>
+              </td>
+            </tr>
+            <tr class="hover:bg-slate-50/70 transition-colors">
+              <td class="py-3 font-mono font-bold text-blue-600">#GRV-4080B</td>
+              <td class="py-3 font-semibold text-slate-800">Campus Infrastructure</td>
+              <td class="py-3 text-slate-500 font-medium">Aug 25, 2026</td>
+              <td class="py-3"><span class="badge-pill bg-slate-100 text-slate-600 text-[10px]">Low</span></td>
+              <td class="py-3"><span class="badge-pill badge-resolved text-[10px]">Resolved</span></td>
+              <td class="py-3 text-right">
+                <a href="#track-section" class="text-slate-400 hover:text-navy-brand"><span class="material-symbols-outlined text-base">visibility</span></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer Bar -->
+    <footer class="pt-6 border-t border-slate-200/80 text-xs font-medium text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p>© 2024 SakshamSetu Educational Platform. All rights reserved.</p>
+      <div class="flex gap-4">
+        <a href="privacy.html" class="hover:text-navy-brand">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-navy-brand">Terms of Service</a>
+        <a href="grievance.html" class="hover:text-navy-brand">Contact Support</a>
+      </div>
+    </footer>
+  </main>
+
+  <script type="module">
+    import { grievance } from './js/grievance.js';
+    import { auth } from './js/auth.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      auth.initAccessibility();
+      grievance.init();
+    });
+  </script>
+</body>
+</html>

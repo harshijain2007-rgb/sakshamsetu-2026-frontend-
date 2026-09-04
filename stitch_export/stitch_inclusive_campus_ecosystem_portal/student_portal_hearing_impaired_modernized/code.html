@@ -1,0 +1,269 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Student Portal - Hearing Impaired Mode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@100..900&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#341100",
+                        "tertiary-fixed": "#ffdbcb",
+                        "on-secondary-fixed": "#00210f",
+                        "on-secondary-container": "#0f7142",
+                        "high-contrast-text": "#1A1A1A",
+                        "on-tertiary-container": "#ffa678",
+                        "primary-container": "#004b91",
+                        "on-secondary-fixed-variant": "#00522e",
+                        "tertiary-container": "#7f3502",
+                        "secondary-container": "#9af3b8",
+                        "on-surface": "#1a1c1c",
+                        "inverse-on-surface": "#f0f1f1",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c2c6d2",
+                        "secondary": "#046d3f",
+                        "tertiary": "#5c2400",
+                        "on-primary-fixed-variant": "#004689",
+                        "primary": "#003469",
+                        "surface-variant": "#e2e2e2",
+                        "visual-active": "#006B3D",
+                        "surface-container": "#eeeeee",
+                        "focus-indicator": "#FFD600",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-tint": "#255fa6",
+                        "surface-dim": "#dadada",
+                        "on-surface-variant": "#424751",
+                        "on-primary-fixed": "#001b3c",
+                        "surface": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e8e8e8",
+                        "on-primary": "#ffffff",
+                        "emergency-red": "#D92D20",
+                        "background": "#f9f9f9",
+                        "voice-active": "#004B91",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "inverse-primary": "#a7c8ff",
+                        "surface-bright": "#f9f9f9",
+                        "on-background": "#1a1c1c",
+                        "secondary-fixed": "#9df5bb",
+                        "surface-container-highest": "#e2e2e2",
+                        "surface-container-low": "#f3f3f4",
+                        "on-primary-container": "#95bdff",
+                        "outline": "#727782",
+                        "border-dark": "#333333",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#793100",
+                        "secondary-fixed-dim": "#81d9a0",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2f3131"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "touch-target-min": "56px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "container-max": "1200px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Atkinson Hyperlegible Next"],
+                        "code-display": ["Atkinson Hyperlegible Next"],
+                        "body-md": ["Atkinson Hyperlegible Next"],
+                        "headline-lg": ["Atkinson Hyperlegible Next"],
+                        "body-lg": ["Atkinson Hyperlegible Next"],
+                        "headline-md": ["Atkinson Hyperlegible Next"],
+                        "label-bold": ["Atkinson Hyperlegible Next"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "code-display": ["48px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "800" }],
+                        "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "label-bold": ["16px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Atkinson Hyperlegible Next', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-background min-h-screen flex flex-col md:flex-row font-body-md">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden lg:flex flex-col border-r-4 border-border-dark h-screen w-64 bg-surface-container-lowest shrink-0 fixed left-0 top-0 z-40">
+<div class="p-6 border-b-4 border-border-dark flex flex-col items-center">
+<span class="material-symbols-outlined text-6xl text-primary mb-4" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<h2 class="font-headline-md text-headline-md text-primary text-center">Student Portal</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 text-center">Visual-Text Mode</p>
+</div>
+<div class="flex-1 overflow-y-auto py-4 flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface dark:text-surface-bright hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu_book</span>
+<span class="font-label-bold text-label-bold">Curriculum</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface dark:text-surface-bright hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">verified</span>
+<span class="font-label-bold text-label-bold">Compliance</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-secondary text-on-secondary font-bold hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">room_service</span>
+<span class="font-label-bold text-label-bold">Services</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface dark:text-surface-bright hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">psychology</span>
+<span class="font-label-bold text-label-bold">AI Tutor</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface dark:text-surface-bright hover:bg-surface-container-highest transition-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">ambulance</span>
+<span class="font-label-bold text-label-bold">Ambulance</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-64 pb-24 md:pb-0 min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin-desktop h-touch-target-min bg-surface-container-lowest border-b-4 border-border-dark sticky top-0 z-30">
+<div class="flex items-center gap-4">
+<h1 class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed">EduAbility</h1>
+</div>
+<div class="hidden md:flex gap-8">
+<a class="font-label-bold text-label-bold text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant px-4 py-2 transition-none" href="#">Dashboard</a>
+<a class="font-label-bold text-label-bold text-primary dark:text-primary-fixed border-b-4 border-primary dark:border-primary-fixed pb-1 hover:bg-surface-container dark:hover:bg-surface-variant px-4 py-2 transition-none" href="#">Portal</a>
+<a class="font-label-bold text-label-bold text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant px-4 py-2 transition-none" href="#">Reports</a>
+<a class="font-label-bold text-label-bold text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant px-4 py-2 transition-none" href="#">Help</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-bold text-label-bold text-on-surface hidden md:block">Admin Role</span>
+<button class="w-touch-target-min h-touch-target-min flex items-center justify-center hover:bg-surface-container transition-none">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+</div>
+</header>
+<div class="max-w-container-max mx-auto p-margin-mobile md:p-margin-desktop space-y-12">
+<!-- Alert Banner -->
+<div class="bg-primary text-on-primary border-4 border-border-dark p-8 flex flex-col sm:flex-row items-center gap-8">
+<span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1;">info</span>
+<div class="flex-1">
+<h2 class="font-headline-md text-headline-md font-bold mb-2">Visual Alerts Active</h2>
+<p class="font-body-lg text-body-lg">All notifications will be displayed on screen. No audio cues are required.</p>
+</div>
+</div>
+<!-- Bento Grid Main Content -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Campus Services -->
+<div class="md:col-span-8 bg-surface-container-lowest border-4 border-border-dark p-8 flex flex-col gap-6">
+<div class="flex items-center gap-4 border-b-4 border-border-dark pb-4">
+<span class="material-symbols-outlined text-5xl text-primary" style="font-variation-settings: 'FILL' 1;">room_service</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Campus Services</h2>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+
+<button class="bg-primary text-on-primary border-4 border-border-dark h-32 flex flex-col items-center justify-center gap-3 hover:bg-on-primary hover:text-primary transition-none active:bg-on-primary active:text-primary">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 0;">local_library</span>
+<span class="font-headline-md text-headline-md font-bold">Library Access</span>
+</button>
+<button class="bg-primary text-on-primary border-4 border-border-dark h-32 flex flex-col items-center justify-center gap-3 hover:bg-on-primary hover:text-primary transition-none active:bg-on-primary active:text-primary">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 0;">calendar_month</span>
+<span class="font-headline-md text-headline-md font-bold">Class Schedule</span>
+</button>
+<button class="bg-primary text-on-primary border-4 border-border-dark h-32 flex flex-col items-center justify-center gap-3 hover:bg-on-primary hover:text-primary transition-none active:bg-on-primary active:text-primary">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 0;">map</span>
+<span class="font-headline-md text-headline-md font-bold">Campus Map</span>
+</button>
+</div>
+</div>
+<!-- Emergency Action -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<div class="bg-emergency-red text-on-error border-4 border-border-dark p-8 flex flex-col items-center justify-center gap-8 text-center h-full">
+<span class="material-symbols-outlined text-7xl" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<h2 class="font-headline-lg text-headline-lg font-bold">EMERGENCY HELP</h2>
+<p class="font-body-lg text-body-lg">Press for immediate visual assistance.</p>
+<button class="bg-on-error text-emergency-red font-headline-md text-headline-md font-bold border-4 border-border-dark px-8 py-4 w-full mt-4 hover:bg-surface-variant transition-none">
+                            ACTIVATE
+                        </button>
+</div>
+</div>
+<!-- Grievance Portal -->
+<div class="md:col-span-6 bg-surface-container-lowest border-4 border-border-dark p-8 flex flex-col gap-6">
+<div class="flex items-center gap-4 border-b-4 border-border-dark pb-4">
+<span class="material-symbols-outlined text-5xl text-tertiary" style="font-variation-settings: 'FILL' 1;">assignment_late</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Grievance Portal</h2>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Submit complaints or issues via text. No verbal communication required.</p>
+<form class="flex flex-col gap-6 mt-4">
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-on-surface">Issue Type</label>
+<select class="border-2 border-border-dark p-4 font-body-lg text-body-lg bg-surface focus:border-focus-indicator focus:ring-4 focus:ring-focus-indicator focus:outline-none">
+<option>Select Issue...</option>
+<option>Accessibility Barrier</option>
+<option>Academic Support</option>
+<option>Other</option>
+</select>
+</div>
+<button class="bg-secondary text-on-secondary font-headline-md text-headline-md font-bold border-4 border-border-dark px-8 py-4 w-full hover:bg-on-secondary hover:text-secondary transition-none" type="button">
+                            START NEW REPORT
+                        </button>
+</form>
+</div>
+<!-- Ambulance Pooling -->
+<div class="md:col-span-6 bg-surface-container-lowest border-4 border-border-dark p-8 flex flex-col gap-6">
+<div class="flex items-center gap-4 border-b-4 border-border-dark pb-4">
+<span class="material-symbols-outlined text-5xl text-secondary" style="font-variation-settings: 'FILL' 1;">ambulance</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Ambulance Pool</h2>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Request non-emergency medical transport via text coordination.</p>
+<div class="flex flex-col gap-6 mt-4">
+<div class="bg-surface border-2 border-border-dark p-4 flex items-center justify-between">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Current Status:</span>
+<span class="font-headline-md text-headline-md font-bold text-secondary px-4 py-1 border-2 border-secondary">AVAILABLE</span>
+</div>
+<button class="bg-primary text-on-primary font-headline-md text-headline-md font-bold border-4 border-border-dark px-8 py-4 w-full hover:bg-on-primary hover:text-primary transition-none">
+                            REQUEST TRANSPORT
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-touch-target-min border-t-4 border-border-dark bg-surface dark:bg-on-background h-20">
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high scale-100 transition-none" href="#">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-bold text-label-bold mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-none h-full w-full hover:bg-surface-container-high scale-100 transition-none" href="#">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">room_service</span>
+<span class="font-label-bold text-label-bold mt-1">Services</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high scale-100 transition-none" href="#">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 0;">assignment_late</span>
+<span class="font-label-bold text-label-bold mt-1">Grievance</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high scale-100 transition-none" href="#">
+<span class="material-symbols-outlined text-3xl text-emergency-red" style="font-variation-settings: 'FILL' 0;">emergency</span>
+<span class="font-label-bold text-label-bold mt-1">Emergency</span>
+</a>
+</nav>
+
+
+</body></html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SakshamSetu — Student Learning Portal (Visual & Physical)</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Main Design System -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "navy-brand": "#0d2859",
+            "navy-dark": "#07193b",
+            "blue-accent": "#2563eb",
+            "sidebar-bg": "#f3f6fc",
+            "green-emerald": "#16a34a",
+            "red-crimson": "#ef4444"
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col md:flex-row">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Left Sidebar Navigation (Matches Visual or student portal.jpg) -->
+  <aside class="w-full md:w-64 bg-[#f3f6fc] border-r border-slate-200/80 p-5 flex flex-col justify-between shrink-0" aria-label="Student Navigation">
+    <div class="space-y-6">
+      
+      <!-- Brand Logo -->
+      <div class="px-2 pt-1 flex items-center justify-between">
+        <a href="student-hearing-physical.html" class="text-xl font-extrabold text-navy-brand font-heading tracking-tight">
+          SakshamSetu
+        </a>
+      </div>
+
+      <!-- User Profile Widget -->
+      <div class="p-3 bg-white rounded-2xl border border-slate-200/80 flex items-center gap-3 shadow-xs">
+        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm shrink-0">
+          <span class="material-symbols-outlined text-2xl">account_circle</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <p id="student-name-display" class="text-xs font-bold text-slate-800 truncate">Student User</p>
+          <p class="text-[11px] text-slate-500 font-medium truncate">Grievance ID: SS-8829</p>
+        </div>
+      </div>
+
+      <!-- Primary Action: + New Grievance -->
+      <a href="grievance.html" class="w-full py-3 px-4 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-1.5">
+        <span class="material-symbols-outlined text-base">add</span>
+        <span>New Grievance</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="space-y-1 text-xs font-bold text-slate-600" aria-label="Portal Navigation">
+        <a href="student-hearing-physical.html" class="flex items-center gap-3 px-3.5 py-2.5 bg-blue-600 text-white rounded-xl shadow-xs transition-colors">
+          <span class="material-symbols-outlined text-lg">grid_view</span>
+          <span>Overview</span>
+        </a>
+        <a href="grievance.html" class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-slate-200/60 rounded-xl transition-colors">
+          <span class="material-symbols-outlined text-lg">assignment</span>
+          <span>My Grievances</span>
+        </a>
+        <a href="campus-map.html" class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-slate-200/60 rounded-xl transition-colors">
+          <span class="material-symbols-outlined text-lg">school</span>
+          <span>Learning Hub</span>
+        </a>
+        <a href="tutor.html" class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-slate-200/60 rounded-xl transition-colors">
+          <span class="material-symbols-outlined text-lg">psychology</span>
+          <span>AI Tutor</span>
+        </a>
+        <a href="student-visual-dyslexic.html" class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-slate-200/60 rounded-xl transition-colors">
+          <span class="material-symbols-outlined text-lg">mic</span>
+          <span>Voice Portal</span>
+        </a>
+        <a href="campus-alerts.html" class="flex items-center gap-3 px-3.5 py-2.5 hover:bg-slate-200/60 rounded-xl transition-colors">
+          <span class="material-symbols-outlined text-lg">campaign</span>
+          <span>Campus Alerts</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Bottom Sidebar Links -->
+    <div class="pt-6 border-t border-slate-200/80 space-y-1 text-xs font-semibold text-slate-600">
+      <a href="grievance.html" class="flex items-center gap-3 px-3.5 py-2 hover:text-navy-brand transition-colors">
+        <span class="material-symbols-outlined text-lg">help_outline</span>
+        <span>Help Center</span>
+      </a>
+      <a href="index.html" class="flex items-center gap-3 px-3.5 py-2 text-slate-500 hover:text-red-600 transition-colors">
+        <span class="material-symbols-outlined text-lg">logout</span>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Container -->
+  <main id="main-content" class="flex-1 p-4 md:p-8 space-y-8 overflow-y-auto">
+    
+    <!-- Top Bar Controls -->
+    <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="badge-pill badge-resolved text-xs">
+          <span class="w-2 h-2 rounded-full bg-green-500"></span>
+          <span>Compliance: <strong id="student-compliance-score">88%</strong></span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button type="button" id="btn-dyslexia" class="a11y-btn !bg-white !text-slate-700 !border-slate-200">Dyslexia</button>
+        <button type="button" id="btn-contrast" class="a11y-btn !bg-white !text-slate-700 !border-slate-200">Contrast</button>
+        <button type="button" id="btn-text-size" class="a11y-btn !bg-white !text-slate-700 !border-slate-200">Text Size</button>
+      </div>
+    </div>
+
+    <!-- Hero Card -->
+    <section class="stitch-card p-6 md:p-8 bg-white flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8" aria-labelledby="hero-title">
+      <div class="space-y-4 max-w-xl">
+        <h2 id="hero-title" class="text-3xl md:text-4xl font-extrabold text-navy-brand font-heading tracking-tight leading-tight">
+          Welcome back to <br><span class="text-navy-brand">your Learning Portal.</span>
+        </h2>
+        <p class="text-sm text-slate-600 font-medium leading-relaxed">
+          Access your courses, track grievances, view accessible campus routes, or access learning aids. Your ID is <strong class="text-navy-brand">#SS-8829</strong>.
+        </p>
+        <div class="flex flex-wrap gap-3 pt-2">
+          <a href="grievance.html" class="px-5 py-2.5 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all inline-flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">add_circle</span>
+            <span>Submit Grievance</span>
+          </a>
+          <a href="grievance.html#track-section" class="px-5 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-bold text-xs rounded-xl transition-all inline-flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base text-blue-600">show_chart</span>
+            <span>Track Status</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Accessibility Shortcut (De-emphasized secondary link) -->
+      <div class="w-full lg:w-64 p-5 bg-slate-50 rounded-2xl border border-slate-200/70 text-center space-y-2 shrink-0">
+        <p class="text-xs font-bold text-slate-700">Hands-Free Navigation</p>
+        <p class="text-[11px] text-slate-500 font-medium">Optional voice-controlled interaction mode</p>
+        <a href="student-visual-dyslexic.html" class="w-full py-2 px-3 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all inline-flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-base text-slate-500">mic</span>
+          <span>Open Voice Portal</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Planned Platform Modules (3 Coming Soon Tiles) -->
+    <section class="space-y-3" aria-labelledby="planned-modules-heading">
+      <div class="flex items-center justify-between">
+        <h3 id="planned-modules-heading" class="text-lg font-bold text-navy-brand font-heading">
+          Upcoming Platform Modules
+        </h3>
+        <span class="text-xs font-semibold text-slate-400">Phase 2 Roadmap</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        <!-- Tile 1: AI Tutor -->
+        <a href="tutor.html" class="stitch-card stitch-card-interactive p-5 bg-white space-y-2 block group">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">psychology</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 text-indigo-700">AI Assistant</span>
+          </div>
+          <h4 class="text-sm font-bold text-slate-800 font-heading">AI Tutor</h4>
+          <p class="text-xs text-slate-500 font-medium">Personalized accessible learning assistant & exam concept aid.</p>
+        </a>
+
+        <!-- Tile 2: Visual Map Route -->
+        <a href="coming-soon.html?feature=Visual%20Map%20Route" class="stitch-card stitch-card-interactive p-5 bg-white space-y-2 block group">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">alt_route</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-600">Coming Soon</span>
+          </div>
+          <h4 class="text-sm font-bold text-slate-800 font-heading">Visual Map Route</h4>
+          <p class="text-xs text-slate-500 font-medium">Planned campus visual map & wheelchair accessible paths.</p>
+        </a>
+
+        <!-- Tile 3: Tracker -->
+        <a href="coming-soon.html?feature=Tracker" class="stitch-card stitch-card-interactive p-5 bg-white space-y-2 block group">
+          <div class="flex items-center justify-between">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-2xl">location_searching</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-600">Coming Soon</span>
+          </div>
+          <h4 class="text-sm font-bold text-slate-800 font-heading">Tracker</h4>
+          <p class="text-xs text-slate-500 font-medium">Live status tracking for campus electric vans and medical responders.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Two Column Dashboard Grid (Matches Reference Layout) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Left 2 Cols: Recent Grievance Activity -->
+      <section class="lg:col-span-2 stitch-card p-6 bg-white space-y-4" aria-labelledby="recent-activity-title">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 id="recent-activity-title" class="text-lg font-bold text-navy-brand font-heading">
+            Recent Grievance Activity
+          </h3>
+          <a href="grievance.html" class="text-xs font-bold text-blue-600 hover:underline">View All</a>
+        </div>
+
+        <!-- Grievance Activity Items -->
+        <div class="space-y-3">
+          <div class="p-3.5 bg-slate-50/70 rounded-2xl border border-slate-200/60 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-xl">description</span>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-slate-800">#GRV-2026-041</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-orange-100 text-orange-700">Pending</span>
+                </div>
+                <p class="text-xs text-slate-600 truncate mt-0.5">Accessibility access for main library ramp gradient...</p>
+              </div>
+            </div>
+            <span class="text-[11px] font-semibold text-slate-400 shrink-0">Updated: Oct 24</span>
+          </div>
+
+          <div class="p-3.5 bg-slate-50/70 rounded-2xl border border-slate-200/60 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-9 h-9 rounded-xl bg-green-50 text-green-600 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-xl">check_circle</span>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-slate-800">#GRV-2026-038</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-green-100 text-green-700">Resolved</span>
+                </div>
+                <p class="text-xs text-slate-600 truncate mt-0.5">Request for extended exam duration & scribe support...</p>
+              </div>
+            </div>
+            <span class="text-[11px] font-semibold text-slate-400 shrink-0">Updated: Oct 15</span>
+          </div>
+
+          <div class="p-3.5 bg-slate-50/70 rounded-2xl border border-slate-200/60 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-xl">sync</span>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-slate-800">#GRV-2026-039</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-700">In Progress</span>
+                </div>
+                <p class="text-xs text-slate-600 truncate mt-0.5">Digital course material screen reader format testing...</p>
+              </div>
+            </div>
+            <span class="text-[11px] font-semibold text-slate-400 shrink-0">Updated: Oct 18</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right 1 Col: Learning Resources & Emergency -->
+      <div class="space-y-6">
+        
+        <!-- Learning Resources Card -->
+        <section class="stitch-card p-6 bg-white space-y-3 text-center" aria-labelledby="resources-heading">
+          <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
+            <span class="material-symbols-outlined text-2xl">menu_book</span>
+          </div>
+          <h3 id="resources-heading" class="text-base font-bold text-navy-brand font-heading">
+            Learning Resources
+          </h3>
+          <p class="text-xs text-slate-500 font-medium">
+            Access accessible study materials and recorded captioned lectures.
+          </p>
+          <a href="campus-map.html" class="w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-bold text-xs rounded-xl transition-all block">
+            Browse Hub
+          </a>
+        </section>
+
+        <!-- Need Immediate Help Card -->
+        <section class="stitch-card p-6 bg-white space-y-3" aria-labelledby="help-heading">
+          <h3 id="help-heading" class="text-base font-bold text-navy-brand font-heading">
+            Need Immediate Help?
+          </h3>
+          <div class="space-y-2 text-xs font-medium text-slate-600">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-base text-slate-400">support_agent</span>
+              <span>Support: <strong>1-800-SAKSHAM</strong></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-base text-slate-400">mail</span>
+              <span>help@sakshamsetu.edu</span>
+            </div>
+          </div>
+          
+          <!-- Tap Emergency Trigger -->
+          <button id="tap-emergency-btn" class="w-full py-2.5 px-4 bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-base">emergency</span>
+            <span>TAP FOR EMERGENCY</span>
+          </button>
+        </section>
+      </div>
+    </div>
+
+    <!-- Nearby Facilities & Visual Notices (Data Binding Preserved) -->
+    <section class="space-y-4 pt-4 border-t border-slate-200/80">
+      <h3 class="text-xl font-bold text-navy-brand font-heading">Nearby Accessible Facilities</h3>
+      <div id="nearby-services-list" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Loaded dynamically via GET /api/dashboard/student -->
+      </div>
+    </section>
+
+    <section class="space-y-4 pt-2">
+      <h3 class="text-xl font-bold text-navy-brand font-heading">Visual Campus Announcements</h3>
+      <div id="visual-notices-list" class="space-y-3">
+        <!-- Loaded dynamically via api.alerts.getAll() -->
+      </div>
+    </section>
+
+    <!-- Footer Bar -->
+    <footer class="pt-8 border-t border-slate-200/80 text-xs font-medium text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p>© 2024 SakshamSetu Educational Platform. All rights reserved.</p>
+      <div class="flex gap-4">
+        <a href="privacy.html" class="hover:text-navy-brand">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-navy-brand">Terms of Service</a>
+        <a href="grievance.html" class="hover:text-navy-brand">Contact Support</a>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { voice } from './js/voice.js';
+    import { emergency } from './js/emergency.js';
+    import { auth } from './js/auth.js';
+    import { api } from './js/api.js';
+
+    // Load Student Dashboard data (name, nearby_services, institute_compliance_score)
+    async function loadStudentDashboard() {
+      try {
+        const res = await api.dashboard.getStudent();
+        if (res) {
+          const nameEl = document.getElementById('student-name-display');
+          const scoreEl = document.getElementById('student-compliance-score');
+          const servicesContainer = document.getElementById('nearby-services-list');
+
+          if (nameEl && res.name) nameEl.textContent = res.name;
+          if (scoreEl && res.institute_compliance_score !== undefined) {
+            scoreEl.textContent = `${res.institute_compliance_score}%`;
+          }
+
+          if (servicesContainer && Array.isArray(res.nearby_services)) {
+            servicesContainer.innerHTML = res.nearby_services.map(s => `
+              <div class="stitch-card p-4 flex justify-between items-center bg-white">
+                <div>
+                  <h4 class="font-bold text-slate-800 text-sm">${s.name || s.title || 'Facility'}</h4>
+                  <p class="text-xs text-slate-500 font-medium">${s.category || 'Access Route'}</p>
+                </div>
+                <span class="badge-pill badge-resolved text-[11px]">${s.status || 'Active'}</span>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Error loading student dashboard data', err);
+      }
+    }
+
+    async function loadVisualNotices() {
+      const container = document.getElementById('visual-notices-list');
+      if (!container) return;
+
+      try {
+        const res = await api.alerts.getAll();
+        const alerts = res.alerts || res || [];
+
+        if (Array.isArray(alerts) && alerts.length > 0) {
+          container.innerHTML = alerts.map(a => `
+            <article class="stitch-card p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 bg-white">
+              <div class="space-y-0.5">
+                <div class="flex items-center gap-2">
+                  <span class="badge-pill ${a.severity === 'Urgent' ? 'badge-open' : 'badge-resolved'} text-[10px] uppercase">${a.severity || 'Notice'}</span>
+                </div>
+                <h4 class="text-sm font-bold text-slate-800">${a.title}</h4>
+                <p class="text-xs text-slate-600">${a.description}</p>
+              </div>
+            </article>
+          `).join('');
+        } else {
+          container.innerHTML = `
+            <div class="stitch-card p-6 bg-white text-center">
+              <p class="text-sm font-medium text-slate-500">No active campus announcements at this time.</p>
+            </div>
+          `;
+        }
+      } catch (e) {
+        container.innerHTML = `
+          <div class="stitch-card p-4 bg-white text-center">
+            <p class="text-xs font-semibold text-slate-500">Campus notifications ready.</p>
+          </div>
+        `;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      auth.initAccessibility();
+
+      document.getElementById('tap-emergency-btn')?.addEventListener('click', () => {
+        emergency.triggerTapEmergency('Hearing-Physical Portal');
+      });
+
+      loadStudentDashboard();
+      loadVisualNotices();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Assign Grievance - EduAbility Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,700;0,800;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "visual-active": "#006B3D",
+                        "surface-tint": "#255fa6",
+                        "outline": "#727782",
+                        "secondary": "#046d3f",
+                        "surface-container-low": "#f3f3f4",
+                        "border-dark": "#333333",
+                        "surface-container-high": "#e8e8e8",
+                        "primary": "#003469",
+                        "outline-variant": "#c2c6d2",
+                        "on-secondary-fixed-variant": "#00522e",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#001b3c",
+                        "surface": "#f9f9f9",
+                        "secondary-fixed-dim": "#81d9a0",
+                        "on-tertiary-fixed": "#341100",
+                        "on-tertiary-fixed-variant": "#793100",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-secondary-fixed": "#00210f",
+                        "surface-bright": "#f9f9f9",
+                        "focus-indicator": "#FFD600",
+                        "secondary-fixed": "#9df5bb",
+                        "inverse-surface": "#2f3131",
+                        "background": "#f9f9f9",
+                        "primary-container": "#004b91",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "high-contrast-text": "#1A1A1A",
+                        "surface-container": "#eeeeee",
+                        "on-background": "#1a1c1c",
+                        "secondary-container": "#9af3b8",
+                        "surface-dim": "#dadada",
+                        "surface-variant": "#e2e2e2",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#004689",
+                        "tertiary": "#5c2400",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f1",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-surface-variant": "#424751",
+                        "on-secondary-container": "#0f7142",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "emergency-red": "#D92D20",
+                        "on-primary-container": "#95bdff",
+                        "on-tertiary-container": "#ffa678",
+                        "tertiary-fixed": "#ffdbcb",
+                        "tertiary-container": "#7f3502",
+                        "on-surface": "#1a1c1c",
+                        "inverse-primary": "#a7c8ff",
+                        "voice-active": "#004B91"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "56px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Atkinson Hyperlegible Next"],
+                        "body-md": ["Atkinson Hyperlegible Next"],
+                        "headline-lg-mobile": ["Atkinson Hyperlegible Next"],
+                        "headline-md": ["Atkinson Hyperlegible Next"],
+                        "code-display": ["Atkinson Hyperlegible Next"],
+                        "label-bold": ["Atkinson Hyperlegible Next"],
+                        "body-lg": ["Atkinson Hyperlegible Next"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "code-display": ["48px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "800" }],
+                        "label-bold": ["16px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface border-b-2 border-border-dark flex justify-between items-center w-full px-margin-desktop h-touch-target-min z-50 fixed top-0 left-0 right-0">
+<div class="flex items-center gap-6">
+<span class="font-headline-md text-headline-md font-extrabold text-primary">EduAbility</span>
+<nav class="hidden md:flex items-center gap-4 ml-8">
+<a class="text-on-surface-variant font-label-bold text-label-bold px-4 py-2 rounded-none hover:bg-surface-container transition-none" href="#">Dashboard</a>
+<a class="text-on-surface-variant font-label-bold text-label-bold px-4 py-2 rounded-none hover:bg-surface-container transition-none" href="#">Portal</a>
+<a class="text-on-surface-variant font-label-bold text-label-bold px-4 py-2 rounded-none hover:bg-surface-container transition-none" href="#">Reports</a>
+<a class="text-on-surface-variant font-label-bold text-label-bold px-4 py-2 rounded-none hover:bg-surface-container transition-none" href="#">Help</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-bold text-label-bold text-primary">Admin Role</span>
+<button aria-label="account_circle" class="w-[56px] h-[56px] flex items-center justify-center hover:bg-surface-container">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<div class="flex pt-touch-target-min min-h-screen">
+<!-- SideNavBar -->
+<nav class="hidden lg:flex flex-col border-r-4 border-border-dark h-[calc(100vh-56px)] w-64 bg-surface fixed left-0 top-touch-target-min overflow-y-auto">
+<div class="p-6 border-b-4 border-border-dark flex flex-col items-center">
+<div class="w-20 h-20 bg-surface-container-high rounded-full flex items-center justify-center mb-4 border-2 border-border-dark">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="account_circle">account_circle</span>
+</div>
+<h2 class="font-label-bold text-label-bold text-center">Student Portal</h2>
+<p class="font-body-md text-body-md text-on-surface-variant text-center">Visual-Text Mode</p>
+</div>
+<div class="flex-1 py-4">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-surface-container-highest transition-none w-full" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-body-lg text-body-lg">Curriculum</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary text-on-secondary font-bold hover:bg-surface-container-highest transition-none w-full" href="#">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+<span class="font-body-lg text-body-lg">Compliance</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-surface-container-highest transition-none w-full" href="#">
+<span class="material-symbols-outlined" data-icon="room_service">room_service</span>
+<span class="font-body-lg text-body-lg">Services</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-surface-container-highest transition-none w-full" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+<span class="font-body-lg text-body-lg">AI Tutor</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-surface-container-highest transition-none w-full" href="#">
+<span class="material-symbols-outlined" data-icon="ambulance">ambulance</span>
+<span class="font-body-lg text-body-lg">Ambulance</span>
+</a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-1 w-full lg:ml-64 p-margin-mobile md:p-margin-desktop bg-background pb-32">
+<div class="max-w-container-max mx-auto w-full">
+<div class="mb-12">
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">Assign Grievance</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Review and route incoming grievances to the appropriate departments.</p>
+</div>
+<!-- Open Layout Table-like Structure -->
+<div class="flex flex-col gap-8">
+<!-- Row 1 -->
+<div class="flex flex-col xl:flex-row gap-6 border-b-[1px] border-border-dark pb-8 items-start xl:items-center">
+<div class="flex-1 w-full">
+<span class="block font-label-bold text-label-bold text-on-surface-variant uppercase mb-2">Secret Code</span>
+<div class="inline-block border-4 border-border-dark px-4 py-2 bg-surface">
+<span class="font-code-display text-code-display text-high-contrast-text">GRV-89A2</span>
+</div>
+<p class="font-body-md text-body-md mt-4">"The wheelchair ramp at the main entrance is partially blocked by construction materials."</p>
+<span class="inline-block mt-2 font-label-bold text-label-bold text-emergency-red bg-error-container px-3 py-1 border-2 border-error">Urgent - Accessibility Issue</span>
+</div>
+<div class="flex-1 w-full flex flex-col gap-4">
+<div class="w-full">
+<label class="block font-label-bold text-label-bold mb-2" for="dept-1">Assign to Department</label>
+<div class="relative">
+<select class="w-full h-touch-target-min border-2 border-border-dark bg-surface font-body-lg text-body-lg px-4 appearance-none focus:outline-none focus:ring-4 focus:ring-focus-indicator rounded-none cursor-pointer" id="dept-1">
+<option disabled="" selected="" value="">Select Department</option>
+<option value="facilities">Facilities</option>
+<option value="transport">Transport</option>
+<option value="academic">Academic</option>
+<option value="health">Health</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" data-icon="arrow_drop_down">arrow_drop_down</span>
+</div>
+</div>
+<div class="w-full">
+<label class="block font-label-bold text-label-bold mb-2" for="note-1">Internal Status Note</label>
+<input class="w-full h-touch-target-min border-2 border-border-dark bg-surface font-body-lg text-body-lg px-4 focus:outline-none focus:ring-4 focus:ring-focus-indicator rounded-none placeholder-outline" id="note-1" placeholder="Enter assignment details..." type="text"/>
+</div>
+</div>
+<div class="w-full xl:w-auto xl:self-end">
+<button class="w-full xl:w-auto h-touch-target-min px-8 bg-primary text-on-primary font-label-bold text-label-bold border-2 border-transparent focus:outline-none focus:ring-4 focus:ring-focus-indicator active:bg-surface active:text-primary active:border-primary transition-none rounded-none">
+                                CONFIRM ASSIGNMENT
+                            </button>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="flex flex-col xl:flex-row gap-6 border-b-[1px] border-border-dark pb-8 items-start xl:items-center">
+<div class="flex-1 w-full">
+<span class="block font-label-bold text-label-bold text-on-surface-variant uppercase mb-2">Secret Code</span>
+<div class="inline-block border-4 border-border-dark px-4 py-2 bg-surface">
+<span class="font-code-display text-code-display text-high-contrast-text">GRV-44B7</span>
+</div>
+<p class="font-body-md text-body-md mt-4">"Requesting a change in standard text size for the digital textbook platform."</p>
+</div>
+<div class="flex-1 w-full flex flex-col gap-4">
+<div class="w-full">
+<label class="block font-label-bold text-label-bold mb-2" for="dept-2">Assign to Department</label>
+<div class="relative">
+<select class="w-full h-touch-target-min border-2 border-border-dark bg-surface font-body-lg text-body-lg px-4 appearance-none focus:outline-none focus:ring-4 focus:ring-focus-indicator rounded-none cursor-pointer" id="dept-2">
+<option disabled="" selected="" value="">Select Department</option>
+<option value="facilities">Facilities</option>
+<option value="transport">Transport</option>
+<option value="academic">Academic</option>
+<option value="health">Health</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" data-icon="arrow_drop_down">arrow_drop_down</span>
+</div>
+</div>
+<div class="w-full">
+<label class="block font-label-bold text-label-bold mb-2" for="note-2">Internal Status Note</label>
+<input class="w-full h-touch-target-min border-2 border-border-dark bg-surface font-body-lg text-body-lg px-4 focus:outline-none focus:ring-4 focus:ring-focus-indicator rounded-none placeholder-outline" id="note-2" placeholder="Enter assignment details..." type="text"/>
+</div>
+</div>
+<div class="w-full xl:w-auto xl:self-end">
+<button class="w-full xl:w-auto h-touch-target-min px-8 bg-primary text-on-primary font-label-bold text-label-bold border-2 border-transparent focus:outline-none focus:ring-4 focus:ring-focus-indicator active:bg-surface active:text-primary active:border-primary transition-none rounded-none">
+                                CONFIRM ASSIGNMENT
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-touch-target-min border-t-4 border-border-dark bg-surface">
+<a class="flex flex-col items-center justify-center text-on-surface h-full w-full hover:bg-surface-container-high transition-none rounded-none" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-label-bold text-label-bold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface h-full w-full hover:bg-surface-container-high transition-none rounded-none" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="mic">mic</span>
+<span class="font-label-bold text-label-bold">Voice</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container h-full w-full hover:bg-surface-container-high transition-none rounded-none" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="assignment_late">assignment_late</span>
+<span class="font-label-bold text-label-bold">Grievance</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface h-full w-full hover:bg-surface-container-high transition-none rounded-none" href="#">
+<span class="material-symbols-outlined mb-1 text-emergency-red" data-icon="emergency">emergency</span>
+<span class="font-label-bold text-label-bold">Emergency</span>
+</a>
+</nav>
+</body></html>

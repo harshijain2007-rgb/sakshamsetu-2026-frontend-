@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Updates &amp; Alerts Management - EduAbility Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "visual-active": "#006B3D",
+                        "surface-tint": "#255fa6",
+                        "outline": "#727782",
+                        "secondary": "#046d3f",
+                        "surface-container-low": "#f3f3f4",
+                        "border-dark": "#333333",
+                        "surface-container-high": "#e8e8e8",
+                        "primary": "#003469",
+                        "outline-variant": "#c2c6d2",
+                        "on-secondary-fixed-variant": "#00522e",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#001b3c",
+                        "surface": "#f9f9f9",
+                        "secondary-fixed-dim": "#81d9a0",
+                        "on-tertiary-fixed": "#341100",
+                        "on-tertiary-fixed-variant": "#793100",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-secondary-fixed": "#00210f",
+                        "surface-bright": "#f9f9f9",
+                        "focus-indicator": "#FFD600",
+                        "secondary-fixed": "#9df5bb",
+                        "inverse-surface": "#2f3131",
+                        "background": "#f9f9f9",
+                        "primary-container": "#004b91",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "high-contrast-text": "#1A1A1A",
+                        "surface-container": "#eeeeee",
+                        "on-background": "#1a1c1c",
+                        "secondary-container": "#9af3b8",
+                        "surface-dim": "#dadada",
+                        "surface-variant": "#e2e2e2",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#004689",
+                        "tertiary": "#5c2400",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f1",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-surface-variant": "#424751",
+                        "on-secondary-container": "#0f7142",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "emergency-red": "#D92D20",
+                        "on-primary-container": "#95bdff",
+                        "on-tertiary-container": "#ffa678",
+                        "tertiary-fixed": "#ffdbcb",
+                        "tertiary-container": "#7f3502",
+                        "on-surface": "#1a1c1c",
+                        "inverse-primary": "#a7c8ff",
+                        "voice-active": "#004B91"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "56px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Atkinson Hyperlegible Next"],
+                        "body-md": ["Atkinson Hyperlegible Next"],
+                        "headline-lg-mobile": ["Atkinson Hyperlegible Next"],
+                        "headline-md": ["Atkinson Hyperlegible Next"],
+                        "code-display": ["Atkinson Hyperlegible Next"],
+                        "label-bold": ["Atkinson Hyperlegible Next"],
+                        "body-lg": ["Atkinson Hyperlegible Next"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "code-display": ["48px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "800" }],
+                        "label-bold": ["16px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Strict minimal resets and utilities */
+        body {
+            background-color: theme('colors.surface-container-lowest');
+            color: theme('colors.high-contrast-text');
+        }
+        
+        /* Custom focus ring based on rules */
+        .custom-focus:focus-within {
+            outline: none;
+            box-shadow: 0 0 0 4px theme('colors.focus-indicator');
+        }
+
+        /* Hide scrollbar for cleaner look if needed */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.surface-container-lowest');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.border-dark');
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md antialiased selection:bg-focus-indicator selection:text-high-contrast-text">
+<!-- TopAppBar -->
+<nav class="bg-surface dark:bg-on-background flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-touch-target-min border-b-2 border-border-dark sticky top-0 z-50 transition-none">
+<div class="flex items-center gap-8">
+<span class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed tracking-tight">EduAbility</span>
+<ul class="hidden md:flex h-full items-stretch gap-6">
+<!-- Dashboard (Active) -->
+<li class="flex items-center text-primary dark:text-primary-fixed border-b-4 border-primary dark:border-primary-fixed pb-1 pt-1 font-label-bold text-label-bold transition-none hover:bg-surface-container dark:hover:bg-surface-variant cursor-pointer px-4">
+                    Dashboard
+                </li>
+<!-- Portal (Inactive) -->
+<li class="flex items-center text-on-surface-variant dark:text-surface-variant font-label-bold text-label-bold transition-none hover:bg-surface-container dark:hover:bg-surface-variant cursor-pointer px-4">
+                    Portal
+                </li>
+<!-- Reports (Inactive) -->
+<li class="flex items-center text-on-surface-variant dark:text-surface-variant font-label-bold text-label-bold transition-none hover:bg-surface-container dark:hover:bg-surface-variant cursor-pointer px-4">
+                    Reports
+                </li>
+<!-- Help (Inactive) -->
+<li class="flex items-center text-on-surface-variant dark:text-surface-variant font-label-bold text-label-bold transition-none hover:bg-surface-container dark:hover:bg-surface-variant cursor-pointer px-4">
+                    Help
+                </li>
+</ul>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden md:inline-block font-label-bold text-label-bold text-high-contrast-text py-2 px-4 border-2 border-border-dark">Admin Role</span>
+<button aria-label="account_circle" class="w-touch-target-min h-touch-target-min flex items-center justify-center hover:bg-surface-container dark:hover:bg-surface-variant transition-none focus:outline-none custom-focus">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed text-3xl" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-16">
+<header class="mb-12">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-high-contrast-text">Updates &amp; Alerts Management</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-4 max-w-3xl">Post new critical information to portals or manage existing active alerts.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- Section 1: Post New Alert Form (Takes 5 cols on large screens) -->
+<section class="lg:col-span-5 bg-surface-container-lowest border-4 border-border-dark p-6 md:p-8 flex flex-col gap-6 sticky top-24">
+<h2 class="font-headline-md text-headline-md text-high-contrast-text border-b-2 border-border-dark pb-4">Post New Alert</h2>
+<form class="flex flex-col gap-6" onsubmit="event.preventDefault();">
+<!-- Severity Dropdown -->
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-high-contrast-text" for="severity">Alert Severity</label>
+<div class="relative custom-focus">
+<select class="w-full appearance-none bg-surface border-2 border-border-dark p-4 pr-12 font-body-md text-body-md text-high-contrast-text rounded-none focus:outline-none focus:ring-0" id="severity" name="severity">
+<option value="info">Information (Standard Update)</option>
+<option value="warning">Warning (Requires Attention)</option>
+<option class="font-bold text-error" value="critical">CRITICAL EMERGENCY</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">arrow_drop_down</span>
+</div>
+</div>
+<!-- Target Audience -->
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-high-contrast-text">Target Portals</label>
+<div class="flex flex-col gap-3 mt-1">
+<label class="flex items-center gap-4 cursor-pointer p-3 border-2 border-border-dark bg-surface hover:bg-surface-container custom-focus group">
+<div class="w-8 h-8 border-2 border-border-dark bg-surface-container-lowest flex items-center justify-center group-has-[:checked]:bg-primary">
+<input checked="" class="sr-only" name="target" type="checkbox" value="visual"/>
+<span class="material-symbols-outlined text-on-primary hidden group-has-[:checked]:block" style="font-size: 20px;">check</span>
+</div>
+<span class="font-body-md text-body-md">Visual-Text Portal</span>
+</label>
+<label class="flex items-center gap-4 cursor-pointer p-3 border-2 border-border-dark bg-surface hover:bg-surface-container custom-focus group">
+<div class="w-8 h-8 border-2 border-border-dark bg-surface-container-lowest flex items-center justify-center group-has-[:checked]:bg-primary">
+<input checked="" class="sr-only" name="target" type="checkbox" value="voice"/>
+<span class="material-symbols-outlined text-on-primary hidden group-has-[:checked]:block" style="font-size: 20px;">check</span>
+</div>
+<span class="font-body-md text-body-md">Voice-First Portal</span>
+</label>
+</div>
+</div>
+<!-- Message Area -->
+<div class="flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-high-contrast-text" for="message">Alert Message</label>
+<div class="custom-focus h-full">
+<textarea class="w-full bg-surface border-2 border-border-dark p-4 font-body-md text-body-md text-high-contrast-text rounded-none focus:outline-none focus:ring-0 resize-y min-h-[150px]" id="message" name="message" placeholder="Enter clear, concise instructions here..." rows="5"></textarea>
+</div>
+</div>
+<!-- Submit Action -->
+<button class="w-full min-h-[64px] bg-primary text-on-primary font-label-bold text-label-bold uppercase tracking-widest border-2 border-primary hover:bg-surface-container-lowest hover:text-primary transition-none active:bg-inverse-surface active:text-inverse-on-surface custom-focus flex items-center justify-center gap-3 mt-4" type="submit">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">campaign</span>
+                        Publish Alert
+                    </button>
+</form>
+</section>
+<!-- Section 2: Active Alerts List (Takes 7 cols on large screens) -->
+<section class="lg:col-span-7 flex flex-col gap-6">
+<div class="flex justify-between items-end border-b-4 border-border-dark pb-4">
+<h2 class="font-headline-md text-headline-md text-high-contrast-text">Active Alerts</h2>
+<span class="font-label-bold text-label-bold bg-surface-variant px-4 py-2 text-on-surface-variant">3 Active</span>
+</div>
+<!-- Bento-style structural list (Solid blocks, high contrast) -->
+<div class="flex flex-col gap-6">
+<!-- Alert Item 1: Emergency -->
+<article class="bg-surface-container-lowest border-4 border-emergency-red flex flex-col md:flex-row p-0">
+<div class="bg-emergency-red text-on-error p-6 md:w-1/3 flex flex-col justify-between items-start gap-4">
+<div class="flex flex-col gap-2">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<span class="font-headline-md text-headline-md uppercase">EMERGENCY</span>
+</div>
+<span class="font-label-bold text-label-bold opacity-90">Posted: Today, 08:45 AM</span>
+</div>
+<div class="p-6 md:w-2/3 flex flex-col justify-between gap-6">
+<div>
+<h3 class="font-label-bold text-label-bold text-high-contrast-text mb-2">Campus-wide Evacuation Drill</h3>
+<p class="font-body-md text-body-md text-high-contrast-text">Proceed to designated assembly areas immediately. Do not use elevators. Staff assist students with physical disabilities.</p>
+</div>
+<div class="flex flex-wrap gap-4 mt-auto">
+<button class="h-touch-target-min px-6 border-2 border-border-dark bg-surface hover:bg-surface-container font-label-bold text-label-bold text-high-contrast-text transition-none custom-focus flex items-center gap-2">
+<span class="material-symbols-outlined">edit</span> Edit
+                                </button>
+<button class="h-touch-target-min px-6 border-2 border-secondary bg-secondary text-on-secondary hover:bg-surface-container-lowest hover:text-secondary font-label-bold text-label-bold transition-none custom-focus flex items-center gap-2 ml-auto">
+<span class="material-symbols-outlined">check_circle</span> Mark Resolved
+                                </button>
+</div>
+</div>
+</article>
+<!-- Alert Item 2: Warning -->
+<article class="bg-surface border-4 border-border-dark flex flex-col md:flex-row p-0">
+<div class="bg-focus-indicator text-high-contrast-text border-r-0 md:border-r-4 border-b-4 md:border-b-0 border-border-dark p-6 md:w-1/4 flex flex-col justify-center items-center gap-2">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="font-label-bold text-label-bold uppercase">Warning</span>
+</div>
+<div class="p-6 md:w-3/4 flex flex-col justify-between gap-6">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-label-bold text-label-bold text-high-contrast-text">Elevator Maintenance - North Wing</h3>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">Yesterday</span>
+</div>
+<p class="font-body-md text-body-md text-high-contrast-text">Elevator B in the North Wing is out of service until 2:00 PM. Please route students requiring mobility assistance to Elevator C.</p>
+</div>
+<div class="flex gap-4 border-t-2 border-border-dark pt-4 mt-2">
+<button class="font-label-bold text-label-bold text-primary underline underline-offset-4 hover:text-primary-container custom-focus px-2 py-1">Edit Content</button>
+<button class="font-label-bold text-label-bold text-secondary underline underline-offset-4 hover:text-on-secondary-fixed-variant custom-focus px-2 py-1 ml-auto">Resolve Issue</button>
+</div>
+</div>
+</article>
+<!-- Alert Item 3: Info -->
+<article class="bg-surface border-4 border-border-dark flex flex-col md:flex-row p-0">
+<div class="bg-surface-container-high border-r-0 md:border-r-4 border-b-4 md:border-b-0 border-border-dark p-6 md:w-1/4 flex flex-col justify-center items-center gap-2">
+<span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">info</span>
+<span class="font-label-bold text-label-bold uppercase text-primary">Update</span>
+</div>
+<div class="p-6 md:w-3/4 flex flex-col justify-between gap-6">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-label-bold text-label-bold text-high-contrast-text">New Curriculum Modules Available</h3>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">Oct 12</span>
+</div>
+<p class="font-body-md text-body-md text-high-contrast-text">The new visual-spatial learning modules have been pushed to all student portals. Teachers, please review the guide.</p>
+</div>
+<div class="flex gap-4 border-t-2 border-border-dark pt-4 mt-2">
+<button class="font-label-bold text-label-bold text-primary underline underline-offset-4 hover:text-primary-container custom-focus px-2 py-1">Edit Content</button>
+<button class="font-label-bold text-label-bold text-secondary underline underline-offset-4 hover:text-on-secondary-fixed-variant custom-focus px-2 py-1 ml-auto">Resolve Issue</button>
+</div>
+</div>
+</article>
+</div>
+</section>
+</div>
+</main>
+</body></html>

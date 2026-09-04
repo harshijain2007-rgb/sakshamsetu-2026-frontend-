@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SakshamSetu — Institution Settings</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Main Design System -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "navy-brand": "#0d2859",
+            "navy-dark": "#07193b",
+            "blue-accent": "#2563eb",
+            "sidebar-bg": "#ffffff",
+            "green-emerald": "#16a34a",
+            "red-crimson": "#ef4444"
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col md:flex-row">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Admin Sidebar Navigation -->
+  <aside class="w-full md:w-64 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between shrink-0" aria-label="Admin Navigation">
+    <div class="space-y-6">
+      
+      <!-- Brand Header -->
+      <div class="px-2 pt-1">
+        <h1 class="text-xl font-extrabold text-navy-brand font-heading tracking-tight">SakshamSetu</h1>
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Admin Dashboard</p>
+      </div>
+
+      <!-- Navigation Sections -->
+      <nav class="space-y-5 text-xs font-bold" aria-label="Admin Sections">
+        
+        <!-- Section: MAIN -->
+        <div class="space-y-1">
+          <p class="px-2.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Main</p>
+          
+          <a href="admin-dashboard.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">grid_view</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="admin-alerts.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">campaign</span>
+            <span>Updates & Alerts</span>
+          </a>
+          <a href="admin-assign-grievance.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">assignment</span>
+            <span>Assign Grievances</span>
+          </a>
+          <a href="admin-checklist.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">verified_user</span>
+            <span>Compliance</span>
+          </a>
+        </div>
+
+        <!-- Section: MANAGEMENT -->
+        <div class="space-y-1">
+          <p class="px-2.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Management</p>
+          
+          <a href="admin-users.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">group</span>
+            <span>Users & Roles</span>
+          </a>
+          <a href="service-feedback.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">forum</span>
+            <span>Student Feedback</span>
+          </a>
+          <a href="admin-feedback.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">rate_review</span>
+            <span>Admin Feedback Review</span>
+          </a>
+          <a href="transport-tracking.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">directions_bus</span>
+            <span>Request Transport</span>
+          </a>
+        </div>
+
+        <!-- Section: SYSTEM -->
+        <div class="space-y-1">
+          <p class="px-2.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">System</p>
+          
+          <a href="admin-settings.html" class="flex items-center gap-3 px-3.5 py-2.5 bg-slate-100 text-navy-brand font-extrabold rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg text-blue-600">settings</span>
+            <span>Settings</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Bottom Sidebar Profile Widget -->
+    <div class="pt-5 border-t border-slate-100 space-y-3">
+      <div class="flex items-center gap-3 px-1">
+        <div class="w-9 h-9 rounded-xl bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs">
+          AK
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-bold text-slate-800 truncate">Admin Officer</p>
+          <p class="text-[10px] text-slate-500 truncate">Compliance Desk</p>
+        </div>
+      </div>
+      <a href="index.html" class="flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-red-600 px-1 transition-colors">
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Centered Content Area -->
+  <main id="main-content" class="flex-1 p-4 md:p-8 flex flex-col justify-between overflow-y-auto">
+    
+    <!-- Top Header Bar -->
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <h2 class="text-lg font-extrabold text-navy-brand font-heading">
+        SakshamSetu Admin
+      </h2>
+
+      <!-- Search & Right Badges & Accessibility Toggles -->
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end flex-wrap">
+        <div class="relative max-w-xs w-full sm:w-48">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+          <input type="text" placeholder="Search..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-transparent rounded-full text-xs font-medium text-slate-700 focus:bg-white focus:border-slate-300 focus:outline-none transition-all">
+        </div>
+        
+        <!-- Accessibility Controls -->
+        <div class="flex items-center gap-1.5" aria-label="Accessibility Bar">
+          <button type="button" id="btn-dyslexia" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Dyslexia</button>
+          <button type="button" id="btn-contrast" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Contrast</button>
+          <button type="button" id="btn-text-size" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Text Size</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button class="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-navy-brand">
+            <span class="material-symbols-outlined text-lg">notifications</span>
+          </button>
+          <button class="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-navy-brand">
+            <span class="material-symbols-outlined text-lg">help_outline</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="my-auto py-12 flex items-center justify-center">
+      <div class="stitch-card p-8 md:p-12 text-center space-y-4 max-w-xl w-full bg-white">
+        <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
+          <span class="material-symbols-outlined text-3xl">settings</span>
+        </div>
+        <h3 class="text-2xl md:text-3xl font-extrabold text-navy-brand font-heading">Institution Settings</h3>
+        <p class="text-xs text-slate-500 font-medium max-w-md mx-auto">
+          Audit frequency thresholds, SMS gateway API credentials, and institutional branding options are scheduled for Phase 2.
+        </p>
+        <span class="badge-pill badge-neutral text-xs">Phase 2 Module</span>
+      </div>
+    </div>
+
+    <!-- Footer Bar -->
+    <footer class="pt-6 border-t border-slate-200/80 text-xs font-medium text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p>© 2024 SakshamSetu Educational Platform. All rights reserved.</p>
+      <div class="flex gap-4">
+        <a href="privacy.html" class="hover:text-navy-brand">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-navy-brand">Terms of Service</a>
+        <a href="admin-alerts.html" class="hover:text-navy-brand">Campus Advisories</a>
+      </div>
+    </footer>
+  </main>
+
+  <script type="module">
+    import { auth } from './js/auth.js';
+    document.addEventListener('DOMContentLoaded', () => auth.initAccessibility());
+  </script>
+</body>
+</html>

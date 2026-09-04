@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Request Transport - EduAbility</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "visual-active": "#006B3D",
+                        "surface-tint": "#255fa6",
+                        "outline": "#727782",
+                        "secondary": "#046d3f",
+                        "surface-container-low": "#f3f3f4",
+                        "border-dark": "#333333",
+                        "surface-container-high": "#e8e8e8",
+                        "primary": "#003469",
+                        "outline-variant": "#c2c6d2",
+                        "on-secondary-fixed-variant": "#00522e",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#001b3c",
+                        "surface": "#f9f9f9",
+                        "secondary-fixed-dim": "#81d9a0",
+                        "on-tertiary-fixed": "#341100",
+                        "on-tertiary-fixed-variant": "#793100",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-secondary-fixed": "#00210f",
+                        "surface-bright": "#f9f9f9",
+                        "focus-indicator": "#FFD600",
+                        "secondary-fixed": "#9df5bb",
+                        "inverse-surface": "#2f3131",
+                        "background": "#f9f9f9",
+                        "primary-container": "#004b91",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "high-contrast-text": "#1A1A1A",
+                        "surface-container": "#eeeeee",
+                        "on-background": "#1a1c1c",
+                        "secondary-container": "#9af3b8",
+                        "surface-dim": "#dadada",
+                        "surface-variant": "#e2e2e2",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#004689",
+                        "tertiary": "#5c2400",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f1",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-surface-variant": "#424751",
+                        "on-secondary-container": "#0f7142",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "emergency-red": "#D92D20",
+                        "on-primary-container": "#95bdff",
+                        "on-tertiary-container": "#ffa678",
+                        "tertiary-fixed": "#ffdbcb",
+                        "tertiary-container": "#7f3502",
+                        "on-surface": "#1a1c1c",
+                        "inverse-primary": "#a7c8ff",
+                        "voice-active": "#004B91"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "56px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Atkinson Hyperlegible Next"],
+                        "body-md": ["Atkinson Hyperlegible Next"],
+                        "headline-lg-mobile": ["Atkinson Hyperlegible Next"],
+                        "headline-md": ["Atkinson Hyperlegible Next"],
+                        "code-display": ["Atkinson Hyperlegible Next"],
+                        "label-bold": ["Atkinson Hyperlegible Next"],
+                        "body-lg": ["Atkinson Hyperlegible Next"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "code-display": ["48px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "800" }],
+                        "label-bold": ["16px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #ffffff; /* Pure white background as requested */ }
+        .focus-ring:focus-within { outline: 4px solid #FFD600; outline-offset: 2px; }
+        .radio-custom:checked + div { background-color: #003469; color: white; border-color: #003469; }
+        .radio-custom:checked.emergency-radio + div { background-color: #D92D20; color: white; border-color: #D92D20; }
+        .form-select-custom { background-position: right 1rem center; background-size: 1.5em 1.5em; }
+    </style>
+</head>
+<body class="font-body-md text-high-contrast-text antialiased min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-background flex justify-between items-center w-full px-margin-desktop h-touch-target-min border-b-2 border-border-dark docked full-width top-0 z-40 hidden md:flex">
+<div class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed">EduAbility</div>
+<nav aria-label="Main Navigation" class="flex h-full items-stretch">
+<a class="flex items-center px-4 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-none font-body-lg text-body-lg" href="#">Dashboard</a>
+<a class="flex items-center px-4 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-none font-body-lg text-body-lg" href="#">Portal</a>
+<a class="flex items-center px-4 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-none font-body-lg text-body-lg" href="#">Reports</a>
+<a class="flex items-center px-4 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-variant transition-none font-body-lg text-body-lg" href="#">Help</a>
+</nav>
+<div class="flex items-center gap-4 h-full">
+<span class="text-primary dark:text-primary-fixed font-label-bold text-label-bold flex items-center h-full">Admin Role</span>
+<button aria-label="account_circle" class="h-touch-target-min w-touch-target-min flex items-center justify-center hover:bg-surface-container dark:hover:bg-surface-variant transition-none text-primary dark:text-primary-fixed">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<div class="flex flex-1 w-full max-w-[1200px] mx-auto md:px-margin-desktop md:py-margin-desktop">
+<!-- SideNavBar (Hidden on Mobile, Active on Web) -->
+<nav aria-label="Sidebar Navigation" class="hidden lg:flex flex-col border-r-4 border-border-dark h-screen docked left-0 h-full w-64 bg-surface dark:bg-on-background shrink-0">
+<div class="p-4 border-b-4 border-border-dark">
+<div class="font-headline-md text-headline-md text-primary mb-2">Student Portal</div>
+<div class="font-body-md text-body-md text-on-surface-variant">Visual-Text Mode</div>
+</div>
+<div class="flex flex-col flex-1 py-4">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface dark:text-surface-bright hover:bg-surface-container-highest transition-none font-body-lg text-body-lg" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span>Curriculum</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface dark:text-surface-bright hover:bg-surface-container-highest transition-none font-body-lg text-body-lg" href="#">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+<span>Compliance</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface dark:text-surface-bright hover:bg-surface-container-highest transition-none font-body-lg text-body-lg" href="#">
+<span class="material-symbols-outlined" data-icon="room_service">room_service</span>
+<span>Services</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface dark:text-surface-bright hover:bg-surface-container-highest transition-none font-body-lg text-body-lg" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+<span>AI Tutor</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-secondary text-on-secondary font-bold hover:bg-surface-container-highest transition-none font-body-lg text-body-lg" href="#">
+<span class="material-symbols-outlined" data-icon="ambulance">ambulance</span>
+<span>Ambulance</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full px-margin-mobile py-8 md:px-8 md:py-0">
+<div class="max-w-3xl mx-auto">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-2">Request Transport</h1>
+<p class="font-body-lg text-body-lg mb-10 text-on-surface-variant">Select the type of transport needed and confirm your location.</p>
+<form class="space-y-12">
+<!-- Transport Type Selection -->
+<fieldset class="space-y-4">
+<legend class="font-headline-md text-headline-md text-high-contrast-text mb-6">1. Select Transport Type</legend>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Non-Emergency -->
+<label class="relative cursor-pointer focus-ring block">
+<input checked="" class="sr-only radio-custom" name="transport_type" type="radio" value="standard"/>
+<div class="border-4 border-border-dark p-6 h-full flex flex-col items-start gap-4 bg-white transition-none group hover:bg-surface-container-low min-h-[160px]">
+<span class="material-symbols-outlined text-4xl" data-icon="directions_car">directions_car</span>
+<div>
+<div class="font-label-bold text-label-bold text-lg mb-2">Non-emergency Transport</div>
+<div class="font-body-md text-body-md">Standard brand blue transport for scheduled or non-urgent movement around campus.</div>
+</div>
+</div>
+</label>
+<!-- Emergency -->
+<label class="relative cursor-pointer focus-ring block">
+<input class="sr-only radio-custom emergency-radio" name="transport_type" type="radio" value="emergency"/>
+<div class="border-4 border-emergency-red p-6 h-full flex flex-col items-start gap-4 bg-error-container text-on-error-container transition-none hover:bg-[#ffc6c2] min-h-[160px]">
+<span class="material-symbols-outlined text-4xl" data-icon="emergency">emergency</span>
+<div>
+<div class="font-label-bold text-label-bold text-lg mb-2 text-emergency-red uppercase tracking-wider">Emergency Ambulance</div>
+<div class="font-body-md text-body-md">Immediate medical assistance required. Dispatches nearest available unit.</div>
+</div>
+</div>
+</label>
+</div>
+</fieldset>
+<!-- Location Selection -->
+<fieldset class="space-y-4">
+<legend class="font-headline-md text-headline-md text-high-contrast-text mb-4">2. Pickup Location</legend>
+<div class="focus-ring w-full max-w-md">
+<label class="font-label-bold text-label-bold text-on-surface-variant block mb-2" for="pickup_location">Select Building / Area</label>
+<select class="w-full border-2 border-border-dark rounded-none py-4 px-4 font-body-lg text-body-lg bg-white form-select-custom appearance-none h-touch-target-min" id="pickup_location" name="pickup_location">
+<option disabled="" selected="" value="">Choose a location...</option>
+<option value="library">Library - Main Entrance</option>
+<option value="science_center">Science Center - North Wing</option>
+<option value="dorm_a">Dormitory A</option>
+<option value="dorm_b">Dormitory B</option>
+<option value="dining_hall">Dining Hall</option>
+<option value="sports_complex">Sports Complex</option>
+</select>
+</div>
+</fieldset>
+<!-- Additional Details -->
+<fieldset class="space-y-4">
+<div class="focus-ring w-full max-w-2xl">
+<label class="font-label-bold text-label-bold text-on-surface-variant block mb-2" for="notes">Additional Notes (Optional)</label>
+<textarea class="w-full border-2 border-border-dark rounded-none p-4 font-body-md text-body-md bg-white resize-none" id="notes" name="notes" placeholder="E.g., Wait near the ramp, wheelchair access needed." rows="3"></textarea>
+</div>
+</fieldset>
+<!-- Submit Action -->
+<div class="pt-8 border-t-2 border-border-dark">
+<button class="w-full md:w-auto h-20 px-12 bg-primary text-on-primary font-headline-md text-headline-md uppercase tracking-wider border-4 border-primary hover:bg-white hover:text-primary transition-none flex items-center justify-center gap-4 focus-ring" type="submit">
+<span class="material-symbols-outlined text-4xl" data-icon="send">send</span>
+                            SEND REQUEST
+                        </button>
+<p class="mt-4 font-body-md text-body-md text-on-surface-variant">Request will be sent to the dispatcher immediately.</p>
+</div>
+</form>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav aria-label="Mobile Navigation" class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-touch-target-min border-t-4 border-border-dark bg-surface dark:bg-on-background">
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high scale-100 transition-none font-label-bold text-label-bold" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span>Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high scale-100 transition-none font-label-bold text-label-bold" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="mic">mic</span>
+<span>Voice</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface dark:text-surface-bright h-full w-full hover:bg-surface-container-high scale-100 transition-none font-label-bold text-label-bold" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="assignment_late">assignment_late</span>
+<span>Grievance</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-none h-full w-full hover:bg-surface-container-high scale-100 transition-none font-label-bold text-label-bold" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="emergency">emergency</span>
+<span>Emergency</span>
+</a>
+</nav>
+<!-- Spacer for mobile nav -->
+<div class="h-touch-target-min md:hidden w-full"></div>
+</body></html>

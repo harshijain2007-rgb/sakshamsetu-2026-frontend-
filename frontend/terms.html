@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SakshamSetu — Terms of Service & Statutory Rights</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Main Design System -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "navy-brand": "#0d2859",
+            "navy-dark": "#07193b",
+            "blue-accent": "#2563eb"
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Accessibility Bar -->
+  <aside class="a11y-bar px-4 md:px-12 py-2" aria-label="Accessibility controls">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm text-yellow-300">gavel</span>
+      <span>Terms of Service & Statutory Rights Charter</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" id="btn-dyslexia" class="a11y-btn">Dyslexia Font</button>
+      <button type="button" id="btn-contrast" class="a11y-btn">High Contrast</button>
+      <button type="button" id="btn-text-size" class="a11y-btn">Text Size</button>
+      <a href="index.html" class="a11y-btn">Home</a>
+    </div>
+  </aside>
+
+  <!-- Global Header -->
+  <header class="bg-white border-b border-slate-200/80 px-6 md:px-16 py-4 sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-navy-brand text-white flex items-center justify-center">
+          <span class="material-symbols-outlined text-xl">hub</span>
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold text-navy-brand font-heading">SakshamSetu</h1>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Statutory Rights & Compliance</p>
+        </div>
+      </a>
+
+      <nav class="flex items-center gap-3 font-semibold text-xs text-slate-600" aria-label="Navigation">
+        <a href="index.html" class="px-3.5 py-2 hover:text-navy-brand">Home</a>
+        <a href="grievance.html" class="px-3.5 py-2 hover:text-navy-brand">Grievance Portal</a>
+        <a href="privacy.html" class="px-3.5 py-2 hover:text-navy-brand">Privacy Policy</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" class="flex-1 max-w-4xl w-full mx-auto p-4 md:p-10 space-y-6">
+    <div class="border-b border-slate-200 pb-4">
+      <h2 class="text-3xl font-extrabold text-navy-brand font-heading">Terms of Service & Accessibility Commitments</h2>
+      <p class="text-xs font-medium text-slate-500 mt-1">
+        Enacted pursuant to the Rights of Persons with Disabilities (RPwD) Act 2016 and Harmonised Guidelines 2021.
+      </p>
+    </div>
+
+    <div class="stitch-card p-6 md:p-10 bg-white space-y-6 text-sm leading-relaxed">
+      <section class="space-y-1.5">
+        <h3 class="text-base font-bold text-navy-brand font-heading border-b border-slate-100 pb-1.5">1. Statutory Obligation & Scope</h3>
+        <p class="text-slate-600 font-medium">
+          SakshamSetu provides accessible digital, physical, and academic services to ensure universal barrier-free participation for students with disabilities across the campus ecosystem. All services comply with mandatory government directives.
+        </p>
+      </section>
+
+      <section class="space-y-1.5">
+        <h3 class="text-base font-bold text-navy-brand font-heading border-b border-slate-100 pb-1.5">2. Equal Examination & Academic Accommodations</h3>
+        <p class="text-slate-600 font-medium">
+          Enrolled students are entitled to reasonable accommodations including qualified scribes, compensatory examination time (minimum 20 minutes per hour), accessible e-Text/braille materials, and assistive workstation access.
+        </p>
+      </section>
+
+      <section class="space-y-1.5">
+        <h3 class="text-base font-bold text-navy-brand font-heading border-b border-slate-100 pb-1.5">3. Non-Discrimination & Anonymous Grievance Right</h3>
+        <p class="text-slate-600 font-medium">
+          Every campus member has the unconditional right to file barrier reports anonymously. The administration is bound by law to assess and remediate reported obstructions without requiring student identity disclosure.
+        </p>
+      </section>
+
+      <section class="space-y-1.5">
+        <h3 class="text-base font-bold text-navy-brand font-heading border-b border-slate-100 pb-1.5">4. Accessible Transit & Emergency Protocol</h3>
+        <p class="text-slate-600 font-medium">
+          Campus electric shuttle vans and medical facilities are priority-reserved for students with mobility impairments and acute medical needs. Emergency triggers dispatch immediate response teams without administrative hindrance.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-200/80 bg-white p-6 text-center text-xs text-slate-500 font-medium">
+    <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+      <p>© 2024 SakshamSetu Educational Platform. All rights reserved.</p>
+      <div class="flex gap-4">
+        <a href="terms.html" class="hover:text-navy-brand font-bold">Terms of Service</a>
+        <a href="privacy.html" class="hover:text-navy-brand">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { auth } from './js/auth.js';
+    import { apiFetch } from './js/api.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      auth.initAccessibility();
+      try {
+        // Public unauthenticated route: GET /api/terms (requireAuth = false)
+        await apiFetch('/api/terms', { method: 'GET' }, false);
+      } catch (e) {
+        // Fallback to static charter content
+      }
+    });
+  </script>
+</body>
+</html>

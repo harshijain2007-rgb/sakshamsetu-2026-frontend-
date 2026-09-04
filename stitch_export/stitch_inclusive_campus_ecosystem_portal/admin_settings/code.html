@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Institution Settings - EduAbility</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Atkinson Hyperlegible Next (Assuming it's available via standard GWF or local, relying on standard loading behavior for now, but adding preconnects) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "visual-active": "#006B3D",
+                      "surface-tint": "#255fa6",
+                      "outline": "#727782",
+                      "secondary": "#046d3f",
+                      "surface-container-low": "#f3f3f4",
+                      "border-dark": "#333333",
+                      "surface-container-high": "#e8e8e8",
+                      "primary": "#003469",
+                      "outline-variant": "#c2c6d2",
+                      "on-secondary-fixed-variant": "#00522e",
+                      "error": "#ba1a1a",
+                      "error-container": "#ffdad6",
+                      "primary-fixed": "#d5e3ff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-fixed": "#001b3c",
+                      "surface": "#f9f9f9",
+                      "secondary-fixed-dim": "#81d9a0",
+                      "on-tertiary-fixed": "#341100",
+                      "on-tertiary-fixed-variant": "#793100",
+                      "surface-container-highest": "#e2e2e2",
+                      "on-secondary-fixed": "#00210f",
+                      "surface-bright": "#f9f9f9",
+                      "focus-indicator": "#FFD600",
+                      "secondary-fixed": "#9df5bb",
+                      "inverse-surface": "#2f3131",
+                      "background": "#f9f9f9",
+                      "primary-container": "#004b91",
+                      "tertiary-fixed-dim": "#ffb691",
+                      "high-contrast-text": "#1A1A1A",
+                      "surface-container": "#eeeeee",
+                      "on-background": "#1a1c1c",
+                      "secondary-container": "#9af3b8",
+                      "surface-dim": "#dadada",
+                      "surface-variant": "#e2e2e2",
+                      "on-tertiary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed-variant": "#004689",
+                      "tertiary": "#5c2400",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#f0f1f1",
+                      "primary-fixed-dim": "#a7c8ff",
+                      "on-surface-variant": "#424751",
+                      "on-secondary-container": "#0f7142",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "emergency-red": "#D92D20",
+                      "on-primary-container": "#95bdff",
+                      "on-tertiary-container": "#ffa678",
+                      "tertiary-fixed": "#ffdbcb",
+                      "tertiary-container": "#7f3502",
+                      "on-surface": "#1a1c1c",
+                      "inverse-primary": "#a7c8ff",
+                      "voice-active": "#004B91"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "touch-target-min": "56px",
+                      "margin-mobile": "16px",
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "container-max": "1200px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Atkinson Hyperlegible", "sans-serif"],
+                      "body-md": ["Atkinson Hyperlegible", "sans-serif"],
+                      "headline-lg-mobile": ["Atkinson Hyperlegible", "sans-serif"],
+                      "headline-md": ["Atkinson Hyperlegible", "sans-serif"],
+                      "code-display": ["Atkinson Hyperlegible", "sans-serif"],
+                      "label-bold": ["Atkinson Hyperlegible", "sans-serif"],
+                      "body-lg": ["Atkinson Hyperlegible", "sans-serif"]
+              },
+              "fontSize": {
+                      "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                      "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                      "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                      "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                      "code-display": ["48px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "800" }],
+                      "label-bold": ["16px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                      "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        /* Baseline structural overrides for extreme accessibility */
+        body { font-family: 'Atkinson Hyperlegible', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom Focus Rings for all interactive elements */
+        *:focus-visible {
+            outline: 4px solid #FFD600 !important;
+            outline-offset: 2px !important;
+        }
+        /* Hide scrollbar for clean aesthetic while keeping functionality */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: #f3f3f4; }
+        ::-webkit-scrollbar-thumb { background: #333333; border: 2px solid #f3f3f4; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col">
+<!-- TopAppBar Shared Component -->
+<!-- Applying style_component_shape: docked full-width top-0 -->
+<!-- Applying style_bg_color: bg-surface -->
+<!-- Applying style_separation_logic: border-b-2 border-border-dark -->
+<!-- Applying style_shadows_and_elevation: flat no shadows -->
+<header class="w-full top-0 bg-surface border-b-2 border-border-dark z-40">
+<!-- Applying style_shell_layout: flex justify-between items-center w-full px-margin-desktop h-touch-target-min -->
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-touch-target-min mx-auto">
+<!-- Brand Logo -->
+<!-- Applying style_brand_logo: text-headline-md font-headline-md font-extrabold text-primary -->
+<div class="text-headline-md font-headline-md font-extrabold text-primary flex items-center gap-3">
+<span aria-hidden="true" class="material-symbols-outlined text-4xl fill text-primary" data-icon="school">school</span>
+                EduAbility
+            </div>
+<!-- Navigation Links (Hidden on mobile, uses TopAppBar logic for Web) -->
+<nav aria-label="Main Navigation" class="hidden md:flex h-full items-stretch">
+<!-- Anti-Hallucination: Current page "Institution Settings" does not match these tabs. All inactive. -->
+<a class="flex items-center px-6 h-full text-on-surface-variant font-label-bold text-label-bold hover:bg-surface-container transition-none border-b-4 border-transparent" href="#">
+                    Dashboard
+                </a>
+<a class="flex items-center px-6 h-full text-on-surface-variant font-label-bold text-label-bold hover:bg-surface-container transition-none border-b-4 border-transparent" href="#">
+                    Portal
+                </a>
+<a class="flex items-center px-6 h-full text-on-surface-variant font-label-bold text-label-bold hover:bg-surface-container transition-none border-b-4 border-transparent" href="#">
+                    Reports
+                </a>
+<a class="flex items-center px-6 h-full text-on-surface-variant font-label-bold text-label-bold hover:bg-surface-container transition-none border-b-4 border-transparent" href="#">
+                    Help
+                </a>
+</nav>
+<!-- Trailing Action -->
+<div class="flex items-center gap-4 h-full">
+<button class="hidden md:flex h-touch-target-min items-center px-6 bg-surface-container-high border-2 border-border-dark text-on-surface font-label-bold text-label-bold hover:bg-surface-dim transition-none gap-2">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+                    Admin Role
+                </button>
+<!-- Mobile Menu Trigger -->
+<button aria-label="Open Menu" class="md:hidden h-touch-target-min w-[56px] flex items-center justify-center border-2 border-border-dark bg-surface text-on-surface">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12">
+<!-- Page Title -->
+<div class="mb-10 border-b-4 border-border-dark pb-6">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-high-contrast-text">
+                Institution Settings
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-4 max-w-3xl">
+                Configure global parameters for the educational environment. Changes applied here affect all student and staff portals immediately.
+            </p>
+</div>
+<!-- Rigid Fixed Grid Layout for Sections -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- Section 1: Institution Profile -->
+<section aria-labelledby="profile-heading" class="lg:col-span-8 bg-surface border-4 border-border-dark p-6 md:p-10">
+<h2 class="font-headline-md text-headline-md text-primary mb-8 flex items-center gap-4" id="profile-heading">
+<span aria-hidden="true" class="material-symbols-outlined text-3xl" data-icon="domain">domain</span>
+                    Institution Profile
+                </h2>
+<div class="space-y-8 flex flex-col">
+<!-- Input: Name -->
+<div class="flex flex-col">
+<label class="font-label-bold text-label-bold text-high-contrast-text mb-2" for="inst-name">
+                            Registered Institution Name
+                        </label>
+<input class="h-touch-target-min w-full bg-surface-container-lowest border-2 border-border-dark px-4 font-body-lg text-body-lg text-high-contrast-text focus:outline-none" id="inst-name" type="text" value="Springfield Special Needs Academy"/>
+</div>
+<!-- Input: Contact -->
+<div class="flex flex-col">
+<label class="font-label-bold text-label-bold text-high-contrast-text mb-2" for="inst-contact">
+                            Primary Administrative Contact (Email or Phone)
+                        </label>
+<input class="h-touch-target-min w-full bg-surface-container-lowest border-2 border-border-dark px-4 font-body-lg text-body-lg text-high-contrast-text focus:outline-none" id="inst-contact" type="text" value="admin@springfield-academy.edu"/>
+</div>
+<!-- Logo Upload (Flat Design Construction) -->
+<div class="flex flex-col">
+<span class="font-label-bold text-label-bold text-high-contrast-text mb-2">
+                            Institution Logo
+                        </span>
+<div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center p-6 border-2 border-dashed border-border-dark bg-surface-container-low">
+<!-- Visual placeholder instead of image to keep HTML clean per instructions, simulating uploaded state -->
+<div class="w-32 h-32 bg-surface-container-lowest border-2 border-border-dark flex items-center justify-center flex-shrink-0">
+<span class="font-headline-md text-headline-md text-primary font-bold">SSA</span>
+</div>
+<div class="flex flex-col gap-4 w-full">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                                    Current logo is active. Upload a new image to replace it. High-contrast PNG or SVG recommended.
+                                </p>
+<button class="h-touch-target-min px-8 bg-secondary text-on-secondary font-label-bold text-label-bold border-2 border-secondary hover:bg-surface-container-lowest hover:text-secondary hover:border-secondary transition-colors w-full sm:w-auto flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined" data-icon="upload">upload</span>
+                                    REPLACE LOGO
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Notification Preferences -->
+<section aria-labelledby="notif-heading" class="lg:col-span-4 bg-surface-container-low border-4 border-border-dark p-6 md:p-10 h-full">
+<h2 class="font-headline-md text-headline-md text-primary mb-8 flex items-center gap-4" id="notif-heading">
+<span aria-hidden="true" class="material-symbols-outlined text-3xl" data-icon="notifications_active">notifications_active</span>
+                    Notifications
+                </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8">
+                    Select how administrative alerts are delivered to system administrators.
+                </p>
+<div class="space-y-6 flex flex-col">
+<!-- Custom Checkbox 1 (Checked State) -->
+<label class="flex items-start gap-4 cursor-pointer group">
+<div class="relative flex items-center justify-center w-[32px] h-[32px] border-4 border-border-dark bg-primary flex-shrink-0 mt-1">
+<input aria-label="Enable Email Alerts" checked="" class="sr-only" type="checkbox"/>
+<!-- Custom checkmark replacement per guidelines (solid interior or dash) -->
+<div class="w-4 h-4 bg-on-primary"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-bold text-label-bold text-high-contrast-text group-hover:underline decoration-2 underline-offset-4">Email Alerts</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-1">Receive daily summaries and critical incident reports via email.</span>
+</div>
+</label>
+<div class="w-full h-[2px] bg-border-dark opacity-20"></div>
+<!-- Custom Checkbox 2 (Unchecked State) -->
+<label class="flex items-start gap-4 cursor-pointer group">
+<div class="relative flex items-center justify-center w-[32px] h-[32px] border-4 border-border-dark bg-surface-container-lowest flex-shrink-0 mt-1">
+<input aria-label="Enable In-App Alerts" class="sr-only" type="checkbox"/>
+<!-- Empty interior for unchecked -->
+</div>
+<div class="flex flex-col">
+<span class="font-label-bold text-label-bold text-high-contrast-text group-hover:underline decoration-2 underline-offset-4">In-App Banner</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-1">Show persistent banners at the top of the portal for active alerts.</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Section 3: Accessibility Norm Thresholds (Full Width) -->
+<section aria-labelledby="thresh-heading" class="lg:col-span-12 bg-primary-fixed border-4 border-border-dark p-6 md:p-10 mt-4">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-8 border-b-4 border-primary pb-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-primary-fixed flex items-center gap-4" id="thresh-heading">
+<span aria-hidden="true" class="material-symbols-outlined text-3xl" data-icon="accessibility_new">accessibility_new</span>
+                            Accessibility Norm Thresholds
+                        </h2>
+<p class="font-body-lg text-body-lg text-on-primary-fixed-variant mt-2 max-w-3xl">
+                            Set the required compliance percentage for curriculum content before it is published to student portals.
+                        </p>
+</div>
+<!-- Massive Scale Display per guidelines -->
+<div class="bg-surface-container-lowest border-4 border-border-dark px-8 py-4 text-center min-w-[200px]">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest block mb-2">Current Target</span>
+<span class="font-code-display text-code-display text-primary block">90%</span>
+</div>
+</div>
+<div class="flex flex-col">
+<label class="font-label-bold text-label-bold text-on-primary-fixed mb-4">
+                        Select new compliance target:
+                    </label>
+<!-- High Visibility Touch Targets -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+<button class="h-[80px] bg-surface border-4 border-border-dark text-on-surface font-headline-md text-headline-md hover:bg-surface-variant transition-none" type="button">
+                            50%
+                        </button>
+<button class="h-[80px] bg-surface border-4 border-border-dark text-on-surface font-headline-md text-headline-md hover:bg-surface-variant transition-none" type="button">
+                            75%
+                        </button>
+<!-- Active State: Color Inversion (White background colored text/border doesn't fit standard buttons, using solid primary per button guidelines) -->
+<button aria-pressed="true" class="h-[80px] bg-primary border-4 border-border-dark text-on-primary font-headline-md text-headline-md relative" type="button">
+                            90%
+                            <span class="absolute top-2 right-2 material-symbols-outlined text-xl" data-icon="check_circle">check_circle</span>
+</button>
+<button class="h-[80px] bg-surface border-4 border-border-dark text-on-surface font-headline-md text-headline-md hover:bg-surface-variant transition-none" type="button">
+                            100%
+                        </button>
+</div>
+</div>
+<!-- Save Action Contextual to this critical section -->
+<div class="mt-10 flex justify-end">
+<button class="h-touch-target-min px-12 bg-visual-active text-on-primary font-label-bold text-label-bold text-lg border-4 border-border-dark hover:bg-surface-container-lowest hover:text-visual-active transition-colors flex items-center justify-center gap-3" type="button">
+<span class="material-symbols-outlined" data-icon="save">save</span>
+                        APPLY THRESHOLD
+                    </button>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Inline script to handle simple robust interactions (e.g., checkbox toggles visually)
+        document.querySelectorAll('label').forEach(label => {
+            const checkbox = label.querySelector('input[type="checkbox"]');
+            if(checkbox) {
+                checkbox.addEventListener('change', (e) => {
+                    const visualBox = label.querySelector('.w-\\[32px\\]');
+                    if(e.target.checked) {
+                        visualBox.classList.remove('bg-surface-container-lowest');
+                        visualBox.classList.add('bg-primary');
+                        visualBox.innerHTML = '<div class="w-4 h-4 bg-on-primary"></div>';
+                    } else {
+                        visualBox.classList.add('bg-surface-container-lowest');
+                        visualBox.classList.remove('bg-primary');
+                        visualBox.innerHTML = '';
+                    }
+                });
+            }
+        });
+    </script>
+</body></html>

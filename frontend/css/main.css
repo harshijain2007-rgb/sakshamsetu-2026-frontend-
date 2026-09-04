@@ -1,0 +1,536 @@
+/**
+ * SakshamSetu Modern Stitch-Inspired Design System Stylesheet
+ * Typography: Plus Jakarta Sans & Outfit
+ * Palette: Deep Navy (#0d2859, #0a2558), Ice/Mint Backdrops (#edf6f1, #f3f8fd, #f8fafc), Pure White Cards (#FFFFFF)
+ * Accents: Emerald Green (#16a34a), Crimson Alert (#ef4444), Amber (#f59e0b)
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+:root {
+  --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  
+  --bg-page: #f8fafc;
+  --bg-mint: #edf6f1;
+  --bg-ice: #f3f8fd;
+  
+  --surface-card: #ffffff;
+  --surface-muted: #f1f5f9;
+  
+  --navy-primary: #0d2859;
+  --navy-dark: #07193b;
+  --blue-accent: #2563eb;
+  --blue-soft: #eff6ff;
+  
+  --green-emerald: #16a34a;
+  --green-light: #dcfce7;
+  --green-glow: rgba(34, 197, 94, 0.35);
+  
+  --red-crimson: #ef4444;
+  --red-light: #fee2e2;
+  
+  --amber-warning: #f59e0b;
+  --amber-light: #fef3c7;
+  
+  --border-card: #e2e8f0;
+  --border-light: #f1f5f9;
+  
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+  
+  --focus-ring: #2563eb;
+  
+  --radius-card: 24px;
+  --radius-input: 14px;
+  --radius-btn: 14px;
+  --radius-pill: 9999px;
+  
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  --shadow-hover: 0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
+}
+
+/* Base Reset & Typography */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--navy-primary);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Skip Link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background-color: var(--navy-primary);
+  color: #ffffff;
+  padding: 10px 18px;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  z-index: 10000;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 16px;
+  outline: 3px solid var(--focus-ring);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring) !important;
+  outline-offset: 2px !important;
+}
+
+/* Accessibility Control Bar */
+.a11y-bar {
+  background-color: var(--navy-primary);
+  color: #ffffff;
+  padding: 6px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.a11y-btn {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.a11y-btn:hover {
+  background-color: #ffffff;
+  color: var(--navy-primary);
+}
+
+/* Polished Cards */
+.stitch-card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.stitch-card-interactive:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: #cbd5e1;
+}
+
+/* Voice Visualizer Rings (Voice Portal Hero) */
+.voice-hero-ring-outer {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #e2f7eb 0%, #c4f2d7 65%, transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: pulse-ring 3s infinite ease-in-out;
+}
+
+.voice-hero-ring-inner {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background-color: #a7ebb9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 40px rgba(34, 197, 94, 0.3);
+}
+
+.voice-mic-core {
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  background-color: #1e6e38;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 10px 25px rgba(22, 101, 52, 0.4);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.voice-mic-core:hover {
+  transform: scale(1.05);
+  background-color: #166534;
+}
+
+.voice-listening-pill {
+  position: absolute;
+  bottom: -14px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-pill);
+  padding: 6px 18px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1e6e38;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.98); opacity: 0.85; }
+  50% { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(0.98); opacity: 0.85; }
+}
+
+/* Badge Utilities */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge-open {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+
+.badge-review {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.badge-resolved {
+  background-color: #dcfce7;
+  color: #16a34a;
+  border: 1px solid #86efac;
+}
+
+.badge-neutral {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+/* Custom Controls */
+.custom-radio {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #94a3b8;
+  border-radius: 50%;
+  background-color: #ffffff;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  margin: 0;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.custom-radio:checked {
+  border-color: var(--navy-primary);
+  background-color: var(--navy-primary);
+}
+
+.custom-radio:checked::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ffffff;
+}
+
+/* Sidebar Active Styles */
+.sidebar-link-active {
+  background-color: #1e50a2 !important;
+  color: #ffffff !important;
+}
+
+.sidebar-link-active span {
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   Accessibility Presets (Universal across all portals & layout-preserving)
+   ========================================================================== */
+
+/* 1. Dyslexia Support */
+.mode-dyslexic,
+.mode-dyslexic body,
+.mode-dyslexic p,
+.mode-dyslexic span:not(.material-symbols-outlined),
+.mode-dyslexic a,
+.mode-dyslexic h1,
+.mode-dyslexic h2,
+.mode-dyslexic h3,
+.mode-dyslexic h4,
+.mode-dyslexic h5,
+.mode-dyslexic h6,
+.mode-dyslexic button,
+.mode-dyslexic input,
+.mode-dyslexic label,
+.mode-dyslexic select,
+.mode-dyslexic textarea,
+.mode-dyslexic td,
+.mode-dyslexic th,
+.mode-dyslexic li {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  letter-spacing: 0.08em !important;
+  word-spacing: 0.18em !important;
+  line-height: 1.85 !important;
+}
+
+/* 2. High Contrast Theme (WCAG AAA - Dark & Amber Gold) */
+html.mode-high-contrast,
+body.mode-high-contrast {
+  background-color: #090d16 !important;
+  color: #ffffff !important;
+}
+
+.mode-high-contrast body,
+.mode-high-contrast main,
+.mode-high-contrast aside,
+.mode-high-contrast header,
+.mode-high-contrast footer,
+.mode-high-contrast section,
+.mode-high-contrast article,
+.mode-high-contrast .stitch-card,
+.mode-high-contrast .bg-white,
+.mode-high-contrast .bg-slate-50,
+.mode-high-contrast .bg-slate-100,
+.mode-high-contrast .bg-mint-bg,
+.mode-high-contrast .bg-slate-200,
+.mode-high-contrast .bg-indigo-50,
+.mode-high-contrast .bg-blue-50,
+.mode-high-contrast .bg-orange-50 {
+  background-color: #121826 !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.mode-high-contrast h1,
+.mode-high-contrast h2,
+.mode-high-contrast h3,
+.mode-high-contrast h4,
+.mode-high-contrast h5,
+.mode-high-contrast h6,
+.mode-high-contrast .text-navy-brand,
+.mode-high-contrast strong {
+  color: #fbbf24 !important; /* High contrast amber-gold */
+}
+
+.mode-high-contrast p,
+.mode-high-contrast span:not(.material-symbols-outlined):not(.badge-pill),
+.mode-high-contrast td,
+.mode-high-contrast th,
+.mode-high-contrast label,
+.mode-high-contrast li {
+  color: #f1f5f9 !important;
+}
+
+.mode-high-contrast .text-slate-400,
+.mode-high-contrast .text-slate-500,
+.mode-high-contrast .text-slate-600,
+.mode-high-contrast .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+.mode-high-contrast input,
+.mode-high-contrast textarea,
+.mode-high-contrast select {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #fbbf24 !important;
+}
+
+.mode-high-contrast button:not(#btn-contrast):not(#voice-toggle-btn):not(#voice-emergency-btn),
+.mode-high-contrast a.stitch-card {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #60a5fa !important;
+}
+
+.mode-high-contrast a:not(.stitch-card):not(.btn-dyslexia):not(.btn-contrast):not(.btn-text-size):not(.a11y-btn) {
+  color: #93c5fd !important;
+}
+
+/* 3. Text Sizing (Layout-Preserving with Upper Limit: Scales typography without distorting containers or layout) */
+.mode-text-medium h1 { font-size: 1.15em !important; }
+.mode-text-medium h2 { font-size: 1.15em !important; }
+.mode-text-medium h3 { font-size: 1.12em !important; }
+.mode-text-medium h4 { font-size: 1.1em !important; }
+.mode-text-medium p,
+.mode-text-medium span:not(.material-symbols-outlined),
+.mode-text-medium a,
+.mode-text-medium button,
+.mode-text-medium input,
+.mode-text-medium select,
+.mode-text-medium textarea,
+.mode-text-medium label,
+.mode-text-medium td,
+.mode-text-medium th,
+.mode-text-medium li {
+  font-size: 1.12em !important;
+  line-height: 1.5 !important;
+}
+
+/* Level 2: Maximum Scaled Step (+25% Upper Limit) */
+.mode-text-max h1 { font-size: 1.25em !important; }
+.mode-text-max h2 { font-size: 1.25em !important; }
+.mode-text-max h3 { font-size: 1.2em !important; }
+.mode-text-max h4 { font-size: 1.18em !important; }
+.mode-text-max p,
+.mode-text-max span:not(.material-symbols-outlined),
+.mode-text-max a,
+.mode-text-max button,
+.mode-text-max input,
+.mode-text-max select,
+.mode-text-max textarea,
+.mode-text-max label,
+.mode-text-max td,
+.mode-text-max th,
+.mode-text-max li {
+  font-size: 1.25em !important;
+  line-height: 1.55 !important;
+  word-break: break-word;
+}
+
+/* Backward compatibility aliases */
+.mode-text-large h1, .mode-text-large h2, .mode-text-large h3, .mode-text-large p, .mode-text-large span { font-size: 1.12em !important; }
+.mode-text-xlarge h1, .mode-text-xlarge h2, .mode-text-xlarge h3, .mode-text-xlarge p, .mode-text-xlarge span { font-size: 1.25em !important; }
+
+/* Compact Floating Voice Assistant Button (for non-voice pages) */
+.voice-compact-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9000;
+  margin: 0;
+  padding: 0;
+}
+
+.voice-fab-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: var(--navy-primary, #0d2859);
+  color: #ffffff;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 4px 16px rgba(13, 40, 89, 0.3), 0 2px 6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline-offset: 3px;
+}
+
+.voice-fab-btn .material-symbols-outlined {
+  font-size: 28px !important;
+  line-height: 1;
+}
+
+.voice-fab-btn:hover {
+  transform: scale(1.08);
+  background-color: #07193b;
+  box-shadow: 0 6px 22px rgba(13, 40, 89, 0.4);
+}
+
+.voice-fab-btn:focus-visible {
+  outline: 3px solid var(--blue-accent, #2563eb) !important;
+}
+
+.voice-fab-btn.listening {
+  background-color: #16a34a !important;
+  border-color: #dcfce7;
+  box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.35), 0 4px 18px rgba(22, 163, 74, 0.45);
+  animation: pulse-fab 1.5s infinite ease-in-out;
+}
+
+.voice-fab-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: #94a3b8;
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.voice-fab-dot.dot-active {
+  background-color: #22c55e;
+  transform: scale(1.1);
+}
+
+@keyframes pulse-fab {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+.mode-high-contrast .voice-fab-btn {
+  background-color: #1e293b !important;
+  color: #ffd600 !important;
+  border-color: #ffd600 !important;
+}
+
+.mode-high-contrast .voice-fab-btn.listening {
+  background-color: #16a34a !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+/* Emergency Modal Backdrop */
+.emergency-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}

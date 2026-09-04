@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Institution Settings - EduAbility</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Noto Serif -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "visual-active": "#006B3D",
+                      "surface-tint": "#3366cc",
+                      "outline": "#74777f",
+                      "secondary": "#535f70",
+                      "surface-container-low": "#f3f3fa",
+                      "border-dark": "#333333",
+                      "surface-container-high": "#e7e8ee",
+                      "primary": "#3366cc",
+                      "outline-variant": "#c4c6d0",
+                      "on-secondary-fixed-variant": "#3c4858",
+                      "error": "#ba1a1a",
+                      "error-container": "#ffdad6",
+                      "primary-fixed": "#d8e2ff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-fixed": "#001a41",
+                      "surface": "#fdf8fd",
+                      "secondary-fixed-dim": "#b9c6ea",
+                      "on-tertiary-fixed": "#2b1236",
+                      "on-tertiary-fixed-variant": "#5a3e66",
+                      "surface-container-highest": "#e2e2e9",
+                      "on-secondary-fixed": "#101c2b",
+                      "surface-bright": "#fdf8fd",
+                      "focus-indicator": "#FFD600",
+                      "secondary-fixed": "#d5e3ff",
+                      "inverse-surface": "#2e3036",
+                      "background": "#fdf8fd",
+                      "primary-container": "#00489b",
+                      "tertiary-fixed-dim": "#e2bced",
+                      "high-contrast-text": "#1A1A1A",
+                      "surface-container": "#edeef4",
+                      "on-background": "#1a1b21",
+                      "secondary-container": "#dce2f9",
+                      "surface-dim": "#d9dae0",
+                      "surface-variant": "#e0e2ec",
+                      "on-tertiary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed-variant": "#004789",
+                      "tertiary": "#70557c",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#f0f0f7",
+                      "primary-fixed-dim": "#adc6ff",
+                      "on-surface-variant": "#44474f",
+                      "on-secondary-container": "#111c2b",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "emergency-red": "#D92D20",
+                      "on-primary-container": "#d8e2ff",
+                      "on-tertiary-container": "#faddff",
+                      "tertiary-fixed": "#fddaff",
+                      "tertiary-container": "#573e64",
+                      "on-surface": "#1a1b21",
+                      "inverse-primary": "#adc6ff",
+                      "voice-active": "#004B91"
+              },
+              "borderRadius": {
+                      "DEFAULT": "4px",
+                      "lg": "4px",
+                      "xl": "4px",
+                      "full": "4px"
+              },
+              "spacing": {
+                      "touch-target-min": "56px",
+                      "margin-mobile": "16px",
+                      "margin-desktop": "64px",
+                      "gutter": "32px",
+                      "container-max": "1000px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Noto Serif", "serif"],
+                      "body-md": ["Noto Serif", "serif"],
+                      "headline-lg-mobile": ["Noto Serif", "serif"],
+                      "headline-md": ["Noto Serif", "serif"],
+                      "code-display": ["Noto Serif", "serif"],
+                      "label-bold": ["Noto Serif", "serif"],
+                      "body-lg": ["Noto Serif", "serif"]
+              },
+              "fontSize": {
+                      "headline-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "body-md": ["16px", { "lineHeight": "1.7", "fontWeight": "400" }],
+                      "headline-lg-mobile": ["36px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                      "headline-md": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                      "code-display": ["48px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                      "label-bold": ["14px", { "lineHeight": "1.5", "letterSpacing": "0.1em", "fontWeight": "700" }],
+                      "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        /* Baseline structural overrides for extreme accessibility */
+        body { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom Focus Rings for all interactive elements */
+        *:focus-visible {
+            outline: 2px solid #3366cc !important;
+            outline-offset: 2px !important;
+        }
+        /* Hide scrollbar for clean aesthetic while keeping functionality */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d9dae0; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col">
+<!-- TopAppBar Shared Component -->
+<header class="w-full top-0 bg-surface border-b border-surface-variant z-40">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-[72px] max-w-container-max mx-auto">
+<!-- Brand Logo -->
+<div class="text-headline-md font-headline-md font-bold text-on-surface flex items-center gap-3">
+<span aria-hidden="true" class="material-symbols-outlined text-3xl" data-icon="school">school</span>
+                EduAbility
+            </div>
+<!-- Navigation Links -->
+<nav aria-label="Main Navigation" class="hidden md:flex h-full items-center gap-8">
+<a class="text-on-surface-variant font-label-bold text-label-bold uppercase tracking-widest hover:text-primary transition-colors" href="#">
+                    Dashboard
+                </a>
+<a class="text-on-surface-variant font-label-bold text-label-bold uppercase tracking-widest hover:text-primary transition-colors" href="#">
+                    Portal
+                </a>
+<a class="text-on-surface-variant font-label-bold text-label-bold uppercase tracking-widest hover:text-primary transition-colors" href="#">
+                    Reports
+                </a>
+<a class="text-on-surface-variant font-label-bold text-label-bold uppercase tracking-widest hover:text-primary transition-colors" href="#">
+                    Help
+                </a>
+</nav>
+<!-- Trailing Action -->
+<div class="flex items-center gap-4 h-full">
+<button class="hidden md:flex h-[40px] items-center px-4 bg-transparent border border-outline text-on-surface font-label-bold text-label-bold uppercase tracking-widest hover:bg-surface-variant transition-colors gap-2 rounded-full">
+<span class="material-symbols-outlined text-lg" data-icon="account_circle">account_circle</span>
+                    Admin
+                </button>
+<!-- Mobile Menu Trigger -->
+<button aria-label="Open Menu" class="md:hidden h-[48px] w-[48px] flex items-center justify-center text-on-surface rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24">
+<!-- Page Title -->
+<div class="mb-16 border-b border-surface-variant pb-8 text-center md:text-left">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
+                Institution Settings
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-6 max-w-3xl mx-auto md:mx-0">
+                Configure global parameters for the educational environment. Changes applied here affect all student and staff portals immediately.
+            </p>
+</div>
+<!-- Layout for Sections -->
+<div class="flex flex-col gap-20">
+<!-- Section 1: Institution Profile -->
+<section aria-labelledby="profile-heading" class="w-full">
+<div class="flex flex-col md:flex-row md:items-baseline justify-between mb-8 pb-4 border-b border-surface-variant">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-3" id="profile-heading">
+<span aria-hidden="true" class="material-symbols-outlined text-2xl text-primary" data-icon="domain">domain</span>
+                        Institution Profile
+                    </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+<div class="space-y-8 flex flex-col">
+<!-- Input: Name -->
+<div class="flex flex-col">
+<label class="font-label-bold text-label-bold text-on-surface uppercase tracking-widest mb-3" for="inst-name">
+                                Registered Institution Name
+                            </label>
+<input class="h-[48px] w-full bg-transparent border-b border-outline px-0 font-body-lg text-body-lg text-on-surface focus:outline-none focus:border-primary focus:border-b-2 transition-all rounded-none" id="inst-name" type="text" value="Springfield Special Needs Academy"/>
+</div>
+<!-- Input: Contact -->
+<div class="flex flex-col">
+<label class="font-label-bold text-label-bold text-on-surface uppercase tracking-widest mb-3" for="inst-contact">
+                                Primary Administrative Contact
+                            </label>
+<input class="h-[48px] w-full bg-transparent border-b border-outline px-0 font-body-lg text-body-lg text-on-surface focus:outline-none focus:border-primary focus:border-b-2 transition-all rounded-none" id="inst-contact" type="text" value="admin@springfield-academy.edu"/>
+</div>
+</div>
+<!-- Logo Upload -->
+<div class="flex flex-col">
+<span class="font-label-bold text-label-bold text-on-surface uppercase tracking-widest mb-3">
+                            Institution Logo
+                        </span>
+<div class="flex flex-col sm:flex-row gap-8 items-start">
+<!-- Visual placeholder instead of image -->
+<div class="w-32 h-32 bg-surface-variant border border-outline flex items-center justify-center flex-shrink-0 rounded-sm">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">SSA</span>
+</div>
+<div class="flex flex-col gap-4 w-full">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                                    Current logo is active. Upload a new image to replace it. High-contrast PNG or SVG recommended.
+                                </p>
+<button class="h-[40px] px-6 bg-transparent text-primary font-label-bold text-label-bold uppercase tracking-widest border border-primary rounded-full hover:bg-primary hover:text-on-primary transition-colors w-full sm:w-auto flex items-center justify-center gap-2 mt-2" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="upload">upload</span>
+                                    Replace Logo
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Notification Preferences -->
+<section aria-labelledby="notif-heading" class="w-full">
+<div class="flex flex-col md:flex-row md:items-baseline justify-between mb-8 pb-4 border-b border-surface-variant">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-3" id="notif-heading">
+<span aria-hidden="true" class="material-symbols-outlined text-2xl text-primary" data-icon="notifications">notifications</span>
+                        Notifications
+                    </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+<div>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                        Select how administrative alerts are delivered to system administrators.
+                    </p>
+</div>
+<div class="space-y-6 flex flex-col">
+<!-- Custom Checkbox 1 (Checked State) -->
+<label class="flex items-start gap-4 cursor-pointer group">
+<div class="relative flex items-center justify-center w-[24px] h-[24px] border-2 border-primary bg-primary flex-shrink-0 mt-1 rounded-[4px] transition-colors">
+<input aria-label="Enable Email Alerts" checked="" class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-on-primary text-[16px] font-bold">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-bold text-label-bold text-on-surface uppercase tracking-widest">Email Alerts</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-2">Receive daily summaries and critical incident reports via email.</span>
+</div>
+</label>
+<div class="w-full h-px bg-surface-variant"></div>
+<!-- Custom Checkbox 2 (Unchecked State) -->
+<label class="flex items-start gap-4 cursor-pointer group">
+<div class="relative flex items-center justify-center w-[24px] h-[24px] border-2 border-outline bg-transparent flex-shrink-0 mt-1 rounded-[4px] transition-colors group-hover:border-primary">
+<input aria-label="Enable In-App Alerts" class="sr-only" type="checkbox"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-bold text-label-bold text-on-surface uppercase tracking-widest">In-App Banner</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-2">Show persistent banners at the top of the portal for active alerts.</span>
+</div>
+</label>
+</div>
+</div>
+</section>
+<!-- Section 3: Accessibility Norm Thresholds -->
+<section aria-labelledby="thresh-heading" class="w-full">
+<div class="flex flex-col md:flex-row md:items-baseline justify-between mb-8 pb-4 border-b border-surface-variant">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-3" id="thresh-heading">
+<span aria-hidden="true" class="material-symbols-outlined text-2xl text-primary" data-icon="accessibility_new">accessibility_new</span>
+                        Accessibility Norm Thresholds
+                    </h2>
+</div>
+<div class="flex flex-col lg:flex-row gap-12 items-start">
+<div class="flex-grow">
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8 max-w-2xl">
+                        Set the required compliance percentage for curriculum content before it is published to student portals.
+                    </p>
+<div class="flex flex-col">
+<label class="font-label-bold text-label-bold text-on-surface uppercase tracking-widest mb-6">
+                            Select new compliance target:
+                        </label>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<button class="h-[64px] bg-transparent border border-outline text-on-surface font-headline-md text-headline-md hover:bg-surface-variant rounded-sm transition-colors" type="button">
+                                50%
+                            </button>
+<button class="h-[64px] bg-transparent border border-outline text-on-surface font-headline-md text-headline-md hover:bg-surface-variant rounded-sm transition-colors" type="button">
+                                75%
+                            </button>
+<!-- Active State -->
+<button aria-pressed="true" class="h-[64px] bg-primary border border-primary text-on-primary font-headline-md text-headline-md relative rounded-sm shadow-sm" type="button">
+                                90%
+                                <span class="absolute top-2 right-2 material-symbols-outlined text-[16px]" data-icon="check_circle">check_circle</span>
+</button>
+<button class="h-[64px] bg-transparent border border-outline text-on-surface font-headline-md text-headline-md hover:bg-surface-variant rounded-sm transition-colors" type="button">
+                                100%
+                            </button>
+</div>
+</div>
+</div>
+<!-- Current Target Display -->
+<div class="flex flex-col items-center justify-center p-8 border border-surface-variant bg-surface-container-low min-w-[240px] rounded-sm">
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest block mb-4 text-center">Current Target</span>
+<span class="font-code-display text-code-display text-primary block text-center">90%</span>
+</div>
+</div>
+<!-- Save Action -->
+<div class="mt-12 flex justify-end pt-8 border-t border-surface-variant">
+<button class="h-[48px] px-8 bg-primary text-on-primary font-label-bold text-label-bold uppercase tracking-widest rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="save">save</span>
+                        Apply Threshold
+                    </button>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Inline script to handle simple robust interactions
+        document.querySelectorAll('label').forEach(label => {
+            const checkbox = label.querySelector('input[type="checkbox"]');
+            if(checkbox) {
+                checkbox.addEventListener('change', (e) => {
+                    const visualBox = label.querySelector('.w-\\[24px\\]');
+                    if(e.target.checked) {
+                        visualBox.classList.remove('bg-transparent', 'border-outline');
+                        visualBox.classList.add('bg-primary', 'border-primary');
+                        visualBox.innerHTML = '<span class="material-symbols-outlined text-on-primary text-[16px] font-bold">check</span><input type="checkbox" class="sr-only" checked aria-label="' + checkbox.getAttribute('aria-label') + '">';
+                    } else {
+                        visualBox.classList.add('bg-transparent', 'border-outline');
+                        visualBox.classList.remove('bg-primary', 'border-primary');
+                        visualBox.innerHTML = '<input type="checkbox" class="sr-only" aria-label="' + checkbox.getAttribute('aria-label') + '">';
+                    }
+                });
+            }
+        });
+    </script>
+</body></html>

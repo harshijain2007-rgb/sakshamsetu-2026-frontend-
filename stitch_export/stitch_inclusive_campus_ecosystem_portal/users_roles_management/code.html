@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduAbility - Users & Roles</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "visual-active": "#006B3D",
+                        "surface-tint": "#255fa6",
+                        "outline": "#727782",
+                        "secondary": "#046d3f",
+                        "surface-container-low": "#f3f3f4",
+                        "border-dark": "#333333",
+                        "surface-container-high": "#e8e8e8",
+                        "primary": "#003469",
+                        "outline-variant": "#c2c6d2",
+                        "on-secondary-fixed-variant": "#00522e",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#001b3c",
+                        "surface": "#f9f9f9",
+                        "secondary-fixed-dim": "#81d9a0",
+                        "on-tertiary-fixed": "#341100",
+                        "on-tertiary-fixed-variant": "#793100",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-secondary-fixed": "#00210f",
+                        "surface-bright": "#f9f9f9",
+                        "focus-indicator": "#FFD600",
+                        "secondary-fixed": "#9df5bb",
+                        "inverse-surface": "#2f3131",
+                        "background": "#f9f9f9",
+                        "primary-container": "#004b91",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "high-contrast-text": "#1A1A1A",
+                        "surface-container": "#eeeeee",
+                        "on-background": "#1a1c1c",
+                        "secondary-container": "#9af3b8",
+                        "surface-dim": "#dadada",
+                        "surface-variant": "#e2e2e2",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#004689",
+                        "tertiary": "#5c2400",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f1",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "on-surface-variant": "#424751",
+                        "on-secondary-container": "#0f7142",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "emergency-red": "#D92D20",
+                        "on-primary-container": "#95bdff",
+                        "on-tertiary-container": "#ffa678",
+                        "tertiary-fixed": "#ffdbcb",
+                        "tertiary-container": "#7f3502",
+                        "on-surface": "#1a1c1c",
+                        "inverse-primary": "#a7c8ff",
+                        "voice-active": "#004B91"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "touch-target-min": "56px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Atkinson Hyperlegible Next"],
+                        "body-md": ["Atkinson Hyperlegible Next"],
+                        "headline-lg-mobile": ["Atkinson Hyperlegible Next"],
+                        "headline-md": ["Atkinson Hyperlegible Next"],
+                        "code-display": ["Atkinson Hyperlegible Next"],
+                        "label-bold": ["Atkinson Hyperlegible Next"],
+                        "body-lg": ["Atkinson Hyperlegible Next"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "code-display": ["48px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "800" }],
+                        "label-bold": ["16px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .focus-ring {
+                @apply focus:outline-none focus:ring-4 focus:ring-focus-indicator;
+            }
+            .btn-primary {
+                @apply bg-primary text-on-primary rounded-none font-label-bold text-label-bold flex items-center justify-center min-h-[56px] px-6 transition-none active:bg-on-primary active:text-primary active:border-4 active:border-primary focus-ring;
+            }
+            .btn-secondary {
+                @apply bg-secondary text-on-secondary rounded-none font-label-bold text-label-bold flex items-center justify-center min-h-[56px] px-6 transition-none active:bg-on-secondary active:text-secondary active:border-4 active:border-secondary focus-ring;
+            }
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-high-contrast-text min-h-screen flex flex-col font-body-md">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-background flex justify-between items-center w-full px-margin-desktop h-touch-target-min border-b-2 border-border-dark hidden md:flex">
+<div class="flex items-center gap-gutter">
+<h1 class="text-headline-md font-headline-md font-extrabold text-primary dark:text-primary-fixed">EduAbility</h1>
+<nav class="flex gap-gutter h-full items-end pb-1">
+<a class="text-on-surface-variant dark:text-surface-variant font-label-bold text-label-bold hover:bg-surface-container dark:hover:bg-surface-variant transition-none px-4 py-2 h-full flex items-end" href="#">Dashboard</a>
+<a class="text-primary dark:text-primary-fixed border-b-4 border-primary dark:border-primary-fixed pb-1 font-label-bold text-label-bold hover:bg-surface-container dark:hover:bg-surface-variant transition-none px-4 h-full flex items-end" href="#">Portal</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-bold text-label-bold hover:bg-surface-container dark:hover:bg-surface-variant transition-none px-4 py-2 h-full flex items-end" href="#">Reports</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-bold text-label-bold hover:bg-surface-container dark:hover:bg-surface-variant transition-none px-4 py-2 h-full flex items-end" href="#">Help</a>
+</nav>
+</div>
+<div class="flex items-center gap-unit">
+<span class="text-primary dark:text-primary-fixed font-label-bold text-label-bold">Admin Role</span>
+<button aria-label="account_circle" class="h-touch-target-min w-touch-target-min flex items-center justify-center text-primary dark:text-primary-fixed hover:bg-surface-container dark:hover:bg-surface-variant focus-ring">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</button>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<nav class="hidden lg:flex flex-col border-r-4 border-border-dark h-screen docked left-0 w-64 bg-surface dark:bg-on-background overflow-y-auto">
+<div class="p-6 border-b-4 border-border-dark flex flex-col items-center">
+<div class="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center mb-4 overflow-hidden border-2 border-border-dark">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A minimalist digital illustration of a generic user avatar placeholder, featuring a simple white outline of a head and shoulders on a flat, neutral gray background. The style is ultra-clean, high-contrast, and strictly functional without any extra details or shading." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhaivv4b2YvvNtWJWa6kT4M6iUsATzy8PQNHwguiKgzjuDiYsNftNjqHDnG7cjEOYRDmXKoAR1I7z0pEYGhqZIYGghfPmxy7p7PHXeqOepFa-VHvms5RX1kk3GYAgE8XFuVK8R0pE8AXI5aijkN2CQrNF-dKdMkMWLzZGyCJXd4PiNFT44M5UTsvt8H2OzRxPoMSXuio3WAGFRofTKnUC0wiGaOiu2vHgpstR6E1f0YYURWNy65bjuqw"/>
+</div>
+<h2 class="text-headline-md font-headline-md font-extrabold text-primary text-center">Student Portal</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 text-center">Visual-Text Mode</p>
+</div>
+<div class="flex flex-col py-4 gap-2">
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 hover:bg-surface-container-highest transition-none focus-ring" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-body-lg text-body-lg">Curriculum</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 hover:bg-surface-container-highest transition-none focus-ring" href="#">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-body-lg text-body-lg">Compliance</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface dark:text-surface-bright px-4 py-3 hover:bg-surface-container-highest transition-none focus-ring" href="#">
+<span class="material-symbols-outlined">room_service</span>
+<span class="font-body-lg text-body-lg">Services</span>
+</a>
+<a class="flex items-center gap-4 bg-secondary text-on-secondary font-bold px-4 py-3 hover:bg-surface-container-highest transition-none focus-ring" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-body-lg text-body-lg">AI Tutor</span>
+</a>
+<a class="flex items-center gap-4 text-emergency-red px-4 py-3 hover:bg-surface-container-highest transition-none focus-ring" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ambulance</span>
+<span class="font-body-lg text-body-lg font-bold">Ambulance</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop">
+<div class="max-w-container-max mx-auto flex flex-col gap-gutter">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b-4 border-border-dark pb-6">
+<div>
+<h2 class="text-headline-lg-mobile md:text-headline-lg font-headline-lg-mobile md:font-headline-lg text-primary">Users & Roles Management</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Manage staff accounts and system permissions.</p>
+</div>
+<button class="btn-primary w-full md:w-auto">
+<span class="material-symbols-outlined mr-2">add</span>
+                        ADD NEW USER
+                    </button>
+</div>
+<!-- Filters / Search (Rigid minimal layout) -->
+<div class="bg-surface border-4 border-border-dark p-6 flex flex-col md:flex-row gap-gutter">
+<div class="flex-1 flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-on-surface" for="search-users">SEARCH USERS</label>
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full min-h-[56px] pl-12 pr-4 border-2 border-border-dark bg-surface-container-lowest font-body-lg text-body-lg focus-ring" id="search-users" placeholder="Enter name or email" type="text"/>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-2">
+<label class="font-label-bold text-label-bold text-on-surface" for="filter-role">FILTER BY ROLE</label>
+<select class="w-full min-h-[56px] px-4 border-2 border-border-dark bg-surface-container-lowest font-body-lg text-body-lg focus-ring appearance-none" id="filter-role">
+<option value="all">All Roles</option>
+<option value="super-admin">Super Admin</option>
+<option value="compliance">Compliance Officer</option>
+<option value="grievance">Grievance Handler</option>
+</select>
+</div>
+</div>
+<!-- Admin Data Table -->
+<div class="overflow-x-auto border-4 border-border-dark bg-surface-container-lowest">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="bg-surface-container border-b-4 border-border-dark">
+<th class="p-4 font-label-bold text-label-bold uppercase text-primary">User Name</th>
+<th class="p-4 font-label-bold text-label-bold uppercase text-primary">Email Address</th>
+<th class="p-4 font-label-bold text-label-bold uppercase text-primary">Assigned Role</th>
+<th class="p-4 font-label-bold text-label-bold uppercase text-primary">Permissions</th>
+<th class="p-4 font-label-bold text-label-bold uppercase text-primary text-center">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md">
+<!-- Row 1 -->
+<tr class="border-b-2 border-border-dark">
+<td class="p-4 font-bold text-high-contrast-text">Sarah Jenkins</td>
+<td class="p-4 text-on-surface-variant">s.jenkins@eduability.org</td>
+<td class="p-4">
+<span class="inline-block px-3 py-1 bg-primary text-on-primary font-bold">Super Admin</span>
+</td>
+<td class="p-4">
+<div class="flex flex-col gap-2">
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="w-8 h-8 border-2 border-border-dark text-secondary focus-ring appearance-none checked:bg-secondary checked:before:content-[''] checked:before:block checked:before:w-4 checked:before:h-4 checked:before:bg-white checked:flex checked:items-center checked:justify-center" type="checkbox"/>
+<span class="font-label-bold text-label-bold">Manage Users</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="w-8 h-8 border-2 border-border-dark text-secondary focus-ring appearance-none checked:bg-secondary checked:before:content-[''] checked:before:block checked:before:w-4 checked:before:h-4 checked:before:bg-white checked:flex checked:items-center checked:justify-center" type="checkbox"/>
+<span class="font-label-bold text-label-bold">Edit Curriculum</span>
+</label>
+</div>
+</td>
+<td class="p-4 text-center">
+<button class="h-touch-target-min px-4 border-2 border-border-dark font-label-bold text-label-bold hover:bg-surface-container focus-ring">EDIT</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="border-b-2 border-border-dark">
+<td class="p-4 font-bold text-high-contrast-text">Dr. Alan Turing</td>
+<td class="p-4 text-on-surface-variant">aturing@eduability.org</td>
+<td class="p-4">
+<span class="inline-block px-3 py-1 bg-visual-active text-white font-bold">Compliance Officer</span>
+</td>
+<td class="p-4">
+<div class="flex flex-col gap-2">
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="w-8 h-8 border-2 border-border-dark text-secondary focus-ring appearance-none checked:bg-secondary checked:before:content-[''] checked:before:block checked:before:w-4 checked:before:h-4 checked:before:bg-white checked:flex checked:items-center checked:justify-center" type="checkbox"/>
+<span class="font-label-bold text-label-bold">View Reports</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="w-8 h-8 border-2 border-border-dark text-secondary focus-ring appearance-none checked:bg-secondary checked:before:content-[''] checked:before:block checked:before:w-4 checked:before:h-4 checked:before:bg-white checked:flex checked:items-center checked:justify-center" type="checkbox"/>
+<span class="font-label-bold text-label-bold">Manage Users</span>
+</label>
+</div>
+</td>
+<td class="p-4 text-center">
+<button class="h-touch-target-min px-4 border-2 border-border-dark font-label-bold text-label-bold hover:bg-surface-container focus-ring">EDIT</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b-2 border-border-dark">
+<td class="p-4 font-bold text-high-contrast-text">Marcus Aurelius</td>
+<td class="p-4 text-on-surface-variant">m.aurelius@eduability.org</td>
+<td class="p-4">
+<span class="inline-block px-3 py-1 bg-[#5c2400] text-white font-bold">Grievance Handler</span>
+</td>
+<td class="p-4">
+<div class="flex flex-col gap-2">
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="w-8 h-8 border-2 border-border-dark text-secondary focus-ring appearance-none checked:bg-secondary checked:before:content-[''] checked:before:block checked:before:w-4 checked:before:h-4 checked:before:bg-white checked:flex checked:items-center checked:justify-center" type="checkbox"/>
+<span class="font-label-bold text-label-bold">Resolve Grievances</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="w-8 h-8 border-2 border-border-dark text-secondary focus-ring appearance-none checked:bg-secondary checked:before:content-[''] checked:before:block checked:before:w-4 checked:before:h-4 checked:before:bg-white checked:flex checked:items-center checked:justify-center" type="checkbox"/>
+<span class="font-label-bold text-label-bold">Edit Curriculum</span>
+</label>
+</div>
+</td>
+<td class="p-4 text-center">
+<button class="h-touch-target-min px-4 border-2 border-border-dark font-label-bold text-label-bold hover:bg-surface-container focus-ring">EDIT</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+</body></html>

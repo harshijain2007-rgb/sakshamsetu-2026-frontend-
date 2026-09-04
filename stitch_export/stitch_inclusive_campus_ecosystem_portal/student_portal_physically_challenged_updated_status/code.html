@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Student Portal - Physically Challenged Mode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#ffa678",
+                        "inverse-on-surface": "#f0f1f1",
+                        "on-secondary-fixed-variant": "#00522e",
+                        "inverse-primary": "#a7c8ff",
+                        "on-secondary-container": "#0f7142",
+                        "surface-tint": "#255fa6",
+                        "surface-container-low": "#f3f3f4",
+                        "secondary-container": "#9af3b8",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#00210f",
+                        "primary": "#003469",
+                        "on-background": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#004b91",
+                        "emergency-red": "#D92D20",
+                        "surface-container-high": "#e8e8e8",
+                        "high-contrast-text": "#1A1A1A",
+                        "on-surface": "#1a1c1c",
+                        "surface-container": "#eeeeee",
+                        "on-primary-container": "#95bdff",
+                        "voice-active": "#004B91",
+                        "background": "#f9f9f9",
+                        "focus-indicator": "#FFD600",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "tertiary": "#5c2400",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcb",
+                        "surface-variant": "#e2e2e2",
+                        "surface-bright": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#2f3131",
+                        "secondary": "#046d3f",
+                        "primary-fixed": "#d5e3ff",
+                        "secondary-fixed-dim": "#81d9a0",
+                        "on-tertiary-fixed": "#341100",
+                        "outline-variant": "#c2c6d2",
+                        "surface-container-highest": "#e2e2e2",
+                        "tertiary-fixed-dim": "#ffb691",
+                        "on-primary-fixed-variant": "#004689",
+                        "visual-active": "#006B3D",
+                        "border-dark": "#333333",
+                        "on-surface-variant": "#424751",
+                        "secondary-fixed": "#9df5bb",
+                        "on-error": "#ffffff",
+                        "outline": "#727782",
+                        "on-primary-fixed": "#001b3c",
+                        "surface": "#f9f9f9",
+                        "tertiary-container": "#7f3502",
+                        "on-tertiary-fixed-variant": "#793100",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max": "1200px",
+                        "margin-desktop": "64px",
+                        "touch-target-min": "56px",
+                        "margin-mobile": "16px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Atkinson Hyperlegible Next"],
+                        "body-lg": ["Atkinson Hyperlegible Next"],
+                        "headline-lg-mobile": ["Atkinson Hyperlegible Next"],
+                        "body-md": ["Atkinson Hyperlegible Next"],
+                        "headline-md": ["Atkinson Hyperlegible Next"],
+                        "label-bold": ["Atkinson Hyperlegible Next"],
+                        "code-display": ["Atkinson Hyperlegible Next"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "800" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "800" }],
+                        "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["28px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "label-bold": ["16px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "code-display": ["48px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "800" }]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Atkinson Hyperlegible Next', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row">
+<!-- TopAppBar (Mobile Only) -->
+<header class="md:hidden flex justify-between items-center w-full px-margin-mobile h-touch-target-min bg-surface border-b-4 border-border-dark">
+<span class="text-headline-lg-mobile font-headline-lg-mobile font-extrabold text-primary">EduAbility</span>
+<div class="flex items-center gap-4">
+<span class="font-label-bold text-label-bold text-primary">Admin Role</span>
+<span class="material-symbols-outlined text-primary" data-icon="account_circle" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</div>
+</header>
+<!-- SideNavBar (Desktop Only) -->
+<nav class="hidden md:flex flex-col border-r-4 border-border-dark h-screen w-64 bg-surface shrink-0">
+<div class="p-6 border-b-4 border-border-dark mb-4">
+<div class="flex items-center gap-4 mb-2">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center border-2 border-border-dark">
+<span class="material-symbols-outlined text-on-surface" data-icon="person">person</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-primary font-bold">Student Portal</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Visual-Text Mode</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2 px-4">
+<a class="flex items-center gap-4 text-on-surface px-4 py-3 border-2 border-transparent hover:border-border-dark min-h-[56px]" href="#">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+<span class="font-body-lg text-body-lg">Compliance</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface px-4 py-3 border-2 border-transparent hover:border-border-dark min-h-[56px]" href="#">
+<span class="material-symbols-outlined" data-icon="room_service">room_service</span>
+<span class="font-body-lg text-body-lg">Services</span>
+</a>
+<a class="flex items-center gap-4 bg-secondary text-on-secondary font-bold px-4 py-3 border-2 border-border-dark min-h-[56px]" href="#">
+<span class="material-symbols-outlined" data-icon="ambulance">ambulance</span>
+<span class="font-body-lg text-body-lg">Ambulance</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full pb-32 md:pb-margin-desktop">
+<header class="mb-12">
+<h1 class="font-headline-lg text-headline-lg md:text-headline-lg text-high-contrast-text mb-4">Student Portal - Physically Challenged Mode</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">Access emergency services, campus map, and report issues. High-contrast, large-target interface.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Ambulance Pooling (Primary Action) -->
+<section class="col-span-1 lg:col-span-12 bg-surface-container-low border-4 border-border-dark p-8 md:p-12">
+<div class="flex flex-col md:flex-row items-center justify-between gap-8">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary mb-4 flex items-center gap-4">
+<span class="material-symbols-outlined text-[48px]" data-icon="ambulance" data-weight="fill">ambulance</span>
+                            Ambulance Pooling (Coming Soon)
+                        </h2>
+<p class="font-body-lg text-body-lg text-on-surface mb-6 max-w-xl">Request immediate mobility assistance or schedule a pooled campus transport.</p>
+</div>
+<div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+<button class="bg-emergency-red text-on-error font-headline-md text-headline-md font-bold py-6 px-12 border-4 border-border-dark min-h-[80px] w-full sm:w-auto text-center hover:bg-on-error hover:text-emergency-red hover:border-emergency-red focus:outline-none focus:ring-4 focus:ring-focus-indicator transition-colors">
+                            EMERGENCY HELP
+                        </button>
+<button class="bg-primary text-on-primary font-body-lg text-body-lg font-bold py-4 px-8 border-4 border-border-dark min-h-[80px] w-full sm:w-auto text-center hover:bg-on-primary hover:text-primary hover:border-primary focus:outline-none focus:ring-4 focus:ring-focus-indicator transition-colors">
+                            Schedule Transport (Coming Soon)
+                        </button>
+</div>
+</div>
+</section>
+<!-- Campus Services Map -->
+<section class="col-span-1 lg:col-span-8 bg-surface border-4 border-border-dark flex flex-col overflow-hidden">
+<div class="p-6 border-b-4 border-border-dark bg-surface">
+<h3 class="font-headline-md text-headline-md text-secondary">Campus Services Map (Coming Soon)</h3>
+</div>
+<div class="flex-1 bg-surface-variant relative overflow-hidden min-h-[400px]">
+<img alt="A highly detailed, simplified, high-contrast digital map of a university campus designed for accessibility. The map uses stark black lines on a clean white background with vibrant solid color blocks (deep blue, bright green, urgent red) to indicate accessible routes, elevators, and emergency points. The aesthetic is extremely clean, minimalist, and functional, resembling a professional architectural accessibility diagram with no gradients or shadows, optimized for visual clarity." class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1XXXKTGpnKp7GEcrxRGbhlveA_jfFKHxlXI_sA8zx-BbuRBD6eyqltv3CT-5Ur6IjCnGYfYKGj7wZN18BdupgxbImltAsqsZnZRspyfYU_wVquJyAnwGicBwdVikT3CwMobItW_KLV2OJ01MpexV3K_v1uZyQiWeLw2m-OVQTbRtOqeQ0xRgqU7gJVeyR3fafA9Z9599vn4Ri2KpAoOV7oQYZGLhG4Ng8R85GJbYg_-Ud4t5KQOvvaizxTp"/>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="font-headline-md text-headline-md text-on-surface bg-surface px-6 py-3 border-4 border-border-dark shadow-sm">Coming Soon</span>
+</div>
+</div>
+</section>
+<!-- Sidebar Actions -->
+<div class="col-span-1 lg:col-span-4 flex flex-col gap-gutter">
+<!-- Grievance Section -->
+<section class="bg-error-container border-4 border-border-dark p-6 flex flex-col flex-1">
+<h3 class="font-headline-md text-headline-md text-on-error-container mb-2">Report Grievance</h3>
+<p class="font-body-md text-body-md text-on-error-container mb-6">Log accessibility barriers or urgent issues directly.</p>
+<div class="mb-6 flex-1">
+<label class="block font-label-bold text-label-bold text-on-error-container mb-2">Issue Type</label>
+<select class="w-full bg-surface border-4 border-border-dark p-4 font-body-lg text-body-lg h-touch-target-min focus:outline-none focus:ring-4 focus:ring-focus-indicator">
+<option>Elevator Outage</option>
+<option>Ramp Blocked</option>
+<option>Transport Delay</option>
+</select>
+</div>
+<button class="bg-error text-on-error font-body-lg text-body-lg font-bold py-4 border-4 border-border-dark min-h-[64px] w-full focus:outline-none focus:ring-4 focus:ring-focus-indicator hover:bg-surface hover:text-error mt-auto">
+                        Submit Report
+                    </button>
+</section>
+<!-- Secret Code Display -->
+<section class="bg-surface border-4 border-border-dark p-6 text-center">
+<p class="font-label-bold text-label-bold text-on-surface mb-2">Your Current Access Code</p>
+<div class="font-code-display text-code-display bg-surface-variant border-4 border-border-dark py-4 mb-4">
+                        A4-B9
+                    </div>
+<button class="bg-secondary text-on-secondary font-body-lg text-body-lg font-bold py-3 px-6 border-4 border-border-dark min-h-[56px] w-full focus:outline-none focus:ring-4 focus:ring-focus-indicator hover:bg-surface hover:text-secondary">
+                        Copy Code
+                    </button>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-touch-target-min bg-surface border-t-4 border-border-dark">
+<a class="flex flex-col items-center justify-center text-on-surface h-full w-full hover:bg-surface-container-high focus:outline-none focus:ring-4 focus:ring-focus-indicator inset-0" href="#">
+<span class="material-symbols-outlined text-[28px]" data-icon="home">home</span>
+<span class="font-label-bold text-label-bold text-[12px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface h-full w-full hover:bg-surface-container-high focus:outline-none focus:ring-4 focus:ring-focus-indicator inset-0" href="#">
+<span class="material-symbols-outlined text-[28px]" data-icon="mic">mic</span>
+<span class="font-label-bold text-label-bold text-[12px]">Voice</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container h-full w-full focus:outline-none focus:ring-4 focus:ring-focus-indicator inset-0" href="#">
+<span class="material-symbols-outlined text-[28px]" data-icon="emergency" data-weight="fill">emergency</span>
+<span class="font-label-bold text-label-bold text-[12px] font-bold">Emergency</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface h-full w-full hover:bg-surface-container-high focus:outline-none focus:ring-4 focus:ring-focus-indicator inset-0" href="#">
+<span class="material-symbols-outlined text-[28px]" data-icon="assignment_late">assignment_late</span>
+<span class="font-label-bold text-label-bold text-[12px]">Grievance</span>
+</a>
+</nav>
+</body></html>

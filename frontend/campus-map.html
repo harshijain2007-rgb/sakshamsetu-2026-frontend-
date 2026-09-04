@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SakshamSetu - Campus Barrier-Free Route Map</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Main Design System -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#003f87",
+            "primary-container": "#e8f0fe",
+            "on-primary": "#ffffff",
+            "secondary": "#2e7d32",
+            "secondary-container": "#e8f5e9",
+            "emergency-red": "#d32f2f",
+            "error-container": "#ffebee",
+            "surface": "#ffffff",
+            "background": "#F4F9F5",
+            "surface-container": "#EBF3EE",
+            "surface-container-high": "#E0ECE4",
+            "border-dark": "#CBD5E1",
+            "outline": "#94A3B8",
+            "high-contrast-text": "#1E293B",
+            "on-surface-variant": "#475569",
+            "focus-indicator": "#FFD600"
+          },
+          fontFamily: {
+            sans: ['"Lexend"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background text-high-contrast-text min-h-screen flex flex-col">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Accessibility Bar -->
+  <aside class="a11y-bar" aria-label="Accessibility controls">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-focus-indicator">map</span>
+      <span class="font-bold text-white">Campus Barrier-Free Accessible Route Map</span>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <button type="button" id="btn-dyslexia" class="a11y-btn">Dyslexia Font</button>
+      <button type="button" id="btn-contrast" class="a11y-btn">High Contrast</button>
+      <button type="button" id="btn-text-size" class="a11y-btn">Text Size</button>
+      <a href="index.html" class="a11y-btn">Home</a>
+    </div>
+  </aside>
+
+  <!-- Global Header -->
+  <header class="border-b-2 border-border-dark bg-white sticky top-0 z-30 px-4 md:px-12 py-4">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">school</span>
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-primary">SakshamSetu</h1>
+          <p class="text-xs font-bold text-on-surface-variant">Accessible Pathway & Building Directory</p>
+        </div>
+      </div>
+
+      <nav class="flex items-center gap-3 flex-wrap" aria-label="Navigation">
+        <a href="campus-map.html" class="px-5 py-2 font-bold bg-primary text-white rounded-full">Campus Map</a>
+        <a href="campus-alerts.html" class="px-5 py-2 font-bold bg-white text-primary border border-border-dark rounded-full hover:bg-surface-container">Live Alerts</a>
+        <a href="grievance.html" class="px-5 py-2 font-bold bg-white text-primary border border-border-dark rounded-full hover:bg-surface-container">Grievance</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Map Content -->
+  <main id="main-content" class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-12 space-y-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b-2 border-border-dark pb-6">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-primary">Accessible Campus Map & Pathway Navigator</h2>
+        <p class="text-base text-on-surface-variant font-medium mt-1">
+          Explore tactile pathways, gradient ramps, braille elevators, and accessible restroom hubs.
+        </p>
+      </div>
+
+      <button id="audio-route-btn" class="bg-primary text-white font-bold py-3 px-6 rounded-full hover:opacity-90 transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined">volume_up</span> Read Route Directions
+      </button>
+    </div>
+
+    <!-- High-Contrast Vector Map Grid Visualizer -->
+    <div class="border-2 border-border-dark bg-white rounded-3xl p-6 md:p-10 space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-border-dark pb-4">
+        <div class="flex flex-wrap gap-2 items-center" role="group" aria-label="Map Legend Filters">
+          <span class="font-extrabold text-sm mr-2 text-primary">Key Accessibility Features:</span>
+          <span class="px-3 py-1 bg-secondary text-white font-bold text-xs rounded-full flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">accessible</span> 1:12 Ramp
+          </span>
+          <span class="px-3 py-1 bg-primary text-white font-bold text-xs rounded-full flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">elevator</span> Braille Lift
+          </span>
+          <span class="px-3 py-1 bg-focus-indicator text-black font-extrabold text-xs rounded-full flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">nordic_walking</span> Tactile Pavers
+          </span>
+          <span class="px-3 py-1 bg-surface-container text-high-contrast-text font-bold text-xs rounded-full border border-border-dark flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">wc</span> Accessible WC
+          </span>
+        </div>
+      </div>
+
+      <!-- Campus Schematic Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Zone 1: North Academic Sector -->
+        <div class="border-2 border-border-dark bg-background rounded-2xl p-6 space-y-3">
+          <div class="flex items-center justify-between border-b-2 border-border-dark pb-2">
+            <h3 class="text-lg font-extrabold text-primary">North Academic Block</h3>
+            <span class="px-3 py-0.5 bg-secondary-container text-secondary font-bold text-xs rounded-full">100% Accessible</span>
+          </div>
+          <ul class="space-y-2 text-sm font-semibold">
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+              Main North Ramp (1:12 Slope with tactile warnings)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-base">elevator</span>
+              Lift #1 & #2 (Audio Floor Announcements Active)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-base">wc</span>
+              Ground Floor Accessible Unisex Restroom
+            </li>
+          </ul>
+        </div>
+
+        <!-- Zone 2: Central Knowledge & Library Hub -->
+        <div class="border-2 border-border-dark bg-background rounded-2xl p-6 space-y-3">
+          <div class="flex items-center justify-between border-b-2 border-border-dark pb-2">
+            <h3 class="text-lg font-extrabold text-primary">Braille Library & Central Hall</h3>
+            <span class="px-3 py-0.5 bg-primary-container text-primary font-bold text-xs rounded-full">Assistive Hub</span>
+          </div>
+          <ul class="space-y-2 text-sm font-semibold">
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-focus-indicator text-base">nordic_walking</span>
+              Continuous Stainless Steel Tactile Guiding Strip
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-base">menu_book</span>
+              Screen Reader & Tactile Book Workstation Wing
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary text-base">door_front</span>
+              Motorized Automatic Sliding Door Access
+            </li>
+          </ul>
+        </div>
+
+        <!-- Zone 3: South Wing & Medical Facility -->
+        <div class="border-2 border-border-dark bg-background rounded-2xl p-6 space-y-3">
+          <div class="flex items-center justify-between border-b-2 border-border-dark pb-2">
+            <h3 class="text-lg font-extrabold text-primary">Health Centre & Hostels</h3>
+            <span class="px-3 py-0.5 bg-error-container text-emergency-red font-bold text-xs rounded-full">24/7 Medical</span>
+          </div>
+          <ul class="space-y-2 text-sm font-semibold">
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-emergency-red text-base">emergency</span>
+              Campus Ambulance Bay & Direct Stretcher Ramp
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-base">hotel</span>
+              Disability Wing Hostel Level Access Path
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary text-base">local_pharmacy</span>
+              Emergency First-Aid & Oxygen Supply Station
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t-2 border-border-dark bg-white p-6 md:p-12 text-center text-on-surface-variant">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="font-bold text-high-contrast-text">SakshamSetu - Central Inclusive Campus Ecosystem</p>
+      <div class="flex gap-6 font-bold">
+        <a href="terms.html" class="underline hover:text-primary">Terms of Service</a>
+        <a href="privacy.html" class="underline hover:text-primary">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { voice } from './js/voice.js';
+    import { auth } from './js/auth.js';
+
+    document.getElementById('audio-route-btn')?.addEventListener('click', () => {
+      voice.speak('Campus Accessibility Route Guide. From Main Entrance Gate, follow the tactile guiding pathway straight for 80 meters to reach Central Braille Library and North Academic Block. Both buildings feature 1 to 12 gradient entrance ramps with dual handrails and elevators with voice floor announcements.');
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      auth.initAccessibility();
+    });
+  </script>
+</body>
+</html>

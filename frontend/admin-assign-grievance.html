@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SakshamSetu — Grievance Department Assignment Desk</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Main Design System -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "navy-brand": "#0d2859",
+            "navy-dark": "#07193b",
+            "blue-accent": "#2563eb",
+            "sidebar-bg": "#ffffff",
+            "green-emerald": "#16a34a",
+            "red-crimson": "#ef4444"
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col md:flex-row">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Admin Sidebar Navigation -->
+  <aside class="w-full md:w-64 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between shrink-0" aria-label="Admin Navigation">
+    <div class="space-y-6">
+      
+      <!-- Brand Header -->
+      <div class="px-2 pt-1">
+        <h1 class="text-xl font-extrabold text-navy-brand font-heading tracking-tight">SakshamSetu</h1>
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Admin Dashboard</p>
+      </div>
+
+      <!-- Navigation Sections -->
+      <nav class="space-y-5 text-xs font-bold" aria-label="Admin Sections">
+        
+        <!-- Section: MAIN -->
+        <div class="space-y-1">
+          <p class="px-2.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Main</p>
+          
+          <a href="admin-dashboard.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">grid_view</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="admin-alerts.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">campaign</span>
+            <span>Updates & Alerts</span>
+          </a>
+          <a href="admin-assign-grievance.html" class="flex items-center gap-3 px-3.5 py-2.5 bg-slate-100 text-navy-brand font-extrabold rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg text-blue-600">assignment</span>
+            <span>Assign Grievances</span>
+          </a>
+          <a href="admin-checklist.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">verified_user</span>
+            <span>Compliance</span>
+          </a>
+        </div>
+
+        <!-- Section: MANAGEMENT -->
+        <div class="space-y-1">
+          <p class="px-2.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Management</p>
+          
+          <a href="admin-users.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">group</span>
+            <span>Users & Roles</span>
+          </a>
+          <a href="service-feedback.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">forum</span>
+            <span>Student Feedback</span>
+          </a>
+          <a href="admin-feedback.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">rate_review</span>
+            <span>Admin Feedback Review</span>
+          </a>
+          <a href="transport-tracking.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">directions_bus</span>
+            <span>Request Transport</span>
+          </a>
+        </div>
+
+        <!-- Section: SYSTEM -->
+        <div class="space-y-1">
+          <p class="px-2.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">System</p>
+          
+          <a href="admin-settings.html" class="flex items-center gap-3 px-3.5 py-2.5 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+            <span class="material-symbols-outlined text-lg">settings</span>
+            <span>Settings</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Bottom Sidebar Profile Widget -->
+    <div class="pt-5 border-t border-slate-100 space-y-3">
+      <div class="flex items-center gap-3 px-1">
+        <div class="w-9 h-9 rounded-xl bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs">
+          AK
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-bold text-slate-800 truncate">Admin Officer</p>
+          <p class="text-[10px] text-slate-500 truncate">Compliance Desk</p>
+        </div>
+      </div>
+      <a href="index.html" class="flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-red-600 px-1 transition-colors">
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main id="main-content" class="flex-1 p-4 md:p-8 space-y-6 overflow-y-auto">
+    
+    <!-- Top Header Bar -->
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <h2 class="text-lg font-extrabold text-navy-brand font-heading">
+        SakshamSetu Admin
+      </h2>
+
+      <!-- Search & Right Badges & Accessibility Toggles -->
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end flex-wrap">
+        <div class="relative max-w-xs w-full sm:w-48">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+          <input type="text" placeholder="Search..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-transparent rounded-full text-xs font-medium text-slate-700 focus:bg-white focus:border-slate-300 focus:outline-none transition-all">
+        </div>
+        
+        <!-- Accessibility Controls -->
+        <div class="flex items-center gap-1.5" aria-label="Accessibility Bar">
+          <button type="button" id="btn-dyslexia" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Dyslexia</button>
+          <button type="button" id="btn-contrast" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Contrast</button>
+          <button type="button" id="btn-text-size" class="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-full text-slate-700 text-xs font-semibold shadow-2xs transition-all">Text Size</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button class="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-navy-brand">
+            <span class="material-symbols-outlined text-lg">notifications</span>
+          </button>
+          <button class="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-navy-brand">
+            <span class="material-symbols-outlined text-lg">help_outline</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Title -->
+    <section class="pt-2">
+      <h3 class="text-2xl md:text-3xl font-extrabold text-navy-brand font-heading">Grievance Department Assignment Desk</h3>
+      <p class="text-xs text-slate-500 font-medium mt-0.5">
+        Route anonymous barrier reports to departmental nodal cells (Facilities, Transport, Academic, Health).
+      </p>
+    </section>
+
+    <!-- Two-Column Desk Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Column 1: Anonymous Token Selector -->
+      <section class="stitch-card p-6 bg-white space-y-4" aria-labelledby="token-list-heading">
+        <div class="border-b border-slate-100 pb-3">
+          <h4 id="token-list-heading" class="text-base font-bold text-navy-brand font-heading">Anonymous Submissions</h4>
+          <p class="text-xs text-slate-500 font-medium">Select a secret token to assign action.</p>
+        </div>
+
+        <div class="space-y-2.5 max-h-[500px] overflow-y-auto" id="grievance-selector-list">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- Column 2 & 3: Assignment & Department Routing Panel -->
+      <section class="lg:col-span-2 stitch-card p-6 md:p-8 bg-white space-y-6" aria-labelledby="active-detail-heading">
+        <div class="border-b border-slate-100 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="badge-pill badge-review text-xs uppercase">Active Selection</span>
+            <span id="current-token-title" class="text-xl font-extrabold text-navy-brand font-mono">SAK-2026-XXXX</span>
+          </div>
+        </div>
+
+        <!-- Grievance Summary Card -->
+        <div class="p-5 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <span class="font-extrabold text-slate-400 uppercase text-[10px]">Barrier Category</span>
+              <p id="detail-category" class="font-bold text-slate-800 text-sm mt-0.5">-</p>
+            </div>
+            <div>
+              <span class="font-extrabold text-slate-400 uppercase text-[10px]">Reported Location</span>
+              <p id="detail-location" class="font-bold text-slate-800 text-sm mt-0.5">-</p>
+            </div>
+          </div>
+          <div class="pt-1">
+            <span class="font-extrabold text-slate-400 uppercase text-[10px]">Student Report Details</span>
+            <p id="detail-description" class="text-xs text-slate-600 font-medium mt-1 leading-relaxed">-</p>
+          </div>
+        </div>
+
+        <!-- Assignment Form -->
+        <form id="assign-form" class="space-y-4 pt-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- Assign Department -->
+            <div>
+              <label for="assign-dept" class="block text-xs font-bold text-slate-700 mb-1">
+                Assign Department / Cell <span class="text-red-500">*</span>
+              </label>
+              <select id="assign-dept" name="department" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="Facilities">Facilities</option>
+                <option value="Transport">Transport</option>
+                <option value="Academic">Academic</option>
+                <option value="Health">Health</option>
+              </select>
+            </div>
+
+            <!-- Status Update -->
+            <div>
+              <label for="assign-status" class="block text-xs font-bold text-slate-700 mb-1">
+                Update Status <span class="text-red-500">*</span>
+              </label>
+              <select id="assign-status" name="status" class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="Registered">Registered</option>
+                <option value="In Progress">In Progress (Action Scheduled)</option>
+                <option value="Resolved">Resolved & Verified</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Official Resolution / Action Note -->
+          <div>
+            <label for="assign-notes" class="block text-xs font-bold text-slate-700 mb-1">
+              Action Item / Remediation Note (Appears on Student Public Timeline)
+            </label>
+            <textarea id="assign-notes" name="notes" rows="3" placeholder="e.g. Civil engineering team dispatched for immediate handrail repair and tactile surface leveling." class="w-full px-3.5 py-2.5 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          </div>
+
+          <button type="submit" class="bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs py-3 px-6 rounded-xl shadow-xs transition-all flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">save</span>
+            <span>Save Assignment & Update Status</span>
+          </button>
+        </form>
+      </section>
+    </div>
+
+    <!-- Footer Bar -->
+    <footer class="pt-6 border-t border-slate-200/80 text-xs font-medium text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p>© 2024 SakshamSetu Educational Platform. All rights reserved.</p>
+      <div class="flex gap-4">
+        <a href="privacy.html" class="hover:text-navy-brand">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-navy-brand">Terms of Service</a>
+        <a href="admin-alerts.html" class="hover:text-navy-brand">Campus Advisories</a>
+      </div>
+    </footer>
+  </main>
+
+  <script type="module">
+    import { api } from './js/api.js';
+    import { auth } from './js/auth.js';
+
+    let allGrievances = [];
+    let activeGrievance = null;
+
+    async function loadData() {
+      const res = await api.grievances.getAllForAdmin();
+      const grievances = res.grievances || res || [];
+      if (Array.isArray(grievances)) {
+        allGrievances = grievances;
+        
+        const params = new URLSearchParams(window.location.search);
+        const codeQuery = params.get('code');
+        activeGrievance = allGrievances.find(g => g.code === codeQuery || g.id === codeQuery) || allGrievances[0];
+        
+        renderList();
+        renderActiveDetails();
+      }
+    }
+
+    function renderList() {
+      const container = document.getElementById('grievance-selector-list');
+      if (!container) return;
+
+      if (allGrievances.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl text-center">
+            <p class="text-xs font-bold text-slate-500">No anonymous grievance tokens registered yet.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = allGrievances.map(g => {
+        const code = g.code || g.id;
+        const isSelected = activeGrievance && (activeGrievance.code === code || activeGrievance.id === code);
+
+        return `
+          <button type="button" class="w-full text-left p-3.5 border rounded-2xl ${isSelected ? 'border-blue-500 bg-blue-50/60 shadow-xs' : 'border-slate-200 bg-white hover:bg-slate-50'} transition-all select-token-btn cursor-pointer block" data-code="${code}">
+            <div class="flex justify-between items-center mb-1">
+              <span class="font-mono font-bold text-xs ${isSelected ? 'text-blue-700' : 'text-slate-800'}">${code}</span>
+              <span class="badge-pill ${g.status === 'Resolved' ? 'badge-resolved' : (g.status === 'In Progress' ? 'badge-review' : 'badge-open')} text-[10px]">${g.status || 'Registered'}</span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-medium truncate">${g.category || 'General'} • ${g.location || 'Campus'}</p>
+          </button>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.select-token-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const code = btn.getAttribute('data-code');
+          activeGrievance = allGrievances.find(g => g.code === code || g.id === code);
+          renderList();
+          renderActiveDetails();
+        });
+      });
+    }
+
+    function renderActiveDetails() {
+      if (!activeGrievance) {
+        document.getElementById('current-token-title').textContent = 'No Active Selection';
+        document.getElementById('detail-category').textContent = '-';
+        document.getElementById('detail-location').textContent = '-';
+        document.getElementById('detail-description').textContent = 'No grievance token selected.';
+        return;
+      }
+      const code = activeGrievance.code || activeGrievance.id;
+      document.getElementById('current-token-title').textContent = code;
+      document.getElementById('detail-category').textContent = activeGrievance.category || 'General Accessibility';
+      document.getElementById('detail-location').textContent = activeGrievance.location || 'Campus';
+      document.getElementById('detail-description').textContent = activeGrievance.description || 'No description provided.';
+      
+      const deptSelect = document.getElementById('assign-dept');
+      const statusSelect = document.getElementById('assign-status');
+      if (deptSelect) deptSelect.value = activeGrievance.department || activeGrievance.assigned_department || 'Facilities';
+      if (statusSelect) statusSelect.value = activeGrievance.status || 'Registered';
+    }
+
+    document.getElementById('assign-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!activeGrievance) return;
+
+      const form = e.target;
+      const dept = form.department.value;
+      const status = form.status.value;
+      const notes = form.notes.value;
+      const code = activeGrievance.code || activeGrievance.id;
+
+      const res = await api.grievances.update(code, {
+        department: dept,
+        assigned_department: dept,
+        status: status,
+        resolutionNote: notes
+      });
+      if (res.success || res.id) {
+        alert(`Grievance ${code} successfully updated!`);
+        form.notes.value = '';
+        await loadData();
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      auth.initAccessibility();
+      loadData();
+    });
+  </script>
+</body>
+</html>
