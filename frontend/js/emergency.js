@@ -121,12 +121,15 @@ export const emergency = {
     emergency.isEmergencyListening = false;
   },
 
+  activeContactName: 'Campus Quick Response Team',
+
   /**
    * Initiates emergency phone call with spoken confirmation
    */
-  initiateEmergencyCall: (phone = null) => {
+  initiateEmergencyCall: (phone = null, contactName = null) => {
     const targetPhone = phone || emergency.activePhoneNumber || '112';
-    console.log('[Emergency Action]: Initiating emergency call to', targetPhone);
+    const targetName = contactName || emergency.activeContactName || 'Campus Quick Response Team';
+    console.log('[Emergency Action]: Initiating emergency call to', targetName, targetPhone);
 
     emergency.stopEmergencyRecognition();
 
@@ -136,28 +139,28 @@ export const emergency = {
       window.voice.voiceOwner = 'emergency_call';
     }
 
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance("Initiating emergency call.");
-      utterance.rate = 0.95;
-      const dial = () => {
-        if (typeof window !== 'undefined' && window.voice) {
-          window.voice.isSpeaking = false;
-          window.voice.releaseMicrophoneOwnership('emergency');
-          window.voice.releaseMicrophoneOwnership('emergency_call');
-        }
-        window.location.href = `tel:${targetPhone}`;
-      };
-      utterance.onend = dial;
-      utterance.onerror = dial;
-      window.speechSynthesis.speak(utterance);
-    } else {
+    const dial = () => {
       if (typeof window !== 'undefined' && window.voice) {
         window.voice.isSpeaking = false;
         window.voice.releaseMicrophoneOwnership('emergency');
         window.voice.releaseMicrophoneOwnership('emergency_call');
+        window.voice.voiceOwner = 'global';
+        window.voice.isVoicePortalActive = true;
+        window.voice.startGlobalRecognition(false);
+        window.voice.updateUiState(true);
       }
       window.location.href = `tel:${targetPhone}`;
+    };
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(`Initiating emergency call to ${targetName} at ${targetPhone.split('').join(' ')}.`);
+      utterance.rate = 0.95;
+      utterance.onend = dial;
+      utterance.onerror = dial;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      dial();
     }
   },
 

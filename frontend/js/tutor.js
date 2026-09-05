@@ -150,12 +150,12 @@ export class TutorVoiceController {
   }
 
   // =========================================================================
-  // 3. Isolated Tutor Speech Recognition Lifecycle (Single-Shot)
+  // 3. Isolated Tutor Speech Recognition Lifecycle (Continuous Bounded Window)
   // =========================================================================
   initTutorRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.tutorSpeechRecognition = new SpeechRecognition();
-    this.tutorSpeechRecognition.continuous = false; // Single-shot capture matching Grievance logic
+    this.tutorSpeechRecognition.continuous = true; // Continuous multi-sentence capture until "Done"
     this.tutorSpeechRecognition.interimResults = false;
     this.tutorSpeechRecognition.lang = 'en-IN';
     this.tutorSpeechRecognition.maxAlternatives = 3;
@@ -163,19 +163,20 @@ export class TutorVoiceController {
     this.tutorSpeechRecognition.onstart = () => {
       this.tutorRecognitionRunning = true;
       this.updateStatusBadge(true);
-      console.log('[TUTOR MIC]: Single-shot recognition started in state:', this.state);
+      console.log(`[LATENCY ${new Date().toISOString()}] [TUTOR MIC]: Recognition active in state: ${this.state}`);
     };
 
     this.tutorSpeechRecognition.onresult = (event) => {
-      const activeText = event.results[0][0].transcript.trim();
+      const lastIdx = event.results.length - 1;
+      const activeText = event.results[lastIdx][0].transcript.trim();
       if (!activeText) return;
 
-      console.log('[TUTOR MIC]: Single-shot captured:', activeText);
+      console.log(`[LATENCY ${new Date().toISOString()}] [TUTOR MIC]: Speech result received: "${activeText}"`);
       this.handleTutorSpeech(activeText, true);
     };
 
     this.tutorSpeechRecognition.onerror = (e) => {
-      console.warn('[TUTOR MIC] error in state:', this.state, e.error);
+      console.warn(`[LATENCY ${new Date().toISOString()}] [TUTOR MIC] error in state ${this.state}:`, e.error);
       this.tutorRecognitionRunning = false;
       this.updateStatusBadge(false);
 
@@ -196,7 +197,17 @@ export class TutorVoiceController {
     this.tutorSpeechRecognition.onend = () => {
       this.tutorRecognitionRunning = false;
       this.updateStatusBadge(false);
-      console.log('[TUTOR MIC]: Single-shot capture ended in state:', this.state);
+      console.log(`[LATENCY ${new Date().toISOString()}] [TUTOR MIC]: Recognition ended in state: ${this.state}`);
+
+      // If still in active listening state and not speaking, maintain listener
+      if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.hasPermissionError) {
+        clearTimeout(this.restartTimer);
+        this.restartTimer = setTimeout(() => {
+          if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.hasPermissionError) {
+            this.startRecognition();
+          }
+        }, 300);
+      }
     };
   }
 
@@ -264,47 +275,63 @@ export class TutorVoiceController {
       return;
     }
 
-    const welcomeText = "Welcome to AI Tutor! Say a topic name like Stacks after the chime.";
-    this.updateStatusText('Welcome to AI Tutor! Say a topic name like Stacks after the chime.');
+    const welcomeText = "Welcome to AI Tutor! What topic would you like to learn today? Say a topic name after the chime, then say Done.";
+    this.updateStatusText('Welcome to AI Tutor! Say a topic name after the chime, then say Done.');
     
     this.speak(welcomeText, 0.95, () => {
+      console.log(`[LATENCY ${new Date().toISOString()}] Initial welcome TTS finished. Playing chime and starting topic capture.`);
       this.playChime(660, 0.5);
       setTimeout(() => {
+        this.capturedSpeech = '';
         this.state = TUTOR_STATES.LISTENING_FOR_TOPIC;
-        this.updateStatusText('Listening for your study topic... Speak freely.');
+        this.updateStatusText('Listening for your study topic... Speak freely and say "Done" when finished.');
         this.startRecognition();
       }, 550);
     });
   }
 
   // =========================================================================
-  // 5. Speech Dispatcher & State Machine
+  // 5. Speech Dispatcher & State Machine (Bounded Capture Window)
   // =========================================================================
   handleTutorSpeech(transcript, isFinal = false) {
     const rawTranscript = transcript;
-    const command = transcript.toLowerCase().trim().replace(/[.,!?]/g, '');
+    const chunk = transcript.trim();
+    const lower = chunk.toLowerCase();
+    const command = lower.replace(/[.,!?]/g, '');
 
-    console.log('[TUTOR] transcript:', rawTranscript);
-    console.log('[TUTOR] normalized command:', command, 'mode:', this.state, 'isFinal:', isFinal);
+    console.log(`[LATENCY ${new Date().toISOString()}] [TUTOR VOICE] State: ${this.state}, Received chunk: "${chunk}"`);
 
     // -----------------------------------------------------------------------
     // State 1: Capturing Study Topic (e.g. "stacks", "binary search", "Newton Raphson")
     // -----------------------------------------------------------------------
     if (this.state === TUTOR_STATES.LISTENING_FOR_TOPIC) {
-      if (!command) return;
+      if (!chunk) return;
 
-      let cleanTopic = command.replace(/^(learn|teach me|i want to learn|study|topic is|topic)\s+/i, '').trim();
-      if (!cleanTopic) cleanTopic = command;
+      // Append speech chunk to continuous buffer
+      this.capturedSpeech = this.capturedSpeech ? `${this.capturedSpeech} ${chunk}` : chunk;
 
-      // Only trigger once we have a clear, non-empty topic phrase
-      if (cleanTopic.length >= 2) {
-        console.log('[TUTOR] final topic received:', cleanTopic);
+      // Update DOM
+      const topicInput = document.getElementById('topicInput') || document.getElementById('tutor-input');
+      if (topicInput) {
+        topicInput.value = this.capturedSpeech;
+      }
+      this.updateStatusText(`Hearing: "${this.capturedSpeech}" (Say "Done" to submit)...`);
+
+      // Check for explicit "done" keyword or clean topic candidate
+      const isDone = /\b(done|i'm done|finish|finished|completed|that's all|submit)\b/i.test(lower) || lower.endsWith('done');
+      let cleanTopic = this.capturedSpeech
+        .replace(/\b(done|i'm done|finish|finished|completed|that's all|submit)\b[.! ]*$/i, '')
+        .replace(/^(learn|teach me|i want to learn|study|topic is|topic)\s+/i, '')
+        .trim();
+
+      if (!cleanTopic) cleanTopic = this.capturedSpeech.replace(/\b(done|i'm done)\b/ig, '').trim();
+
+      if ((isDone && cleanTopic.length >= 2) || cleanTopic.length >= 2) {
+        console.log(`[LATENCY ${new Date().toISOString()}] Final topic captured: "${cleanTopic}"`);
         this.currentTopic = cleanTopic;
         this.stopRecognition();
         this.state = TUTOR_STATES.GENERATING;
 
-        // Populate DOM input
-        const topicInput = document.getElementById('topicInput') || document.getElementById('tutor-input');
         if (topicInput) {
           topicInput.value = cleanTopic;
         }
@@ -316,18 +343,29 @@ export class TutorVoiceController {
     }
 
     // -----------------------------------------------------------------------
-    // State 2: Capturing Spoken Doubt / Question
+    // State 2: Capturing Spoken Doubt / Question (Continuous until "done")
     // -----------------------------------------------------------------------
     if (this.state === TUTOR_STATES.LISTENING_FOR_DOUBT) {
-      if (!command) return;
+      if (!chunk) return;
 
-      // When the user speaks their question
-      if (command.length >= 3) {
-        console.log('[TUTOR] final question received:', rawTranscript);
+      // Append speech chunk to continuous buffer
+      this.capturedSpeech = this.capturedSpeech ? `${this.capturedSpeech} ${chunk}` : chunk;
+      this.updateStatusText(`Hearing question: "${this.capturedSpeech}" (Say "Done" when finished)...`);
+
+      const isDone = /\b(done|i'm done|finish|finished|completed|that's all|submit)\b/i.test(lower) || lower.endsWith('done');
+      let cleanQuestion = this.capturedSpeech
+        .replace(/\b(done|i'm done|finish|finished|completed|that's all|submit)\b[.! ]*$/i, '')
+        .replace(/^(i have a question|my question is|question is|question)\s+/i, '')
+        .trim();
+
+      if (!cleanQuestion) cleanQuestion = this.capturedSpeech.replace(/\b(done|i'm done)\b/ig, '').trim();
+
+      if (isDone || cleanQuestion.length >= 3) {
+        console.log(`[LATENCY ${new Date().toISOString()}] Final question captured: "${cleanQuestion}"`);
         this.stopRecognition();
         this.state = TUTOR_STATES.GENERATING;
-        this.appendUserMessage(`Question: ${rawTranscript}`);
-        this.processDoubtQuestion(rawTranscript);
+        this.appendUserMessage(`Question: ${cleanQuestion}`);
+        this.processDoubtQuestion(cleanQuestion);
       }
       return;
     }
@@ -368,12 +406,22 @@ export class TutorVoiceController {
         return;
       }
 
-      // 5. Explicit New Topic Request
+      // 5. Return to Main Portal
+      if (/\b(exit|leave|main portal|voice portal|return to portal|home)\b/i.test(command) || command.includes('exit portal') || command.includes('main portal')) {
+        this.stopRecognition();
+        this.speak('Returning to main voice portal.', 0.95, () => {
+          window.location.href = 'student-visual-dyslexic.html';
+        });
+        return;
+      }
+
+      // 6. Explicit New Topic Request
       if (command.startsWith('learn ') || command.startsWith('study ') || command.startsWith('topic ') || command.startsWith('teach me ')) {
         const newTopic = command.replace(/^(learn|study|topic|teach me)\s+/i, '').trim();
         if (newTopic) {
           console.log('[TUTOR] new topic intent:', newTopic);
           this.state = TUTOR_STATES.LISTENING_FOR_TOPIC;
+          this.capturedSpeech = newTopic;
           this.handleTutorSpeech(newTopic, true);
           return;
         }
@@ -385,11 +433,14 @@ export class TutorVoiceController {
   // 6. Lesson Generation & Playback
   // =========================================================================
   async generateAndStartLesson(topic) {
+    const startTime = Date.now();
+    console.log(`[LATENCY ${new Date().toISOString()}] Sending Gemini generate request for "${topic}"...`);
     this.state = TUTOR_STATES.GENERATING;
-    this.updateStatusText(`Generating lesson on "${topic}" with Gemini...`);
+    this.updateStatusText(`Generating lesson on "${topic}" with Gemini AI...`);
 
     try {
       const res = await api.tutor.generate(topic);
+      console.log(`[LATENCY ${new Date().toISOString()}] Gemini response received in ${Date.now() - startTime}ms`);
       const lesson = res?.lesson || res;
 
       if (lesson && Array.isArray(lesson.steps) && lesson.steps.length > 0) {
@@ -407,7 +458,7 @@ export class TutorVoiceController {
       this.speak(errorMsg, 0.9, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_TOPIC;
         this.startRecognition();
-        this.updateStatusText('Say any study topic to try again.');
+        this.updateStatusText('Say any study topic to try again, then say Done.');
       });
     }
   }
@@ -425,6 +476,7 @@ export class TutorVoiceController {
     const spokenText = `${stepTitle}. ${stepContent}`;
 
     this.updateStatusText(`Reading: ${stepTitle}`);
+    console.log(`[LATENCY ${new Date().toISOString()}] Starting lesson step speech output (Rate 0.9)...`);
 
     this.speak(spokenText, 0.9, () => {
       this.playChime(660, 0.35);
@@ -477,37 +529,43 @@ export class TutorVoiceController {
   }
 
   // =========================================================================
-  // 7. Voice Doubt Flow
+  // 7. Voice Doubt Flow (Continuous Bounded Window)
   // =========================================================================
   startDoubtFlow() {
     this.stopRecognition();
     this.state = TUTOR_STATES.GENERATING;
-    const promptText = "What is your question? Speak after the chime.";
+    const promptText = "What is your question? Speak after the chime, and say Done when you are finished.";
     this.updateStatusText(promptText);
 
     this.speak(promptText, 0.95, () => {
+      console.log(`[LATENCY ${new Date().toISOString()}] Doubt prompt TTS complete. Playing chime...`);
       this.playChime(660, 0.5);
       setTimeout(() => {
+        this.capturedSpeech = '';
         this.state = TUTOR_STATES.LISTENING_FOR_DOUBT;
-        this.updateStatusText('Listening for your question... Ask freely.');
+        this.updateStatusText('Listening for your question... Ask freely and say "Done" when finished.');
         this.startRecognition();
       }, 550);
     });
   }
 
   async processDoubtQuestion(questionText) {
+    const startTime = Date.now();
+    console.log(`[LATENCY ${new Date().toISOString()}] Sending Gemini doubt request for "${questionText}"...`);
     this.state = TUTOR_STATES.GENERATING;
-    this.updateStatusText('Finding explanation from Gemini...');
+    this.updateStatusText('Finding explanation from Gemini AI...');
     const stepOrder = this.currentStepIndex + 1;
     const topic = this.currentTopic || (this.currentLesson?.topic) || 'Current Topic';
 
     try {
       const res = await api.tutor.doubt(topic, stepOrder, questionText);
+      console.log(`[LATENCY ${new Date().toISOString()}] Gemini doubt response received in ${Date.now() - startTime}ms`);
       const answer = res?.answer || res?.explanation || `Regarding step ${stepOrder}: In simple terms, ${questionText} relates directly to core concepts.`;
 
       this.appendAiMessage(`<strong>Q: ${questionText}</strong><br><br>${answer}`);
 
       this.updateStatusText('Reading answer...');
+      console.log(`[LATENCY ${new Date().toISOString()}] Starting doubt answer speech output...`);
       this.speak(answer, 0.95, () => {
         this.playChime(660, 0.35);
         setTimeout(() => {

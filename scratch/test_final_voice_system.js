@@ -41,8 +41,8 @@ it('1. tutor.js tracks actual browser recognition via tutorRecognitionRunning an
   assert(tutorJs.includes('isMicrophoneAllowedState'), 'Must check isMicrophoneAllowedState');
 });
 
-it('2. tutor.js uses single-shot capture (continuous=false, interimResults=false, maxAlternatives=3)', () => {
-  assert(tutorJs.includes('this.tutorSpeechRecognition.continuous = false;'), 'continuous must be false');
+it('2. tutor.js uses continuous capture bounded by "Done" keyword (continuous=true, interimResults=false, maxAlternatives=3)', () => {
+  assert(tutorJs.includes('this.tutorSpeechRecognition.continuous = true;'), 'continuous must be true for bounded multi-sentence capture');
   assert(tutorJs.includes('this.tutorSpeechRecognition.interimResults = false;'), 'interimResults must be false');
   assert(tutorJs.includes("this.tutorSpeechRecognition.lang = 'en-IN';"), 'lang must be en-IN');
   assert(tutorJs.includes('this.tutorSpeechRecognition.maxAlternatives = 3;'), 'maxAlternatives must be 3');

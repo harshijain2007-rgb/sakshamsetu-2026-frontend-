@@ -620,11 +620,11 @@ class VoiceController {
   }
 
   // =========================================================================
-  // Status Tracking Flow (In-Place Accessible Audio Status)
+  // Status Tracking Flow (Universal Sub-Flow Auto-Return Pattern)
   // =========================================================================
   async triggerStatusFlow() {
     this.requestMicrophoneOwnership('status');
-    this.isStatusMode = true;
+    this.isStatusMode = false;
     const checkMsg = 'Checking your registered grievances...';
     this.updateStatusText(checkMsg);
 
@@ -643,26 +643,32 @@ class VoiceController {
             const dept = g.assigned_department || g.department || 'Campus Nodal Office';
             summaryText += `Grievance ${idx + 1}: Code ${code}, category ${cat}, status is currently ${status}. Assigned department: ${dept}. `;
           });
-          summaryText += `Say Repeat to hear this again, or say Back to return to the voice portal.`;
+          summaryText += `Returning to main voice portal.`;
         } else {
-          summaryText = 'You currently have no registered grievances. Say Back to return to the voice portal.';
+          summaryText = 'You currently have no registered grievances. Returning to main voice portal.';
         }
 
         this.lastStatusSummary = summaryText;
         this.updateStatusText(summaryText);
 
         this.speak(summaryText, () => {
-          // Keep recognition active in status mode ONLY after speech finishes
-          if (this.voiceOwner === 'status') {
-            this.startStandbyListening();
-          }
+          // Automatically return control to parent listener, exactly like grievance flow after submit
+          this.releaseMicrophoneOwnership('status');
+          this.voiceOwner = 'global';
+          this.isVoicePortalActive = true;
+          this.startGlobalRecognition(false);
+          this.updateUiState(true);
         });
       } catch (err) {
         console.error('[Voice Status Error]:', err);
-        const errorMsg = 'Sorry, I could not retrieve your grievance status right now. Please try again.';
+        const errorMsg = 'Sorry, I could not retrieve your grievance status right now. Returning to voice portal.';
         this.updateStatusText(errorMsg);
         this.speak(errorMsg, () => {
-          this.exitStatusMode();
+          this.releaseMicrophoneOwnership('status');
+          this.voiceOwner = 'global';
+          this.isVoicePortalActive = true;
+          this.startGlobalRecognition(false);
+          this.updateUiState(true);
         });
       }
     });
@@ -918,23 +924,53 @@ class VoiceController {
   }
 
   readNotices() {
+    this.requestMicrophoneOwnership('alerts');
+    this.stopGlobalRecognition(false);
+
     const noticeElements = document.querySelectorAll('[data-voice-notice]');
     if (noticeElements.length === 0) {
-      this.speak('There are no recent campus notifications at this time.');
+      this.speak('There are no recent campus notifications at this time. Returning to voice portal.', () => {
+        this.releaseMicrophoneOwnership('alerts');
+        this.voiceOwner = 'global';
+        this.isVoicePortalActive = true;
+        this.startGlobalRecognition(false);
+        this.updateUiState(true);
+      });
       return;
     }
     let allText = 'Here are your campus notifications: ';
     noticeElements.forEach((el, idx) => {
       allText += ` Notification ${idx + 1}: ${el.getAttribute('data-voice-notice') || el.innerText}. `;
     });
-    this.speak(allText);
+    allText += ' Returning to voice portal.';
+    this.speak(allText, () => {
+      this.releaseMicrophoneOwnership('alerts');
+      this.voiceOwner = 'global';
+      this.isVoicePortalActive = true;
+      this.startGlobalRecognition(false);
+      this.updateUiState(true);
+    });
   }
 
   readCurrentPage() {
+    this.requestMicrophoneOwnership('screen_reader');
+    this.stopGlobalRecognition(false);
+
     const mainContent = document.querySelector('main');
-    if (!mainContent) return;
+    if (!mainContent) {
+      this.releaseMicrophoneOwnership('screen_reader');
+      this.voiceOwner = 'global';
+      this.startGlobalRecognition(false);
+      return;
+    }
     const text = mainContent.innerText.replace(/\s+/g, ' ').trim();
-    this.speak('Reading page preview: ' + text.slice(0, 500) + (text.length > 500 ? '... End of preview.' : ''));
+    this.speak('Reading page preview: ' + text.slice(0, 500) + (text.length > 500 ? '... End of preview. Returning to voice portal.' : ' Returning to voice portal.'), () => {
+      this.releaseMicrophoneOwnership('screen_reader');
+      this.voiceOwner = 'global';
+      this.isVoicePortalActive = true;
+      this.startGlobalRecognition(false);
+      this.updateUiState(true);
+    });
   }
 
   // =========================================================================
