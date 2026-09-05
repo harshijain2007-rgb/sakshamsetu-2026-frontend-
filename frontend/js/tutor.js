@@ -173,11 +173,20 @@ export class TutorVoiceController {
         }
       }
 
-      const activeText = (finalTranscript || interimTranscript).trim();
+      // Display live interim speech in the status UI without triggering any action!
+      if (interimTranscript && !finalTranscript) {
+        const trimmedInterim = interimTranscript.trim();
+        if (trimmedInterim) {
+          this.updateStatusText(`Hearing: "${trimmedInterim}..."`);
+        }
+        return; // Reject interim command execution!
+      }
+
+      const activeText = finalTranscript.trim();
       if (!activeText) return;
 
-      const isFinal = !!finalTranscript || event.results[event.results.length - 1].isFinal;
-      this.handleTutorSpeech(activeText, isFinal);
+      // ONLY process final speech!
+      this.handleTutorSpeech(activeText, true);
     };
 
     this.tutorSpeechRecognition.onerror = (e) => {

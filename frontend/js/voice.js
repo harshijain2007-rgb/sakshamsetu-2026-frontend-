@@ -29,6 +29,7 @@ class VoiceController {
     // Strict Wake-Word State Machine (STANDBY by default)
     this.isVoicePortalActive = false;
     this.restartTimer = null;
+    this.voiceOwner = 'global'; // 'global' | 'grievance' | 'emergency' | 'status' | null
 
     this.audioCtx = null;
     this.customGrievanceHandler = null;
@@ -74,6 +75,33 @@ class VoiceController {
   }
 
   // =========================================================================
+  // Microphone Ownership & Race-Condition Lock
+  // =========================================================================
+  requestMicrophoneOwnership(featureName) {
+    console.log(`[VOICE LOCK] Ownership requested by: "${featureName}" (Current owner: "${this.voiceOwner}")`);
+    if (this.voiceOwner !== featureName) {
+      this.stopGlobalRecognition(false);
+      clearTimeout(this.restartTimer);
+      this.voiceOwner = featureName;
+    }
+    return true;
+  }
+
+  releaseMicrophoneOwnership(featureName) {
+    console.log(`[VOICE LOCK] Ownership released by: "${featureName}"`);
+    if (this.voiceOwner === featureName) {
+      this.voiceOwner = null;
+    }
+  }
+
+  canGlobalRecognize() {
+    return this.hasRecognition &&
+      (this.voiceOwner === 'global' || this.voiceOwner === null) &&
+      !this.isModalOpen &&
+      !this.isSpeaking;
+  }
+
+  // =========================================================================
   // 1. Audio Prompt Tone Generator (Web Audio API)
   // =========================================================================
   playTone(frequency = 660, duration = 0.35) {
@@ -116,7 +144,7 @@ class VoiceController {
     this.globalRecognition.onstart = () => {
       this.isGlobalListening = true;
       this.updateUiState(this.isVoicePortalActive);
-      console.log('[VOICE] mode:', this.isVoicePortalActive ? 'ACTIVE' : 'STANDBY');
+      console.log('[VOICE] mode:', this.isVoicePortalActive ? 'ACTIVE' : 'STANDBY', 'owner:', this.voiceOwner);
       console.log('[VOICE] recognition started');
     };
 
@@ -133,9 +161,23 @@ class VoiceController {
         }
       }
 
-      const activeText = (finalTranscript || interimTranscript).trim();
+      // If interim results only, update live visual text feedback but NEVER trigger commands!
+      if (interimTranscript && !finalTranscript) {
+        const trimmedInterim = interimTranscript.trim();
+        if (trimmedInterim) {
+          const statusEl = document.getElementById('voice-status-text');
+          const globalStatusEl = document.getElementById('global-voice-status');
+          const msg = `Hearing: "${trimmedInterim}..."`;
+          if (statusEl) statusEl.textContent = msg;
+          if (globalStatusEl) globalStatusEl.textContent = msg;
+        }
+        return; // Reject interim command execution
+      }
+
+      const activeText = finalTranscript.trim();
       if (!activeText) return;
 
+      // Execute command ONLY from final recognized result
       this.processVoiceCommand(activeText);
     };
 
@@ -148,35 +190,39 @@ class VoiceController {
         return;
       }
 
-      // Safe Debounced Auto-Restart (400ms buffer prevents browser mic throttling)
+      // Safe Debounced Auto-Restart (Only if global is allowed to recognize and not owned by another feature)
       clearTimeout(this.restartTimer);
-      this.restartTimer = setTimeout(() => {
-        if (!this.isModalOpen) {
-          try {
-            this.globalRecognition.start();
-          } catch (err) {}
-        }
-      }, 400);
+      if (this.canGlobalRecognize()) {
+        this.restartTimer = setTimeout(() => {
+          if (this.canGlobalRecognize()) {
+            try {
+              this.globalRecognition.start();
+            } catch (err) {}
+          }
+        }, 400);
+      }
     };
 
     this.globalRecognition.onend = () => {
       this.isGlobalListening = false;
-      console.log('[VOICE] recognition ended');
+      console.log('[VOICE] recognition ended, canRecognize:', this.canGlobalRecognize());
 
-      // Safe Debounced Auto-Restart (400ms buffer prevents browser mic throttling)
+      // Safe Debounced Auto-Restart: ONLY if global voice is supposed to be active and owns the mic!
       clearTimeout(this.restartTimer);
-      this.restartTimer = setTimeout(() => {
-        if (!this.isModalOpen) {
-          try {
-            this.globalRecognition.start();
-          } catch (err) {}
-        }
-      }, 400);
+      if (this.canGlobalRecognize()) {
+        this.restartTimer = setTimeout(() => {
+          if (this.canGlobalRecognize()) {
+            try {
+              this.globalRecognition.start();
+            } catch (err) {}
+          }
+        }, 400);
+      }
     };
   }
 
   startStandbyListening() {
-    if (!this.hasRecognition || this.isModalOpen) return;
+    if (!this.canGlobalRecognize()) return;
     try {
       this.globalRecognition.start();
     } catch (e) {
@@ -186,7 +232,7 @@ class VoiceController {
 
   setupUserInteractionUnlock() {
     const unlock = () => {
-      if (this.hasRecognition && !this.isGlobalListening && !this.isModalOpen) {
+      if (this.canGlobalRecognize() && !this.isGlobalListening) {
         this.startStandbyListening();
       }
     };
@@ -196,20 +242,36 @@ class VoiceController {
   }
 
   startGlobalRecognition(cueUser = false) {
+    this.voiceOwner = 'global';
     this.isVoicePortalActive = true;
     this.updateUiState(true);
-    if (this.hasRecognition && !this.isGlobalListening && !this.isModalOpen) {
-      this.startStandbyListening();
-    }
+
     if (cueUser) {
       this.playTone(660, 0.25);
-      this.speak('Voice portal activated.');
+      this.speak('Voice portal activated.', () => {
+        if (this.canGlobalRecognize() && !this.isGlobalListening) {
+          this.startStandbyListening();
+        }
+      });
+    } else {
+      if (this.canGlobalRecognize() && !this.isGlobalListening) {
+        this.startStandbyListening();
+      }
     }
   }
 
   stopGlobalRecognition(cueUser = false) {
+    clearTimeout(this.restartTimer);
     this.isVoicePortalActive = false;
     this.updateUiState(false);
+
+    if (this.globalRecognition && this.isGlobalListening) {
+      try {
+        this.globalRecognition.stop();
+      } catch (e) {}
+    }
+    this.isGlobalListening = false;
+
     if (cueUser) {
       this.playTone(440, 0.25);
       this.speak('Voice portal paused.');
@@ -533,7 +595,7 @@ class VoiceController {
   // Status Tracking Flow (In-Place Accessible Audio Status)
   // =========================================================================
   async triggerStatusFlow() {
-    this.stopSpeaking();
+    this.requestMicrophoneOwnership('status');
     this.isStatusMode = true;
     const checkMsg = 'Checking your registered grievances...';
     this.updateStatusText(checkMsg);
@@ -562,17 +624,17 @@ class VoiceController {
         this.updateStatusText(summaryText);
 
         this.speak(summaryText, () => {
-          // Keep recognition active in status mode
-          this.isStatusMode = true;
-          this.startGlobalRecognition(false);
+          // Keep recognition active in status mode ONLY after speech finishes
+          if (this.voiceOwner === 'status') {
+            this.startStandbyListening();
+          }
         });
       } catch (err) {
         console.error('[Voice Status Error]:', err);
         const errorMsg = 'Sorry, I could not retrieve your grievance status right now. Please try again.';
         this.updateStatusText(errorMsg);
         this.speak(errorMsg, () => {
-          this.isStatusMode = false;
-          this.startGlobalRecognition(false);
+          this.exitStatusMode();
         });
       }
     });
@@ -581,8 +643,9 @@ class VoiceController {
   repeatStatusSummary() {
     if (this.lastStatusSummary) {
       this.speak(this.lastStatusSummary, () => {
-        this.isStatusMode = true;
-        this.startGlobalRecognition(false);
+        if (this.voiceOwner === 'status') {
+          this.startStandbyListening();
+        }
       });
     } else {
       this.triggerStatusFlow();
@@ -592,6 +655,8 @@ class VoiceController {
   exitStatusMode() {
     this.isStatusMode = false;
     this.speak('Returning to voice portal.', () => {
+      this.releaseMicrophoneOwnership('status');
+      this.voiceOwner = 'global';
       this.isVoicePortalActive = true;
       this.startGlobalRecognition(false);
       this.updateUiState(true);
@@ -614,8 +679,8 @@ class VoiceController {
       return;
     }
 
-    // 1. Immediately pause global listener
-    this.stopGlobalRecognition();
+    // 1. Immediately request microphone ownership for grievance and stop global
+    this.requestMicrophoneOwnership('grievance');
     this.isModalOpen = true;
     this.isDictationPaused = false;
 
@@ -660,12 +725,10 @@ class VoiceController {
     }
     document.body.classList.remove('overflow-hidden');
 
-    // Restart background navigation listener if autoRestart was enabled
-    if (this.autoRestart) {
-      setTimeout(() => {
-        this.startGlobalRecognition();
-      }, 400);
-    }
+    this.releaseMicrophoneOwnership('grievance');
+    this.voiceOwner = 'global';
+    this.isVoicePortalActive = true;
+    this.startGlobalRecognition(false);
   }
 
   // =========================================================================
@@ -788,7 +851,9 @@ class VoiceController {
           this.isDictationPaused = false;
           this.stopModalRecognition();
 
-          // Re-enable globalRecognition in ACTIVE state seamlessly
+          // Re-enable globalRecognition in ACTIVE state seamlessly after TTS
+          this.releaseMicrophoneOwnership('grievance');
+          this.voiceOwner = 'global';
           this.isVoicePortalActive = true;
           this.startGlobalRecognition(false);
           this.updateUiState(true);
@@ -820,7 +885,7 @@ class VoiceController {
   }
 
   triggerEmergencyFlow() {
-    this.speak('Emergency protocol triggered. Accessing campus response team.');
+    this.requestMicrophoneOwnership('emergency');
     emergency.triggerVoiceEmergency();
   }
 
@@ -852,19 +917,27 @@ class VoiceController {
       if (onComplete) setTimeout(onComplete, 500);
       return;
     }
+    this.isSpeaking = true;
+    if (this.globalRecognition && this.isGlobalListening) {
+      try { this.globalRecognition.stop(); } catch (e) {}
+    }
     this.synth.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 0.95;
     utterance.pitch = 1.0;
     if (this.activeVoice) utterance.voice = this.activeVoice;
-    if (onComplete) {
-      utterance.onend = () => {
+    utterance.onend = () => {
+      this.isSpeaking = false;
+      if (onComplete) {
         onComplete();
-      };
-      utterance.onerror = () => {
+      }
+    };
+    utterance.onerror = () => {
+      this.isSpeaking = false;
+      if (onComplete) {
         onComplete();
-      };
-    }
+      }
+    };
     this.synth.speak(utterance);
   }
 
@@ -872,6 +945,7 @@ class VoiceController {
     if (this.hasSynthesis) {
       this.synth.cancel();
     }
+    this.isSpeaking = false;
   }
 
   updateUiState(isActive) {

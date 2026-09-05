@@ -23,16 +23,20 @@ export const emergency = {
     const targetPhone = phone || emergency.activePhoneNumber || '112';
     console.log('[Emergency Action]: Initiating emergency call to', targetPhone);
 
+    if (typeof window !== 'undefined' && window.voice) {
+      window.voice.stopGlobalRecognition(false);
+      window.voice.releaseMicrophoneOwnership('emergency');
+    }
+
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance("Initiating emergency call.");
       utterance.rate = 0.95;
-      utterance.onend = () => {
+      const dial = () => {
         window.location.href = `tel:${targetPhone}`;
       };
-      utterance.onerror = () => {
-        window.location.href = `tel:${targetPhone}`;
-      };
+      utterance.onend = dial;
+      utterance.onerror = dial;
       window.speechSynthesis.speak(utterance);
     } else {
       window.location.href = `tel:${targetPhone}`;
@@ -56,18 +60,36 @@ export const emergency = {
       try { banner.remove(); } catch (e) {}
     }
 
+    // Stop active recognition
+    if (typeof window !== 'undefined' && window.voice) {
+      window.voice.stopGlobalRecognition(false);
+    }
+
+    // Spoken confirmation: only resume global voice AFTER TTS finishes
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance("Emergency modal closed. Returning to voice portal.");
       utterance.rate = 0.95;
+      const restoreGlobal = () => {
+        if (typeof window !== 'undefined' && window.voice) {
+          window.voice.releaseMicrophoneOwnership('emergency');
+          window.voice.voiceOwner = 'global';
+          window.voice.isVoicePortalActive = true;
+          window.voice.startGlobalRecognition(false);
+          window.voice.updateUiState(true);
+        }
+      };
+      utterance.onend = restoreGlobal;
+      utterance.onerror = restoreGlobal;
       window.speechSynthesis.speak(utterance);
-    }
-
-    // Re-enable global voice recognition if on voice portal page
-    if (typeof window !== 'undefined' && window.voice) {
-      window.voice.isVoicePortalActive = true;
-      window.voice.startGlobalRecognition(false);
-      window.voice.updateUiState(true);
+    } else {
+      if (typeof window !== 'undefined' && window.voice) {
+        window.voice.releaseMicrophoneOwnership('emergency');
+        window.voice.voiceOwner = 'global';
+        window.voice.isVoicePortalActive = true;
+        window.voice.startGlobalRecognition(false);
+        window.voice.updateUiState(true);
+      }
     }
   },
 
@@ -76,35 +98,17 @@ export const emergency = {
    */
   triggerVoiceEmergency: async (location = 'Visual-Dyslexic Portal') => {
     try {
+      if (typeof window !== 'undefined' && window.voice) {
+        window.voice.requestMicrophoneOwnership('emergency');
+        window.voice.stopGlobalRecognition(false);
+      }
+
       const requestRes = await api.emergency.request();
       const res = requestRes.success ? requestRes : await api.emergency.getContact(location);
 
       const contactName = res.contactName || 'Campus Quick Response Team';
       const phone = res.phoneNumber || '112';
       emergency.activePhoneNumber = phone;
-
-      // Spoken narration
-      const speechText = `Emergency assistance alert activated. Contacting ${contactName}. The direct phone number is ${phone.split('').join(' ')}. Please say call or dismiss.`;
-      
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(speechText);
-        utterance.rate = 0.9;
-        utterance.pitch = 1.0;
-        utterance.onend = () => {
-          if (typeof window !== 'undefined' && window.voice) {
-            window.voice.isVoicePortalActive = true;
-            window.voice.startGlobalRecognition(false);
-          }
-        };
-        utterance.onerror = () => {
-          if (typeof window !== 'undefined' && window.voice) {
-            window.voice.isVoicePortalActive = true;
-            window.voice.startGlobalRecognition(false);
-          }
-        };
-        window.speechSynthesis.speak(utterance);
-      }
 
       // Render on-screen emergency modal & alert banner
       emergency.renderEmergencyBanner({
@@ -120,6 +124,26 @@ export const emergency = {
         alternateNumber: res.alternateNumber || '108',
         instructions: res.instructions || 'Stay at your current location. Campus responders are notified.'
       });
+
+      // Spoken narration
+      const speechText = `Emergency assistance alert activated. Contacting ${contactName}. The direct phone number is ${phone.split('').join(' ')}. Please say call or dismiss.`;
+      
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(speechText);
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        const startEmergencyListening = () => {
+          if (typeof window !== 'undefined' && window.voice) {
+            window.voice.voiceOwner = 'emergency';
+            window.voice.isVoicePortalActive = true;
+            window.voice.startStandbyListening();
+          }
+        };
+        utterance.onend = startEmergencyListening;
+        utterance.onerror = startEmergencyListening;
+        window.speechSynthesis.speak(utterance);
+      }
     } catch (err) {
       console.error('[Emergency API Error]', err);
     }

@@ -222,12 +222,20 @@
       statusRecognition.maxAlternatives = 3;
 
       statusRecognition.onresult = (event) => {
-        let text = '';
+        let interimText = '';
+        let finalText = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
-          text += event.results[i][0].transcript + ' ';
+          if (event.results[i].isFinal) {
+            finalText += event.results[i][0].transcript + ' ';
+          } else {
+            interimText += event.results[i][0].transcript + ' ';
+          }
         }
-        text = text.toLowerCase().trim().replace(/[.,!?]/g, '');
-        console.log('[Status Page Heard]:', text);
+
+        if (!finalText.trim()) return;
+
+        const text = finalText.toLowerCase().trim().replace(/[.,!?]/g, '');
+        console.log('[Status Page Final Heard]:', text);
 
         if (/\b(repeat|again|replay|read again)\b/i.test(text) || text.includes('repeat') || text.includes('again')) {
           if (lastStatusSummary) {
