@@ -374,6 +374,32 @@ class VoiceController {
     }
 
     // 2. ACTIVE STATE (isVoicePortalActive === true)
+    // Emergency Modal Voice Commands (Active specifically when #emergencyModal is open)
+    const emergencyModal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
+    if (emergencyModal && emergencyModal.style.display !== 'none' && !emergencyModal.classList.contains('hidden')) {
+      if (text.includes('call') || text.includes('dial')) {
+        this.speak('Initiating emergency call.');
+        const callBtn = emergencyModal.querySelector('a[href^="tel:"]');
+        if (callBtn) {
+          callBtn.click();
+        } else {
+          window.location.href = 'tel:112';
+        }
+        return;
+      }
+
+      if (text.includes('dismiss') || text.includes('cancel') || text.includes('close')) {
+        emergencyModal.style.display = 'none';
+        emergencyModal.classList.add('hidden');
+        try { emergencyModal.remove(); } catch (e) {}
+        this.speak('Emergency modal closed. Returning to voice portal.');
+        this.isVoicePortalActive = true;
+        this.startGlobalRecognition(false);
+        this.updateUiState(true);
+        return;
+      }
+    }
+
     // SLEEP WORD CHECK
     if (text.includes('stop') || text.includes('pause') || text.includes('mute') || text.includes('silence') || text.includes('sleep')) {
       this.isVoicePortalActive = false;
@@ -424,9 +450,9 @@ class VoiceController {
       return;
     }
 
-    if (text.includes('check status') || text.includes('track grievance') || text.includes('status')) {
+    if (text.includes('check status') || text.includes('track status') || text.includes('track grievance') || text.includes('my grievances') || text === 'status') {
       this.speak('Opening grievance status lookup.');
-      window.location.href = 'grievance.html#track-section';
+      window.location.href = 'status.html';
       return;
     }
 

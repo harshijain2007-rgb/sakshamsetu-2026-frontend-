@@ -87,11 +87,11 @@ export const emergency = {
    */
   renderHighContrastModal: (contactData) => {
     // Remove existing if any
-    const existing = document.getElementById('emergency-modal');
+    const existing = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
     if (existing) existing.remove();
 
     const modal = document.createElement('div');
-    modal.id = 'emergency-modal';
+    modal.id = 'emergencyModal';
     modal.className = 'emergency-modal-backdrop';
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');

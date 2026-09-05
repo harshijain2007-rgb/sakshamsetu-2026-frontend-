@@ -319,12 +319,18 @@
     <!-- Actions Footer Card -->
     <div class="stitch-card p-5 bg-white flex flex-col sm:flex-row justify-between items-center gap-4">
       <p class="text-xs font-medium text-slate-500">
-        Audit results are recorded in institutional compliance records.
+        Audit results and full compliance logs are restricted to authenticated institution administrators.
       </p>
-      <button id="save-audit-btn" class="px-5 py-2.5 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-2 shrink-0">
-        <span class="material-symbols-outlined text-base">save</span>
-        <span>Save Audit Progress</span>
-      </button>
+      <div class="flex flex-wrap items-center gap-2">
+        <button id="download-audit-btn" class="px-5 py-2.5 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-2 shrink-0 cursor-pointer">
+          <span class="material-symbols-outlined text-base text-blue-600">download</span>
+          <span>Download Audit Report</span>
+        </button>
+        <button id="save-audit-btn" class="px-5 py-2.5 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-2 shrink-0 cursor-pointer">
+          <span class="material-symbols-outlined text-base">save</span>
+          <span>Save Audit Progress</span>
+        </button>
+      </div>
     </div>
 
     <!-- Footer Bar -->
@@ -392,6 +398,32 @@
       setTimeout(() => {
         btn.innerHTML = `<span class="material-symbols-outlined text-base">save</span> Save Audit Progress`;
       }, 3000);
+    });
+
+    // Admin Audit Download Handler (Restricted to Administrators)
+    document.getElementById('download-audit-btn')?.addEventListener('click', () => {
+      const auditData = {
+        title: "SakshamSetu RPwD Act Compliance Audit Report",
+        generatedAt: new Date().toISOString(),
+        complianceScore: document.getElementById('live-compliance-score')?.textContent || "88%",
+        standard: "RPwD Act 2016 / Harmonised Guidelines 2021",
+        items: Array.from(document.querySelectorAll('.checklist-item')).map(cb => ({
+          id: cb.getAttribute('data-id'),
+          title: cb.parentElement.querySelector('.font-bold')?.textContent || '',
+          description: cb.parentElement.querySelector('.font-medium')?.textContent || '',
+          status: cb.checked ? 'Compliant' : 'In Review'
+        }))
+      };
+
+      const blob = new Blob([JSON.stringify(auditData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `compliance_audit_report_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     });
 
     document.addEventListener('DOMContentLoaded', () => {

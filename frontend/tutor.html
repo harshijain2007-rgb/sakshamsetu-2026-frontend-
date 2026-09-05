@@ -81,44 +81,54 @@
   <main id="main-content" class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 md:py-12 space-y-8">
     <div class="space-y-3 text-center">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold">
-        <span class="material-symbols-outlined text-sm">auto_awesome</span> Gemini-Powered Study Aid
+        <span class="material-symbols-outlined text-sm">auto_awesome</span> Gemini-Powered Voice Study Assistant
       </div>
       <h1 class="text-3xl md:text-4xl font-extrabold text-navy-brand font-heading">
         AI Accessible Tutor
       </h1>
       <p class="text-sm text-slate-600 font-medium max-w-xl mx-auto">
-        Ask academic questions, simplify complex textbook passages, or get scribe-style audio explanations.
+        100% hands-free voice study: Speak any topic to begin, hear step-by-step audio lessons, and ask questions naturally anytime.
       </p>
+
+      <!-- Live Voice Status Banner -->
+      <div class="inline-flex items-center gap-3 px-4 py-2 bg-white rounded-full border border-slate-200/80 shadow-xs text-xs font-bold text-slate-700">
+        <span id="tutor-mic-dot" class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+        <span id="tutor-mic-label">LISTENING</span>
+        <span class="text-slate-300">|</span>
+        <span id="tutor-status-text" class="text-slate-500 font-medium">Initializing voice tutor...</span>
+      </div>
     </div>
 
     <!-- Interactive Tutor Chat Card -->
     <div class="stitch-card p-6 md:p-8 bg-white space-y-6">
-      <div id="tutor-chat-messages" class="space-y-4 min-h-[220px] max-h-[360px] overflow-y-auto p-4 bg-slate-50/60 border border-slate-200/80 rounded-2xl">
+      <div id="tutor-chat-messages" class="space-y-4 min-h-[260px] max-h-[440px] overflow-y-auto p-4 bg-slate-50/60 border border-slate-200/80 rounded-2xl">
         <div class="flex items-start gap-3">
-          <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0">
+          <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs">
             <span class="material-symbols-outlined text-sm">psychology</span>
           </div>
           <div class="p-3.5 bg-white border border-slate-200 rounded-2xl text-xs font-medium text-slate-800 space-y-1 shadow-xs">
             <p class="font-bold text-indigo-700">Saksham AI Tutor</p>
-            <p>Hello! I am your accessible learning assistant. You can speak or type any question, request simplified definitions, or ask me to read concepts aloud.</p>
+            <p>Welcome to AI Tutor! Say any topic name after the tone, or type it below. I will guide you through an accessible step-by-step lesson.</p>
           </div>
         </div>
       </div>
 
-      <!-- Input controls -->
+      <!-- Input controls (Supports both voice speech and typed input) -->
       <form id="tutor-form" class="space-y-3">
         <div class="flex flex-col sm:flex-row gap-3">
-          <input type="text" id="tutor-input" placeholder="Ask a study question (e.g., Explain Newton's Third Law in simple words)..." class="flex-1 px-4 py-3 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-          <button type="submit" class="px-6 py-3 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 shrink-0">
+          <input type="text" id="topicInput" name="topic" placeholder="Say or type a study topic (e.g. Newton's Laws, RPwD Act 2016, Photosynthesis)..." class="flex-1 px-4 py-3 text-xs font-medium border border-slate-200 bg-slate-50/50 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          <input type="hidden" id="tutor-input">
+          <button type="submit" id="tutorSubmitBtn" class="px-6 py-3 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer">
             <span class="material-symbols-outlined text-base">send</span>
-            <span>Ask Tutor</span>
+            <span>Learn Topic</span>
           </button>
         </div>
         <div class="flex flex-wrap gap-2 text-xs">
-          <span class="text-slate-400 font-semibold py-1">Quick prompts:</span>
-          <button type="button" class="quick-prompt px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px]">Compensatory exam time rules</button>
-          <button type="button" class="quick-prompt px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px]">Summarize RPwD Act 2016</button>
-          <button type="button" class="quick-prompt px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px]">Scribe assistance guidelines</button>
+          <span class="text-slate-400 font-semibold py-1">Try saying:</span>
+          <button type="button" class="quick-prompt px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] cursor-pointer">Compensatory exam time rules</button>
+          <button type="button" class="quick-prompt px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] cursor-pointer">Summarize RPwD Act 2016</button>
+          <button type="button" class="quick-prompt px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] cursor-pointer">Newton's Third Law</button>
+          <button type="button" class="quick-prompt px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium text-[11px] cursor-pointer">Scribe assistance guidelines</button>
         </div>
       </form>
     </div>
@@ -139,61 +149,35 @@
 
   <script type="module">
     import { auth } from './js/auth.js';
-    import { voice } from './js/voice.js';
+    import { tutor } from './js/tutor.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       auth.initAccessibility();
 
+      // Start initial spoken welcome prompt and isolated listener on load
+      tutor.startInitialWelcome();
+
       const form = document.getElementById('tutor-form');
-      const input = document.getElementById('tutor-input');
-      const container = document.getElementById('tutor-chat-messages');
+      const topicInput = document.getElementById('topicInput');
 
       form?.addEventListener('submit', (e) => {
         e.preventDefault();
-        const query = input?.value.trim();
-        if (!query) return;
+        const topic = topicInput?.value.trim();
+        if (!topic) return;
 
-        // Append user query
-        const userMsg = document.createElement('div');
-        userMsg.className = 'flex items-start justify-end gap-3';
-        userMsg.innerHTML = `
-          <div class="p-3.5 bg-navy-brand text-white rounded-2xl text-xs font-medium max-w-md shadow-xs">
-            <p>${query}</p>
-          </div>
-        `;
-        container?.appendChild(userMsg);
-        if (input) input.value = '';
-
-        // Response
-        setTimeout(() => {
-          const aiMsg = document.createElement('div');
-          aiMsg.className = 'flex items-start gap-3';
-          let reply = `Here is the explanation for "${query}": Under RPwD Act guidelines, students with disabilities are entitled to compensatory time (20 minutes per hour) and scribe assistance upon registration with the Equal Opportunity Cell.`;
-          aiMsg.innerHTML = `
-            <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0">
-              <span class="material-symbols-outlined text-sm">psychology</span>
-            </div>
-            <div class="p-3.5 bg-white border border-slate-200 rounded-2xl text-xs font-medium text-slate-800 space-y-2 shadow-xs max-w-lg">
-              <p class="font-bold text-indigo-700">Saksham AI Tutor</p>
-              <p>${reply}</p>
-              <button type="button" class="read-reply-btn text-[11px] font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1">
-                <span class="material-symbols-outlined text-sm">volume_up</span> Listen to explanation
-              </button>
-            </div>
-          `;
-          container?.appendChild(aiMsg);
-          container?.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-
-          aiMsg.querySelector('.read-reply-btn')?.addEventListener('click', () => {
-            voice.speak(reply);
-          });
-        }, 500);
+        tutor.currentTopic = topic;
+        tutor.appendUserMessage(topic);
+        const prepMsg = `Preparing your lesson on ${topic}. Please wait a moment.`;
+        tutor.updateStatusText(prepMsg);
+        tutor.speak(prepMsg, 0.95, async () => {
+          await tutor.generateAndStartLesson(topic);
+        });
       });
 
       document.querySelectorAll('.quick-prompt').forEach(btn => {
         btn.addEventListener('click', () => {
-          if (input) {
-            input.value = btn.textContent || '';
+          if (topicInput) {
+            topicInput.value = btn.textContent || '';
             form?.dispatchEvent(new Event('submit'));
           }
         });

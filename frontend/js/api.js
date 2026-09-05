@@ -353,6 +353,15 @@ export const api = {
       });
     },
 
+    getMyGrievances: async () => {
+      return apiFetch('/api/grievance/my-grievances', {
+        method: 'GET'
+      }, true, () => {
+        const state = getLocalState();
+        return { success: true, grievances: state.grievances || [] };
+      });
+    },
+
     // Update grievance department and status via single PATCH call
     update: async (codeOrId, updates = {}) => {
       return apiFetch(`/api/grievance/${encodeURIComponent(codeOrId)}`, {
@@ -498,6 +507,56 @@ export const api = {
           return { success: true, item };
         }
         return { success: false, message: 'Checklist item not found' };
+      });
+    }
+  },
+
+  // AI Tutor Module
+  tutor: {
+    generate: async (topic) => {
+      return apiFetch('/api/tutor/generate', {
+        method: 'POST',
+        body: JSON.stringify({ topic })
+      }, false, () => {
+        const cleanTopic = (topic || 'General Studies').trim();
+        return {
+          success: true,
+          topic: cleanTopic,
+          title: `Accessible Lesson on ${cleanTopic}`,
+          steps: [
+            {
+              step_order: 1,
+              title: `Introduction to ${cleanTopic}`,
+              content: `${cleanTopic} is a foundational concept. In this lesson, we will explore the core ideas, key definitions, and accessible examples step by step.`
+            },
+            {
+              step_order: 2,
+              title: `Core Principles & Applications`,
+              content: `Key principles of ${cleanTopic} include fundamental rules and real-world applications designed for inclusive, clear understanding.`
+            },
+            {
+              step_order: 3,
+              title: `Summary & Review`,
+              content: `To summarize: remember the essential principles of ${cleanTopic}. You can ask any question, repeat steps, or explore further anytime.`
+            }
+          ]
+        };
+      });
+    },
+
+    doubt: async (topic, step_order, question) => {
+      return apiFetch('/api/tutor/doubt', {
+        method: 'POST',
+        body: JSON.stringify({ topic, step_order, question })
+      }, false, () => {
+        return {
+          success: true,
+          topic: topic || 'General Topic',
+          step_order: step_order || 1,
+          question: question || '',
+          answer: `Regarding step ${step_order || 1} of ${topic}: ${question} is explained simply through foundational principles that focus on practical understanding and accessibility.`,
+          explanation: `Regarding step ${step_order || 1} of ${topic}: ${question} is explained simply through foundational principles that focus on practical understanding and accessibility.`
+        };
       });
     }
   }

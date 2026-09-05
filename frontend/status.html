@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SakshamSetu — Status Tracking & Audio Status Reader</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Main Design System -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="./css/main.css">
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "navy-brand": "#0d2859",
+            "navy-dark": "#07193b",
+            "blue-accent": "#2563eb",
+            "ice-bg": "#f3f8fd",
+            "green-emerald": "#16a34a",
+            "red-crimson": "#ef4444"
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Outfit"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-ice-bg text-slate-800 min-h-screen flex flex-col justify-between">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Accessibility Bar -->
+  <aside class="a11y-bar px-4 md:px-12 py-2" aria-label="Accessibility controls">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-sm text-yellow-300">record_voice_over</span>
+      <span>Voice-First Audio Status Reader Active</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" id="btn-dyslexia" class="a11y-btn">Dyslexia Font</button>
+      <button type="button" id="btn-contrast" class="a11y-btn">High Contrast</button>
+      <button type="button" id="btn-text-size" class="a11y-btn">Text Size</button>
+      <a href="student-visual-dyslexic.html" class="a11y-btn">Voice Portal</a>
+    </div>
+  </aside>
+
+  <!-- Global Header -->
+  <header class="bg-transparent px-6 md:px-16 py-5 border-b border-slate-200/60 bg-white/60 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="student-visual-dyslexic.html" class="text-2xl font-extrabold text-navy-brand tracking-tight font-heading flex items-center gap-2">
+        <span>SakshamSetu</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 font-semibold text-sm text-slate-600" aria-label="Main Navigation">
+        <a href="student-hearing-physical.html" class="hover:text-navy-brand transition-colors">Dashboard</a>
+        <a href="student-visual-dyslexic.html" class="hover:text-navy-brand transition-colors">Voice Portal</a>
+        <a href="status.html" class="text-navy-brand font-bold border-b-2 border-navy-brand pb-1">Grievance Status</a>
+        <a href="tutor.html" class="hover:text-navy-brand transition-colors">AI Tutor</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="student-visual-dyslexic.html" class="px-4 py-2 bg-navy-brand text-white font-bold text-xs rounded-full flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-base">mic</span>
+          <span>Voice Portal</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 md:py-12 space-y-8">
+    <div class="space-y-3 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold">
+        <span class="material-symbols-outlined text-sm">hearing</span> Spoken Status Reader
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-navy-brand font-heading">
+        Grievance Status Tracking
+      </h1>
+      <p class="text-sm text-slate-600 font-medium max-w-xl mx-auto">
+        Your logged accessibility barriers and live nodal redressal updates. Say <strong>"Repeat"</strong> to hear status again or <strong>"Back"</strong> to return.
+      </p>
+
+      <!-- Live Voice Status Banner -->
+      <div class="inline-flex items-center gap-3 px-4 py-2 bg-white rounded-full border border-slate-200/80 shadow-xs text-xs font-bold text-slate-700">
+        <span id="status-mic-dot" class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+        <span id="status-mic-label">VOICE ACTIVE</span>
+        <span class="text-slate-300">|</span>
+        <span id="status-reading-text" class="text-slate-500 font-medium">Fetching registered grievances...</span>
+      </div>
+    </div>
+
+    <!-- Quick Audio Controls Card -->
+    <div class="stitch-card p-6 bg-white flex flex-wrap items-center justify-between gap-4 border border-blue-100">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center">
+          <span class="material-symbols-outlined text-2xl">volume_up</span>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-navy-brand font-heading">Audio Status Reader</h3>
+          <p id="audio-summary-preview" class="text-xs text-slate-500 font-medium">Reading status summary...</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" id="btn-replay-status" class="px-4 py-2.5 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+          <span class="material-symbols-outlined text-base">replay</span>
+          <span>Repeat Audio (Say "Repeat")</span>
+        </button>
+        <button type="button" id="btn-back-dashboard" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer">
+          <span class="material-symbols-outlined text-base">arrow_back</span>
+          <span>Back to Portal (Say "Back")</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Registered Grievances List Container -->
+    <section class="space-y-4" aria-labelledby="my-grievances-heading">
+      <div class="flex items-center justify-between">
+        <h2 id="my-grievances-heading" class="text-xl font-extrabold text-navy-brand font-heading">
+          Your Registered Grievances
+        </h2>
+        <span id="grievance-count-badge" class="badge-pill bg-blue-100 text-blue-800 text-xs font-bold">Loading...</span>
+      </div>
+
+      <div id="my-grievance-list" class="space-y-4">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- Public Secret Code Lookup Section -->
+    <section class="stitch-card p-6 md:p-8 bg-white space-y-4" aria-labelledby="track-heading">
+      <div class="border-b border-slate-100 pb-3">
+        <h3 id="track-heading" class="text-lg font-bold text-navy-brand font-heading">Public Secret Code Lookup</h3>
+        <p class="text-xs text-slate-500 font-medium mt-0.5">
+          Look up the timeline for any specific anonymous code (e.g. SAK-2026-8891).
+        </p>
+      </div>
+
+      <form id="trackForm" class="flex flex-col sm:flex-row gap-3">
+        <input id="track-code-input" type="text" required placeholder="Enter Secret Code (e.g. SAK-2026-8891)" class="flex-1 px-4 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase font-mono">
+        <button type="submit" class="px-6 py-3 bg-navy-brand hover:bg-navy-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer">
+          <span class="material-symbols-outlined text-base">search</span>
+          <span>Track Status</span>
+        </button>
+      </form>
+
+      <div id="track-result-container" class="hidden space-y-4 pt-2"></div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-50/70 border-t border-blue-100/60 py-8 px-6 text-center text-xs font-medium text-slate-600 mt-16">
+    <div class="max-w-4xl mx-auto space-y-3">
+      <p class="font-bold text-sm text-navy-brand font-heading">SakshamSetu</p>
+      <div class="flex flex-wrap justify-center gap-6">
+        <a href="privacy.html" class="hover:text-navy-brand transition-colors">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-navy-brand transition-colors">Terms of Service</a>
+        <a href="student-visual-dyslexic.html" class="hover:text-navy-brand transition-colors">Voice Portal</a>
+      </div>
+      <p class="text-slate-400">© 2024 SakshamSetu. Empowering Accessible Education.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { api, apiFetch } from './js/api.js';
+    import { auth } from './js/auth.js';
+    import { grievance } from './js/grievance.js';
+
+    let lastStatusSummary = '';
+    let statusRecognition = null;
+    let isStatusListening = true;
+
+    function speakStatus(text, onComplete = null) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 1.0;
+      if (onComplete) utterance.onend = onComplete;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function initStatusVoiceNavigation() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) return;
+
+      statusRecognition = new SpeechRecognition();
+      statusRecognition.continuous = true;
+      statusRecognition.interimResults = false;
+      statusRecognition.lang = 'en-IN';
+
+      statusRecognition.onresult = (event) => {
+        const last = event.results.length - 1;
+        const text = event.results[last][0].transcript.toLowerCase().trim();
+        console.log('[Status Page Heard]:', text);
+
+        if (text.includes('repeat') || text.includes('again') || text.includes('replay') || text.includes('read again')) {
+          if (lastStatusSummary) {
+            speakStatus(lastStatusSummary);
+          }
+          return;
+        }
+
+        if (text.includes('back') || text.includes('close') || text.includes('return') || text.includes('exit')) {
+          window.speechSynthesis.cancel();
+          window.location.href = 'student-visual-dyslexic.html';
+          return;
+        }
+
+        if (text.includes('home') || text.includes('portal home') || text.includes('index')) {
+          window.speechSynthesis.cancel();
+          window.location.href = 'index.html';
+          return;
+        }
+
+        if (text.includes('tutor') || text.includes('study')) {
+          window.speechSynthesis.cancel();
+          window.location.href = 'tutor.html';
+          return;
+        }
+      };
+
+      statusRecognition.onend = () => {
+        if (isStatusListening) {
+          setTimeout(() => {
+            try { statusRecognition.start(); } catch (e) {}
+          }, 300);
+        }
+      };
+
+      try {
+        statusRecognition.start();
+      } catch (e) {}
+    }
+
+    async function loadAndSpeakGrievanceStatus() {
+      const listContainer = document.getElementById('my-grievance-list');
+      const countBadge = document.getElementById('grievance-count-badge');
+      const previewText = document.getElementById('audio-summary-preview');
+      const statusText = document.getElementById('status-reading-text');
+
+      try {
+        const res = await api.grievances.getMyGrievances();
+        const grievances = res?.grievances || res || [];
+
+        if (Array.isArray(grievances) && grievances.length > 0) {
+          countBadge.textContent = `${grievances.length} Active`;
+
+          // Spoken summary structure:
+          // "You have [X] registered grievances. Grievance code [SAK-XXXXXX], category [Category Name], status is currently [Status]. Assigned department: [Department]."
+          let summary = `You have ${grievances.length} registered ${grievances.length === 1 ? 'grievance' : 'grievances'}. `;
+          
+          grievances.forEach((g, idx) => {
+            const code = g.code || g.secret_code || g.id || `SAK-${idx + 1}`;
+            const category = g.category_name || g.category || 'General Accessibility';
+            const status = g.status || 'Registered';
+            const dept = g.department || g.assigned_department || 'Equal Opportunity Cell';
+            summary += `Grievance code ${code}, category ${category}, status is currently ${status}. Assigned department: ${dept}. `;
+          });
+
+          lastStatusSummary = summary;
+          if (previewText) previewText.textContent = summary.slice(0, 100) + '...';
+          if (statusText) statusText.textContent = `Speaking ${grievances.length} registered grievance statuses...`;
+
+          // Render UI cards
+          listContainer.innerHTML = grievances.map(g => {
+            const code = g.code || g.secret_code || g.id;
+            const category = g.category_name || g.category || 'General Accessibility';
+            const status = g.status || 'Registered';
+            const dept = g.department || g.assigned_department || 'Equal Opportunity Cell';
+            const desc = g.description || 'Barrier report submitted anonymously.';
+            const isResolved = status.toLowerCase() === 'resolved';
+
+            return `
+              <div class="stitch-card p-5 bg-white space-y-3 border border-slate-200">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono font-bold text-navy-brand text-sm">${code}</span>
+                    <span class="badge-pill ${isResolved ? 'badge-resolved' : 'badge-open'} text-[10px] uppercase font-bold">${status}</span>
+                  </div>
+                  <span class="text-xs font-semibold text-slate-500">Dept: ${dept}</span>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider text-slate-400">Category: ${category}</h4>
+                  <p class="text-xs text-slate-700 font-medium mt-1 leading-relaxed">${desc}</p>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          // Read summary aloud
+          speakStatus(summary, () => {
+            if (statusText) statusText.textContent = 'Say "Repeat" to hear again or "Back" to return.';
+          });
+
+        } else {
+          countBadge.textContent = '0 Active';
+          const noGrievanceText = "You have no registered grievances.";
+          lastStatusSummary = noGrievanceText;
+          if (previewText) previewText.textContent = noGrievanceText;
+          if (statusText) statusText.textContent = noGrievanceText;
+
+          listContainer.innerHTML = `
+            <div class="stitch-card p-8 bg-white text-center space-y-3">
+              <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                <span class="material-symbols-outlined text-2xl">check_circle</span>
+              </div>
+              <h3 class="text-sm font-bold text-slate-800 font-heading">No Active Grievances Found</h3>
+              <p class="text-xs text-slate-500 max-w-sm mx-auto">You currently have no recorded barrier reports. You can file a new grievance using the voice portal or standard form anytime.</p>
+              <a href="student-visual-dyslexic.html" class="inline-flex items-center gap-1.5 px-4 py-2 bg-navy-brand text-white text-xs font-bold rounded-xl shadow-xs">
+                <span class="material-symbols-outlined text-base">mic</span>
+                <span>Return to Voice Portal</span>
+              </a>
+            </div>
+          `;
+
+          speakStatus(noGrievanceText, () => {
+            if (statusText) statusText.textContent = 'Say "Back" to return to voice portal.';
+          });
+        }
+      } catch (err) {
+        console.error('[Status Load Error]:', err);
+        const errorText = "Unable to retrieve your grievance status right now. Please try again later.";
+        lastStatusSummary = errorText;
+        if (previewText) previewText.textContent = errorText;
+        if (statusText) statusText.textContent = errorText;
+
+        listContainer.innerHTML = `
+          <div class="stitch-card p-6 bg-white text-center space-y-2 border-red-200">
+            <p class="text-xs font-bold text-red-600">${errorText}</p>
+          </div>
+        `;
+
+        speakStatus(errorText);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      auth.initAccessibility();
+      grievance.initTracker();
+      initStatusVoiceNavigation();
+      loadAndSpeakGrievanceStatus();
+
+      document.getElementById('btn-replay-status')?.addEventListener('click', () => {
+        if (lastStatusSummary) speakStatus(lastStatusSummary);
+      });
+
+      document.getElementById('btn-back-dashboard')?.addEventListener('click', () => {
+        window.speechSynthesis.cancel();
+        window.location.href = 'student-visual-dyslexic.html';
+      });
+    });
+  </script>
+</body>
+</html>
