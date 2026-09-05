@@ -103,34 +103,48 @@ class VoiceController {
   }
 
   // =========================================================================
-  // 2. Global Navigation Listener (interimResults = false for low latency)
+  // 2. Global Navigation Listener (Continuous & Resilient Intent Matching)
   // =========================================================================
   initGlobalRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.globalRecognition = new SpeechRecognition();
     this.globalRecognition.continuous = true;
-    this.globalRecognition.interimResults = false; // Fast, low-latency intent matching
+    this.globalRecognition.interimResults = true;
     this.globalRecognition.lang = 'en-IN';
+    this.globalRecognition.maxAlternatives = 3;
 
     this.globalRecognition.onstart = () => {
       this.isGlobalListening = true;
       this.updateUiState(this.isVoicePortalActive);
-      console.log('[Voice Global Listener]: Active (Portal mode:', this.isVoicePortalActive ? 'ACTIVE' : 'STANDBY', ')');
+      console.log('[VOICE] mode:', this.isVoicePortalActive ? 'ACTIVE' : 'STANDBY');
+      console.log('[VOICE] recognition started');
     };
 
     this.globalRecognition.onresult = (event) => {
-      const lastIndex = event.results.length - 1;
-      const transcript = event.results[lastIndex][0].transcript.trim();
-      console.log('[Voice Global Command Heard]:', transcript);
-      this.processVoiceCommand(transcript);
+      let interimTranscript = '';
+      let finalTranscript = '';
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const item = event.results[i][0];
+        if (event.results[i].isFinal) {
+          finalTranscript += item.transcript;
+        } else {
+          interimTranscript += item.transcript;
+        }
+      }
+
+      const activeText = (finalTranscript || interimTranscript).trim();
+      if (!activeText) return;
+
+      this.processVoiceCommand(activeText);
     };
 
     this.globalRecognition.onerror = (e) => {
-      console.warn('[Voice Global Listener] Error:', e.error);
+      console.warn('[VOICE] error in global listener:', e.error);
       this.isGlobalListening = false;
-      this.updateUiState(this.isVoicePortalActive);
 
-      if (e.error === 'not-allowed') {
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+        this.updateUiState(false);
         return;
       }
 
@@ -147,7 +161,7 @@ class VoiceController {
 
     this.globalRecognition.onend = () => {
       this.isGlobalListening = false;
-      this.updateUiState(this.isVoicePortalActive);
+      console.log('[VOICE] recognition ended');
 
       // Safe Debounced Auto-Restart (400ms buffer prevents browser mic throttling)
       clearTimeout(this.restartTimer);
@@ -354,49 +368,74 @@ class VoiceController {
   }
 
   // =========================================================================
-  // 4. Direct Intent Recognition (Fast keyword checks via .includes())
+  // 4. Direct Intent Recognition & Priority Dispatcher
   // =========================================================================
   processVoiceCommand(transcript) {
-    const text = transcript.toLowerCase().trim();
+    const rawTranscript = transcript;
+    const command = transcript.toLowerCase().trim().replace(/[.,!?]/g, '');
+
+    console.log('[VOICE] mode:', this.isVoicePortalActive ? 'ACTIVE' : 'STANDBY', 'statusMode:', !!this.isStatusMode);
+    console.log('[VOICE] raw transcript:', rawTranscript);
+    console.log('[VOICE] normalized command:', command);
+
     const statusEl = document.getElementById('voice-status-text');
     const globalStatusEl = document.getElementById('global-voice-status');
-    const msg = `Heard: "${transcript}"`;
+    const msg = `Heard: "${rawTranscript}"`;
     if (statusEl) statusEl.textContent = msg;
     if (globalStatusEl) globalStatusEl.textContent = msg;
 
-    // 1. STANDBY STATE (isVoicePortalActive === false) - Strict Wake-Word Mode
+    // 1. EMERGENCY MODAL VOICE COMMANDS (TOP PRIORITY - Checked anytime #emergencyModal is open)
+    const emergencyModal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
+    const isEmergencyActive = emergencyModal && emergencyModal.style.display !== 'none' && !emergencyModal.classList.contains('hidden');
+
+    if (isEmergencyActive) {
+      console.log('[EMERGENCY] command received:', command);
+      if (/\b(call|dial|call emergency|make a call|make emergency call|dial emergency)\b/i.test(command) || command.includes('call') || command.includes('dial')) {
+        console.log('[EMERGENCY] executing action: CALL');
+        emergency.initiateEmergencyCall();
+        return;
+      }
+
+      if (/\b(dismiss|close|cancel|dismiss emergency|close emergency|cancel emergency)\b/i.test(command) || command.includes('dismiss') || command.includes('close') || command.includes('cancel')) {
+        console.log('[EMERGENCY] executing action: DISMISS');
+        emergency.dismissEmergencyModal();
+        return;
+      }
+    }
+
+    // 2. STATUS LISTENING MODE (When student is listening to / repeating grievance status)
+    if (this.isStatusMode) {
+      if (/\b(repeat|again|say that again|read again|replay)\b/i.test(command) || command.includes('repeat') || command.includes('again')) {
+        console.log('[STATUS] executing action: REPEAT');
+        this.repeatStatusSummary();
+        return;
+      }
+      if (/\b(back|previous|return|close|exit|main portal|cancel)\b/i.test(command) || command.includes('back') || command.includes('close') || command.includes('return')) {
+        console.log('[STATUS] executing action: BACK');
+        this.exitStatusMode();
+        return;
+      }
+    }
+
+    // 3. STANDBY STATE (Strict Wake-Word Filter)
     if (!this.isVoicePortalActive) {
-      // WAKE WORD CHECK: Match ONLY if text contains "start" or "activate"
-      if (text.includes('start') || text.includes('activate')) {
+      if (/\b(start|activate|wake up|listen)\b/i.test(command) || command.includes('start') || command.includes('activate')) {
         this.isVoicePortalActive = true;
         this.updateUiState(true);
         this.playTone(660, 0.25);
         this.speak('Voice portal activated.');
         console.log('[Voice Portal]: Woken up via wake-word "Start"');
       } else {
-        console.log('[Voice Portal Standby]: Ignored input while in standby:', transcript);
+        console.log('[Voice Portal Standby]: Ignored input while in standby:', rawTranscript);
       }
       return; // REJECT ALL OTHER COMMANDS IN STANDBY
     }
 
-    // 2. ACTIVE STATE (isVoicePortalActive === true)
-    // Emergency Modal Voice Commands (Active specifically when #emergencyModal is open)
-    const emergencyModal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
-    if (emergencyModal && emergencyModal.style.display !== 'none' && !emergencyModal.classList.contains('hidden')) {
-      if (text.includes('call') || text.includes('dial')) {
-        emergency.initiateEmergencyCall();
-        return;
-      }
-
-      if (text.includes('dismiss') || text.includes('cancel') || text.includes('close')) {
-        emergency.dismissEmergencyModal();
-        return;
-      }
-    }
-
-    // SLEEP WORD CHECK
-    if (text.includes('stop') || text.includes('pause') || text.includes('mute') || text.includes('silence') || text.includes('sleep')) {
+    // 4. ACTIVE PORTAL COMMANDS
+    // Sleep word check
+    if (/\b(stop|pause|mute|silence|sleep)\b/i.test(command) || command.includes('stop') || command.includes('pause') || command.includes('sleep')) {
       this.isVoicePortalActive = false;
+      this.isStatusMode = false;
       this.updateUiState(false);
       this.playTone(440, 0.25);
       this.speak('Voice portal paused.');
@@ -404,87 +443,166 @@ class VoiceController {
       return;
     }
 
-    // PROCESS INTENTS (ACTIVE ONLY)
-    if (text.includes('file a grievance') || text.includes('grievance') || text.includes('complain') || text.includes('complaint') || text.includes('lodge complaint') || text.includes('report barrier')) {
+    // Status Tracking Intent
+    if (/\b(track status|check status|my status|grievance status|track grievance|check grievance|status)\b/i.test(command) || command.includes('track status') || command.includes('check status') || command.includes('my status') || command.includes('grievance status')) {
+      this.triggerStatusFlow();
+      return;
+    }
+
+    // Grievance Flow
+    if (/\b(file a grievance|grievance|complain|complaint|lodge complaint|report barrier)\b/i.test(command) || command.includes('grievance') || command.includes('complain')) {
       this.triggerGrievanceFlow();
       return;
     }
 
-    if (text.includes('read notifications') || text.includes('alerts') || text.includes('alert') || text.includes('notification') || text.includes('notices') || text.includes('broadcast')) {
+    // Alerts Flow
+    if (/\b(read notifications|alerts|alert|notification|notices|broadcast)\b/i.test(command) || command.includes('alert') || command.includes('notification')) {
       this.triggerAlertsFlow();
       return;
     }
 
-    if (text.includes('emergency') || text.includes('help') || text.includes('sos') || text.includes('call ambulance')) {
+    // Emergency Flow
+    if (/\b(emergency|help|sos|call ambulance)\b/i.test(command) || command.includes('emergency') || command.includes('help') || command.includes('sos')) {
       this.triggerEmergencyFlow();
       return;
     }
 
-    if (text.includes('tutor') || text.includes('study') || text.includes('study assistant')) {
+    // Tutor Flow
+    if (/\b(tutor|study|study assistant|ai tutor|learn)\b/i.test(command) || command.includes('tutor') || command.includes('study')) {
       this.speak('Opening AI Tutor.');
       window.location.href = 'tutor.html';
       return;
     }
 
-    if (text.includes('home') || text.includes('portal home') || text.includes('main menu') || text.includes('index')) {
+    if (command.includes('home') || command.includes('portal home') || command.includes('main menu') || command.includes('index')) {
       this.speak('Navigating to portal home.');
       window.location.href = 'index.html';
       return;
     }
 
-    if (text.includes('dashboard') || text.includes('student dashboard') || text.includes('overview') || text.includes('learning portal')) {
+    if (command.includes('dashboard') || command.includes('student dashboard') || command.includes('overview') || command.includes('learning portal')) {
       this.speak('Opening student visual dashboard.');
       window.location.href = 'student-hearing-physical.html';
       return;
     }
 
-    if (text.includes('campus map') || text.includes('open map') || text.includes('routes')) {
+    if (command.includes('campus map') || command.includes('open map') || command.includes('routes')) {
       this.speak('Opening campus accessibility map.');
       window.location.href = 'campus-map.html';
       return;
     }
 
-    if (text.includes('check status') || text.includes('track status') || text.includes('track grievance') || text.includes('my grievances') || text === 'status') {
-      this.speak('Opening grievance status lookup.');
-      window.location.href = 'status.html';
-      return;
-    }
-
-    if (text.includes('how to apply') || text.includes('accommodation') || text.includes('apply for aid')) {
+    if (command.includes('how to apply') || command.includes('accommodation') || command.includes('apply for aid')) {
       this.speak('To apply for accommodations or RPwD provisions, contact the Equal Opportunity Cell in Block A or submit an online request.');
       return;
     }
 
-    if (text.includes('read page') || text.includes('read screen')) {
+    if (command.includes('read page') || command.includes('read screen')) {
       this.readCurrentPage();
       return;
     }
 
-    if (text.includes('dyslexia') || text.includes('dyslexic')) {
+    if (command.includes('dyslexia') || command.includes('dyslexic')) {
       auth.toggleDyslexicMode();
       this.speak('Dyslexia font toggled.');
       return;
     }
 
-    if (text.includes('contrast')) {
+    if (command.includes('contrast')) {
       auth.toggleHighContrast();
       this.speak('High contrast mode toggled.');
       return;
     }
 
-    if (text.includes('text size') || text.includes('larger text') || text.includes('bigger font')) {
+    if (command.includes('text size') || command.includes('larger text') || command.includes('bigger font')) {
       auth.cycleTextSize();
       this.speak('Text size adjusted.');
       return;
     }
 
-    if (text.includes('logout') || text.includes('sign out') || text.includes('exit portal')) {
+    if (command.includes('logout') || command.includes('sign out') || command.includes('exit portal')) {
       this.speak('Signing out from portal.');
       auth.logout();
       return;
     }
 
-    this.speak(`Heard ${transcript}. Say File a grievance, Read notifications, Emergency, Tutor, or Stop.`);
+    this.speak(`Heard ${rawTranscript}. Say File a grievance, Track status, Read notifications, Emergency, Tutor, or Stop.`);
+  }
+
+  // =========================================================================
+  // Status Tracking Flow (In-Place Accessible Audio Status)
+  // =========================================================================
+  async triggerStatusFlow() {
+    this.stopSpeaking();
+    this.isStatusMode = true;
+    const checkMsg = 'Checking your registered grievances...';
+    this.updateStatusText(checkMsg);
+
+    this.speak(checkMsg, async () => {
+      try {
+        const res = await api.grievances.getMyGrievances();
+        const items = res?.grievances || res?.data || (Array.isArray(res) ? res : []);
+
+        let summaryText = '';
+        if (items && items.length > 0) {
+          summaryText = `You have ${items.length} registered grievance${items.length > 1 ? 's' : ''}. `;
+          items.forEach((g, idx) => {
+            const code = g.secretCode || g.secret_code || g.id || `SAK-${idx + 101}`;
+            const cat = g.category_name || g.category || 'General';
+            const status = g.status || 'Pending';
+            const dept = g.assigned_department || g.department || 'Campus Nodal Office';
+            summaryText += `Grievance ${idx + 1}: Code ${code}, category ${cat}, status is currently ${status}. Assigned department: ${dept}. `;
+          });
+          summaryText += `Say Repeat to hear this again, or say Back to return to the voice portal.`;
+        } else {
+          summaryText = 'You currently have no registered grievances. Say Back to return to the voice portal.';
+        }
+
+        this.lastStatusSummary = summaryText;
+        this.updateStatusText(summaryText);
+
+        this.speak(summaryText, () => {
+          // Keep recognition active in status mode
+          this.isStatusMode = true;
+          this.startGlobalRecognition(false);
+        });
+      } catch (err) {
+        console.error('[Voice Status Error]:', err);
+        const errorMsg = 'Sorry, I could not retrieve your grievance status right now. Please try again.';
+        this.updateStatusText(errorMsg);
+        this.speak(errorMsg, () => {
+          this.isStatusMode = false;
+          this.startGlobalRecognition(false);
+        });
+      }
+    });
+  }
+
+  repeatStatusSummary() {
+    if (this.lastStatusSummary) {
+      this.speak(this.lastStatusSummary, () => {
+        this.isStatusMode = true;
+        this.startGlobalRecognition(false);
+      });
+    } else {
+      this.triggerStatusFlow();
+    }
+  }
+
+  exitStatusMode() {
+    this.isStatusMode = false;
+    this.speak('Returning to voice portal.', () => {
+      this.isVoicePortalActive = true;
+      this.startGlobalRecognition(false);
+      this.updateUiState(true);
+    });
+  }
+
+  updateStatusText(text) {
+    const statusEl = document.getElementById('voice-status-text');
+    if (statusEl) {
+      statusEl.textContent = text;
+    }
   }
 
   // =========================================================================
@@ -739,7 +857,14 @@ class VoiceController {
     utterance.rate = 0.95;
     utterance.pitch = 1.0;
     if (this.activeVoice) utterance.voice = this.activeVoice;
-    if (onComplete) utterance.onend = onComplete;
+    if (onComplete) {
+      utterance.onend = () => {
+        onComplete();
+      };
+      utterance.onerror = () => {
+        onComplete();
+      };
+    }
     this.synth.speak(utterance);
   }
 
@@ -769,9 +894,9 @@ class VoiceController {
       if (isActive) container.classList.add('voice-active');
       else container.classList.remove('voice-active');
     }
-    if (statusText) {
+    if (statusText && !this.isStatusMode) {
       statusText.textContent = isActive
-        ? 'Voice portal active. Listening for commands (say "File a grievance", "Alerts", "Emergency", "Tutor", "Stop")...'
+        ? 'Voice portal active. Listening for commands (say "File a grievance", "Track status", "Alerts", "Emergency", "Tutor", "Stop")...'
         : 'Voice portal in standby. Say "Start" or tap microphone to activate.';
     }
 
@@ -853,6 +978,9 @@ class VoiceController {
 }
 
 export const voice = new VoiceController();
+if (typeof window !== 'undefined') {
+  window.voice = voice;
+}
 
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {

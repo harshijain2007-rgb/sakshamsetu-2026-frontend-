@@ -717,27 +717,27 @@ export const api = {
         return {
           success: true,
           topic: topicCapitalized,
-          title: `Comprehensive Guide to ${topicCapitalized}`,
+          title: `Guide to ${topicCapitalized}`,
           steps: [
             {
               step_order: 1,
-              title: `Core Definition & Overview of ${topicCapitalized}`,
-              content: `${topicCapitalized} is a key concept that focuses on practical understanding. At its core, it establishes fundamental principles and structured rules that allow us to analyze, model, and solve related problems systematically.`
+              title: `What is ${topicCapitalized}?`,
+              content: `${topicCapitalized} is a core academic topic. At its fundamental level, it defines the essential elements and relationships needed to understand how ${topicCapitalized} functions in practical problems.`
             },
             {
               step_order: 2,
               title: `Key Mechanism & Working Rules`,
-              content: `To understand ${topicCapitalized}, examine how its components interact. Each element functions under strict causal relationships: inputs are processed sequentially, and specific constraints ensure consistent, reproducible outcomes.`
+              content: `The primary mechanism of ${topicCapitalized} relies on sequential processing: inputs are evaluated under specific operational rules to produce dependable and verifiable outcomes.`
             },
             {
               step_order: 3,
-              title: `Practical Non-Visual Example`,
-              content: `Consider a real-world scenario: when applying ${topicCapitalized}, you start from a known baseline, apply the standard operational rules step by step, and verify the resulting state against expected criteria.`
+              title: `Non-Visual Real-World Analogy`,
+              content: `Think of ${topicCapitalized} like a postal routing network: every item has a specific identifier, follows a defined pipeline, and reaches its intended destination following clear rules.`
             },
             {
               step_order: 4,
-              title: `Essential Summary & Key Takeaway`,
-              content: `In summary, mastering ${topicCapitalized} requires remembering its primary definition, the rules governing its operations, and how it connects to broader systems. You can ask any specific question or repeat any step anytime.`
+              title: `Essential Takeaway & Summary`,
+              content: `In summary, mastering ${topicCapitalized} requires understanding its main definition, its working sequence, and its practical uses. Say Question to ask any doubt, or say Next.`
             }
           ]
         };

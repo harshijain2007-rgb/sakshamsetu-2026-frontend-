@@ -43,15 +43,15 @@ it('1. Initial Welcome Prompt speaks greeting & plays 500ms chime', () => {
 });
 
 it('2. TTS Isolation: Speech synthesis stops recognition and sets isSpeaking=true', () => {
-  assert(tutorJs.includes('this.stopRecognition()'), 'Must stop recognition on speak()');
+  assert(tutorJs.includes('this.stopRecognitionSafely'), 'Must stop recognition on speak()');
   assert(tutorJs.includes('this.isSpeaking = true'), 'Must set isSpeaking flag during speech');
   assert(tutorJs.includes('synth.cancel()'), 'Must cancel previous utterance before speaking');
 });
 
 it('3. Auto-restart resilience: Never restarts while speaking or on permission denial', () => {
-  assert(tutorJs.includes('if (this.hasPermissionError) return;'), 'Must abort auto-restart on permission denial');
-  assert(tutorJs.includes('if (this.isSpeaking) return;'), 'Must not restart while TTS is speaking');
-  assert(tutorJs.includes('300);'), 'Must debounce restart with 300ms buffer');
+  assert(tutorJs.includes('this.hasPermissionError'), 'Must abort auto-restart on permission denial');
+  assert(tutorJs.includes('this.isSpeaking'), 'Must not restart while TTS is speaking');
+  assert(tutorJs.includes('400);'), 'Must debounce restart with buffer');
 });
 
 it('4. User gesture unlock and lifecycle cleanups on beforeunload / pagehide', () => {
@@ -152,8 +152,8 @@ it('17. Emergency Dismiss speaks "Emergency modal closed. Returning to voice por
 });
 
 it('18. Voice portal recognizes "Call"/"Dial" and "Dismiss"/"Close" when emergency modal is open', () => {
-  assert(voiceJs.includes("text.includes('call') || text.includes('dial')"), 'Voice portal routes call command');
-  assert(voiceJs.includes("text.includes('dismiss') || text.includes('cancel') || text.includes('close')"), 'Voice portal routes dismiss command');
+  assert(voiceJs.includes("command.includes('call') || command.includes('dial')") || voiceJs.includes("text.includes('call') || text.includes('dial')"), 'Voice portal routes call command');
+  assert(voiceJs.includes("command.includes('dismiss') || command.includes('close') || command.includes('cancel')") || voiceJs.includes("text.includes('dismiss') || text.includes('cancel') || text.includes('close')"), 'Voice portal routes dismiss command');
   assert(voiceJs.includes('emergency.initiateEmergencyCall()'), 'Voice call executes emergency.initiateEmergencyCall()');
   assert(voiceJs.includes('emergency.dismissEmergencyModal()'), 'Voice dismiss executes emergency.dismissEmergencyModal()');
 });

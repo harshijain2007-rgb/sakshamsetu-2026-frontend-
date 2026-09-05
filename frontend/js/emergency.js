@@ -84,13 +84,25 @@ export const emergency = {
       emergency.activePhoneNumber = phone;
 
       // Spoken narration
-      const speechText = `Emergency assistance alert activated. Contacting ${contactName}. The direct phone number is ${phone.split('').join(' ')}. Say Call to dial, or say Dismiss to close.`;
+      const speechText = `Emergency assistance alert activated. Contacting ${contactName}. The direct phone number is ${phone.split('').join(' ')}. Please say call or dismiss.`;
       
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(speechText);
         utterance.rate = 0.9;
         utterance.pitch = 1.0;
+        utterance.onend = () => {
+          if (typeof window !== 'undefined' && window.voice) {
+            window.voice.isVoicePortalActive = true;
+            window.voice.startGlobalRecognition(false);
+          }
+        };
+        utterance.onerror = () => {
+          if (typeof window !== 'undefined' && window.voice) {
+            window.voice.isVoicePortalActive = true;
+            window.voice.startGlobalRecognition(false);
+          }
+        };
         window.speechSynthesis.speak(utterance);
       }
 

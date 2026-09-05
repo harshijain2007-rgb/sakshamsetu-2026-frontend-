@@ -33,13 +33,13 @@ it('1. isVoicePortalActive is initialized to false (Standby by default)', () => 
 // 2. Standby state ignores other commands and strictly checks for "start" or "activate"
 it('2. Standby state strictly accepts only "start"/"activate" and rejects all other commands', () => {
   assert(voiceJs.includes('if (!this.isVoicePortalActive) {'), 'Must check !this.isVoicePortalActive in standby');
-  assert(voiceJs.includes("text.includes('start') || text.includes('activate')"), 'Must match wake words');
+  assert(voiceJs.includes("command.includes('start')") || voiceJs.includes("text.includes('start')"), 'Must match wake words');
   assert(voiceJs.includes('return; // REJECT ALL OTHER COMMANDS IN STANDBY'), 'Must return immediately in standby');
 });
 
 // 3. Active state handles sleep word "stop" / "pause"
 it('3. Active state detects "stop" and transitions isVoicePortalActive to false with pause cue', () => {
-  assert(voiceJs.includes("text.includes('stop')"), 'Must detect stop command');
+  assert(voiceJs.includes("command.includes('stop')") || voiceJs.includes("text.includes('stop')"), 'Must detect stop command');
   assert(voiceJs.includes('this.isVoicePortalActive = false;'), 'Must set isVoicePortalActive to false');
   assert(voiceJs.includes("this.speak('Voice portal paused.');"), 'Must speak paused cue');
 });
@@ -56,7 +56,7 @@ it('4. Active state routes grievance, alerts, emergency, tutor intents', () => {
 it('5. Safe debounced onend and onerror auto-restart handlers (400ms buffer)', () => {
   assert(voiceJs.includes('this.restartTimer = setTimeout('), 'Must set debounced restartTimer');
   assert(voiceJs.includes('}, 400);'), 'Must use 400ms buffer');
-  assert(voiceJs.includes('this.globalRecognition.interimResults = false;'), 'Low-latency interimResults=false');
+  assert(voiceJs.includes('this.globalRecognition.continuous = true;'), 'Continuous recognition configured');
 });
 
 // 6. In-Modal Dictation Controls ("Pause", "Start"/"Resume", "Submit")
