@@ -20,6 +20,7 @@ import { api } from './api.js';
 export const TUTOR_STATES = {
   IDLE: 'IDLE',
   LISTENING_FOR_TOPIC: 'LISTENING_FOR_TOPIC',
+  GENERATING: 'GENERATING',
   PLAYING_LESSON: 'PLAYING_LESSON',
   LISTENING_FOR_COMMAND: 'LISTENING_FOR_COMMAND',
   LISTENING_FOR_DOUBT: 'LISTENING_FOR_DOUBT'
@@ -34,10 +35,9 @@ export class TutorVoiceController {
     this.activeVoice = null;
 
     this.tutorSpeechRecognition = null;
-    this.recognitionShouldBeActive = false; // Logical expectation
-    this.isRecognizing = false;             // Actual browser mic status
-    this.isSpeaking = false;                // TTS active flag
-    this.hasPermissionError = false;        // Fatal mic permission error
+    this.tutorRecognitionRunning = false;  // Tracks actual browser microphone state
+    this.isSpeaking = false;               // Tracks TTS speech synthesis
+    this.hasPermissionError = false;
     this.restartTimer = null;
     this.audioCtx = null;
     this.state = TUTOR_STATES.IDLE;
@@ -64,6 +64,14 @@ export class TutorVoiceController {
     }
 
     this.setupLifecycleCleanups();
+  }
+
+  isMicrophoneAllowedState() {
+    return (
+      this.state === TUTOR_STATES.LISTENING_FOR_TOPIC ||
+      this.state === TUTOR_STATES.LISTENING_FOR_COMMAND ||
+      this.state === TUTOR_STATES.LISTENING_FOR_DOUBT
+    );
   }
 
   // =========================================================================
@@ -99,8 +107,8 @@ export class TutorVoiceController {
   // 2. Speech Synthesis Helper with Strict Recognition Isolation
   // =========================================================================
   speak(text, rate = 0.9, onComplete = null) {
-    // Stop microphone safely before speaking to prevent feedback
-    this.stopRecognitionSafely(false);
+    // Stop microphone safely before speaking to eliminate feedback
+    this.stopRecognition();
     this.isSpeaking = true;
 
     if (!this.hasSynthesis) {
@@ -153,11 +161,9 @@ export class TutorVoiceController {
     this.tutorSpeechRecognition.maxAlternatives = 3;
 
     this.tutorSpeechRecognition.onstart = () => {
-      this.isRecognizing = true;
-      console.log('[VOICE] recognition started, mode:', this.state);
-      if (this.recognitionShouldBeActive) {
-        this.updateStatusBadge(true);
-      }
+      this.tutorRecognitionRunning = true;
+      this.updateStatusBadge(true);
+      console.log('[TUTOR MIC]: Recognition started in state:', this.state);
     };
 
     this.tutorSpeechRecognition.onresult = (event) => {
@@ -190,12 +196,11 @@ export class TutorVoiceController {
     };
 
     this.tutorSpeechRecognition.onerror = (e) => {
-      console.warn('[VOICE] error in mode:', this.state, e.error);
+      console.warn('[TUTOR MIC] error in state:', this.state, e.error);
+      this.tutorRecognitionRunning = false;
 
       if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
         this.hasPermissionError = true;
-        this.recognitionShouldBeActive = false;
-        this.isRecognizing = false;
         this.updateStatusBadge(false);
         const permMsg = "Microphone access is required for voice control. Please allow microphone access in your browser.";
         this.updateStatusText(permMsg);
@@ -208,104 +213,71 @@ export class TutorVoiceController {
         return;
       }
 
-      // Safe debounced recovery for temporary interruptions (no-speech, network, aborted)
-      if (this.recognitionShouldBeActive && !this.isSpeaking) {
-        this.scheduleRestart();
+      // Safe debounced recovery only if still in a valid listening state and not speaking
+      if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.hasPermissionError) {
+        clearTimeout(this.restartTimer);
+        this.restartTimer = setTimeout(() => {
+          if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.tutorRecognitionRunning && !this.hasPermissionError) {
+            this.startRecognition();
+          }
+        }, 400);
       }
     };
 
     this.tutorSpeechRecognition.onend = () => {
-      this.isRecognizing = false;
-      console.log('[VOICE] recognition ended, mode:', this.state, 'shouldBeActive:', this.recognitionShouldBeActive);
-      
-      const shouldRestart = (
-        (this.state === TUTOR_STATES.LISTENING_FOR_TOPIC ||
-         this.state === TUTOR_STATES.LISTENING_FOR_COMMAND ||
-         this.state === TUTOR_STATES.LISTENING_FOR_DOUBT) &&
-        this.recognitionShouldBeActive &&
-        !this.isSpeaking &&
-        !this.hasPermissionError
-      );
+      this.tutorRecognitionRunning = false;
+      this.updateStatusBadge(false);
+      console.log('[TUTOR MIC]: onend in state:', this.state, 'isSpeaking:', this.isSpeaking);
 
-      if (shouldRestart) {
-        this.scheduleRestart();
-      } else if (!this.recognitionShouldBeActive) {
-        this.updateStatusBadge(false);
+      // Controlled state-based restart: ONLY restart if in a listening state and not speaking
+      if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.hasPermissionError) {
+        clearTimeout(this.restartTimer);
+        this.restartTimer = setTimeout(() => {
+          if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.tutorRecognitionRunning && !this.hasPermissionError) {
+            this.startRecognition();
+          }
+        }, 400);
       }
     };
   }
 
-  scheduleRestart() {
-    if (this.hasPermissionError || this.isSpeaking || !this.recognitionShouldBeActive || this.isRecognizing) return;
+  startRecognition() {
+    if (!this.hasRecognition || this.hasPermissionError || this.isSpeaking) return;
+    if (!this.isMicrophoneAllowedState()) return;
 
     clearTimeout(this.restartTimer);
-    this.restartTimer = setTimeout(() => {
-      const canStart = (
-        (this.state === TUTOR_STATES.LISTENING_FOR_TOPIC ||
-         this.state === TUTOR_STATES.LISTENING_FOR_COMMAND ||
-         this.state === TUTOR_STATES.LISTENING_FOR_DOUBT) &&
-        this.recognitionShouldBeActive &&
-        !this.isSpeaking &&
-        !this.isRecognizing &&
-        !this.hasPermissionError
-      );
+    if (this.tutorRecognitionRunning) return; // Do not call start if already running
 
-      if (canStart) {
-        try {
-          if (this.tutorSpeechRecognition) {
-            this.tutorSpeechRecognition.start();
-          }
-        } catch (err) {
-          console.warn('[VOICE] restart caught:', err);
-        }
-      }
-    }, 400);
+    try {
+      this.tutorSpeechRecognition.start();
+    } catch (e) {
+      console.warn('[Tutor Voice] start error:', e);
+    }
   }
 
   startRecognitionSafely() {
-    if (!this.hasRecognition || this.hasPermissionError || this.isSpeaking) return;
-    this.recognitionShouldBeActive = true;
-    this.updateStatusBadge(true);
-    clearTimeout(this.restartTimer);
-
-    if (!this.isRecognizing) {
-      try {
-        this.tutorSpeechRecognition.start();
-      } catch (e) {
-        // Already started or busy
-      }
-    }
+    this.startRecognition();
   }
 
-  startRecognition() {
-    this.startRecognitionSafely();
-  }
-
-  stopRecognitionSafely(disableLogical = true) {
+  stopRecognition() {
     clearTimeout(this.restartTimer);
-    if (disableLogical) {
-      this.recognitionShouldBeActive = false;
-      this.updateStatusBadge(false);
-    }
-    if (this.tutorSpeechRecognition && this.isRecognizing) {
+    if (this.tutorSpeechRecognition && this.tutorRecognitionRunning) {
       try {
         this.tutorSpeechRecognition.stop();
       } catch (e) {}
     }
-    this.isRecognizing = false;
+    this.tutorRecognitionRunning = false;
+    this.updateStatusBadge(false);
   }
 
-  stopRecognition() {
-    this.stopRecognitionSafely(true);
+  stopRecognitionSafely() {
+    this.stopRecognition();
   }
 
   setupUserInteractionUnlock() {
     const unlock = () => {
       if (this.audioCtx && this.audioCtx.state === 'suspended') {
         this.audioCtx.resume();
-      }
-      if (this.hasRecognition && this.recognitionShouldBeActive && !this.isRecognizing && !this.isSpeaking) {
-        this.startRecognitionSafely();
       }
     };
     window.addEventListener('click', unlock, { passive: true });
@@ -340,7 +312,7 @@ export class TutorVoiceController {
       this.playChime(660, 0.5);
       setTimeout(() => {
         this.state = TUTOR_STATES.LISTENING_FOR_TOPIC;
-        this.startRecognitionSafely();
+        this.startRecognition();
         this.updateStatusText('Listening for your study topic... Speak freely.');
       }, 550);
     });
@@ -367,10 +339,10 @@ export class TutorVoiceController {
 
       // Only trigger once we have a clear, non-empty topic phrase
       if (cleanTopic.length >= 2) {
-        console.log('[TUTOR] topic captured:', cleanTopic);
+        console.log('[TUTOR] final topic received:', cleanTopic);
         this.currentTopic = cleanTopic;
-        this.state = TUTOR_STATES.PLAYING_LESSON;
-        this.stopRecognitionSafely(true);
+        this.stopRecognition();
+        this.state = TUTOR_STATES.GENERATING;
 
         // Populate DOM input
         const topicInput = document.getElementById('topicInput') || document.getElementById('tutor-input');
@@ -392,8 +364,9 @@ export class TutorVoiceController {
 
       // When the user speaks their question
       if (command.length >= 3) {
-        console.log('[TUTOR] doubt question captured:', rawTranscript);
-        this.stopRecognitionSafely(true);
+        console.log('[TUTOR] final question received:', rawTranscript);
+        this.stopRecognition();
+        this.state = TUTOR_STATES.GENERATING;
         this.appendUserMessage(`Question: ${rawTranscript}`);
         this.processDoubtQuestion(rawTranscript);
       }
@@ -403,10 +376,11 @@ export class TutorVoiceController {
     // -----------------------------------------------------------------------
     // State 3: Listening for Navigation & Doubt Commands
     // -----------------------------------------------------------------------
-    if (this.state === TUTOR_STATES.LISTENING_FOR_COMMAND || this.state === TUTOR_STATES.PLAYING_LESSON) {
+    if (this.state === TUTOR_STATES.LISTENING_FOR_COMMAND) {
       // 1. Next / More / Continue / Proceed
       if (/\b(next|more|continue|proceed|go next|next step|move next)\b/i.test(command) || command.includes('next') || command.includes('more')) {
         console.log('[TUTOR] intent recognized: NEXT');
+        this.stopRecognition();
         this.goToNextStep();
         return;
       }
@@ -414,6 +388,7 @@ export class TutorVoiceController {
       // 2. Previous / Back / Prior
       if (/\b(back|previous|prev|prior|go back|previous step)\b/i.test(command) || command.includes('back') || command.includes('previous')) {
         console.log('[TUTOR] intent recognized: BACK');
+        this.stopRecognition();
         this.goToPreviousStep();
         return;
       }
@@ -421,6 +396,7 @@ export class TutorVoiceController {
       // 3. Repeat / Again / Say that again
       if (/\b(repeat|again|say that again|repeat this|repeat step|read again|replay)\b/i.test(command) || command.includes('repeat') || command.includes('again')) {
         console.log('[TUTOR] intent recognized: REPEAT');
+        this.stopRecognition();
         this.repeatCurrentStep();
         return;
       }
@@ -428,6 +404,7 @@ export class TutorVoiceController {
       // 4. Question / Doubt / Help / Explain
       if (/\b(question|doubt|ask question|help|i have a question|explain)\b/i.test(command) || command.includes('question') || command.includes('doubt')) {
         console.log('[TUTOR] intent recognized: QUESTION');
+        this.stopRecognition();
         this.startDoubtFlow();
         return;
       }
@@ -449,6 +426,7 @@ export class TutorVoiceController {
   // 6. Lesson Generation & Playback
   // =========================================================================
   async generateAndStartLesson(topic) {
+    this.state = TUTOR_STATES.GENERATING;
     this.updateStatusText(`Generating lesson on "${topic}" with Gemini...`);
 
     try {
@@ -469,7 +447,7 @@ export class TutorVoiceController {
       this.updateStatusText(errorMsg);
       this.speak(errorMsg, 0.9, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_TOPIC;
-        this.startRecognitionSafely();
+        this.startRecognition();
         this.updateStatusText('Say any study topic to try again.');
       });
     }
@@ -491,7 +469,7 @@ export class TutorVoiceController {
 
     this.speak(spokenText, 0.9, () => {
       this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
-      this.startRecognitionSafely();
+      this.startRecognition();
       this.updateStatusText(`Step ${this.currentStepIndex + 1} complete. Say "Next", "Back", "Repeat", or "Question".`);
     });
   }
@@ -506,7 +484,7 @@ export class TutorVoiceController {
       this.updateStatusText(finishText);
       this.speak(finishText, 0.9, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
-        this.startRecognitionSafely();
+        this.startRecognition();
       });
     }
   }
@@ -521,7 +499,7 @@ export class TutorVoiceController {
       this.updateStatusText(firstText);
       this.speak(firstText, 0.9, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
-        this.startRecognitionSafely();
+        this.startRecognition();
       });
     }
   }
@@ -534,8 +512,8 @@ export class TutorVoiceController {
   // 7. Voice Doubt Flow
   // =========================================================================
   startDoubtFlow() {
-    this.state = TUTOR_STATES.LISTENING_FOR_DOUBT;
-    this.stopRecognitionSafely(true);
+    this.stopRecognition();
+    this.state = TUTOR_STATES.GENERATING;
     const promptText = "What is your question about this step? Speak after the tone.";
     this.updateStatusText(promptText);
 
@@ -543,13 +521,14 @@ export class TutorVoiceController {
       this.playChime(660, 0.5);
       setTimeout(() => {
         this.state = TUTOR_STATES.LISTENING_FOR_DOUBT;
-        this.startRecognitionSafely();
+        this.startRecognition();
         this.updateStatusText('Listening for your question... Ask freely.');
       }, 550);
     });
   }
 
   async processDoubtQuestion(questionText) {
+    this.state = TUTOR_STATES.GENERATING;
     this.updateStatusText('Finding explanation from Gemini...');
     const stepOrder = this.currentStepIndex + 1;
     const topic = this.currentTopic || (this.currentLesson?.topic) || 'Current Topic';
@@ -563,7 +542,7 @@ export class TutorVoiceController {
       this.updateStatusText('Reading answer...');
       this.speak(answer, 0.95, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
-        this.startRecognitionSafely();
+        this.startRecognition();
         this.updateStatusText(`Answer complete. Say "Next", "Back", "Repeat", or "Question".`);
       });
     } catch (err) {
@@ -572,7 +551,7 @@ export class TutorVoiceController {
       this.updateStatusText(errorMsg);
       this.speak(errorMsg, 0.9, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
-        this.startRecognitionSafely();
+        this.startRecognition();
       });
     }
   }

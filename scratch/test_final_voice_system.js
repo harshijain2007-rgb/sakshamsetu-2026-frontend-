@@ -36,10 +36,9 @@ function it(desc, fn) {
 // ---------------------------------------------------------------------------
 console.log('\n--- 1. Verification of Non-Oscillating Voice Lifecycle ---');
 
-it('1. tutor.js onend does NOT flip UI badge to Standby when voice is expected', () => {
-  assert(!tutorJs.includes("this.isTutorListening = false;\n      this.updateStatusBadge(false);"), 'Must not flip badge to Standby in raw onend');
-  assert(tutorJs.includes('recognitionShouldBeActive'), 'Must use recognitionShouldBeActive logical state');
-  assert(tutorJs.includes('this.recognitionShouldBeActive'), 'Must recover on unexpected onend without UI flashing');
+it('1. tutor.js tracks actual browser recognition via tutorRecognitionRunning and isMicrophoneAllowedState', () => {
+  assert(tutorJs.includes('this.tutorRecognitionRunning'), 'Must track tutorRecognitionRunning');
+  assert(tutorJs.includes('isMicrophoneAllowedState'), 'Must check isMicrophoneAllowedState');
 });
 
 it('2. tutor.js uses continuous=true, interimResults=true, and maxAlternatives=3', () => {

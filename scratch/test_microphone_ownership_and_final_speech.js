@@ -87,6 +87,9 @@ it('8. TEST 2 & 3 (Emergency Dismiss & Call): Exclusive emergency owner and TTS 
   assert(emergencyJs.includes("window.voice.releaseMicrophoneOwnership('emergency')"), 'Dismiss releases emergency ownership');
   assert(emergencyJs.includes('Emergency modal closed. Returning to voice portal.'), 'Dismiss speaks confirmation');
   assert(emergencyJs.includes('Initiating emergency call.'), 'Call speaks initiation');
+  assert(emergencyJs.includes('initEmergencyRecognition'), 'Emergency has dedicated recognizer init');
+  assert(emergencyJs.includes('startEmergencyRecognition'), 'Emergency has dedicated recognizer start');
+  assert(emergencyJs.includes('stopEmergencyRecognition'), 'Emergency has dedicated recognizer stop');
 });
 
 it('9. TEST 4 (Status Tracking Flow): Dedicated status owner with repeat and back navigation', () => {

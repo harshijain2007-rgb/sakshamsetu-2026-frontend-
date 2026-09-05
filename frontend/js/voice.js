@@ -96,7 +96,7 @@ class VoiceController {
 
   canGlobalRecognize() {
     return this.hasRecognition &&
-      (this.voiceOwner === 'global' || this.voiceOwner === 'emergency' || this.voiceOwner === 'status' || this.voiceOwner === null) &&
+      (this.voiceOwner === 'global' || this.voiceOwner === 'status' || this.voiceOwner === null) &&
       !this.isModalOpen &&
       !this.isSpeaking;
   }

@@ -15,6 +15,110 @@ import { api } from './api.js';
 
 export const emergency = {
   activePhoneNumber: '112',
+  emergencyRecognition: null,
+  isEmergencyListening: false,
+
+  /**
+   * Initializes dedicated Emergency SpeechRecognition instance
+   */
+  initEmergencyRecognition: () => {
+    if (emergency.emergencyRecognition) return;
+    const SpeechRecognition = typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition);
+    if (!SpeechRecognition) return;
+
+    emergency.emergencyRecognition = new SpeechRecognition();
+    emergency.emergencyRecognition.continuous = true;
+    emergency.emergencyRecognition.interimResults = false;
+    emergency.emergencyRecognition.lang = 'en-IN';
+    emergency.emergencyRecognition.maxAlternatives = 3;
+
+    emergency.emergencyRecognition.onstart = () => {
+      emergency.isEmergencyListening = true;
+      console.log('[Emergency Recognition]: Active and listening for Call/Dismiss');
+    };
+
+    emergency.emergencyRecognition.onresult = (event) => {
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (!event.results[i].isFinal) continue;
+
+        const rawTranscript = event.results[i][0].transcript;
+        const command = rawTranscript.toLowerCase().trim().replace(/[.,!?]/g, '');
+        console.log('[Emergency Recognition]: Final command heard:', command);
+
+        // Check CALL commands: "call", "dial", "make the call", "call emergency", "please make the call"
+        if (/\b(call|dial|make a call|make the call|call emergency|dial emergency|please call|please make the call)\b/i.test(command) || command.includes('call') || command.includes('dial')) {
+          console.log('[Emergency Recognition]: Executing CALL action');
+          emergency.stopEmergencyRecognition();
+          emergency.initiateEmergencyCall();
+          return;
+        }
+
+        // Check DISMISS commands: "dismiss", "close", "cancel", "close emergency", "I want to dismiss this"
+        if (/\b(dismiss|close|cancel|dismiss emergency|close emergency|cancel emergency|dismiss this|cancel this|close this|exit|leave|i want to dismiss this|i want to close this)\b/i.test(command) || command.includes('dismiss') || command.includes('close') || command.includes('cancel')) {
+          console.log('[Emergency Recognition]: Executing DISMISS action');
+          emergency.stopEmergencyRecognition();
+          emergency.dismissEmergencyModal();
+          return;
+        }
+      }
+    };
+
+    emergency.emergencyRecognition.onerror = (e) => {
+      console.warn('[Emergency Recognition] Error:', e.error);
+      emergency.isEmergencyListening = false;
+      const modal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
+      const banner = document.getElementById('emergency-banner');
+      if ((modal || banner) && typeof window !== 'undefined' && window.voice?.voiceOwner === 'emergency') {
+        setTimeout(() => {
+          if (!emergency.isEmergencyListening && typeof window !== 'undefined' && window.voice?.voiceOwner === 'emergency') {
+            emergency.startEmergencyRecognition();
+          }
+        }, 400);
+      }
+    };
+
+    emergency.emergencyRecognition.onend = () => {
+      emergency.isEmergencyListening = false;
+      console.log('[Emergency Recognition]: Ended');
+      const modal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
+      const banner = document.getElementById('emergency-banner');
+      if ((modal || banner) && typeof window !== 'undefined' && window.voice?.voiceOwner === 'emergency' && !window.voice?.isSpeaking) {
+        setTimeout(() => {
+          if (!emergency.isEmergencyListening && typeof window !== 'undefined' && window.voice?.voiceOwner === 'emergency' && !window.voice?.isSpeaking) {
+            emergency.startEmergencyRecognition();
+          }
+        }, 400);
+      }
+    };
+  },
+
+  startEmergencyRecognition: () => {
+    if (typeof window === 'undefined') return;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+
+    if (!emergency.emergencyRecognition) {
+      emergency.initEmergencyRecognition();
+    }
+
+    if (!emergency.isEmergencyListening && emergency.emergencyRecognition) {
+      try {
+        emergency.emergencyRecognition.start();
+        emergency.isEmergencyListening = true;
+      } catch (e) {
+        console.warn('[Emergency Recognition] start exception:', e);
+      }
+    }
+  },
+
+  stopEmergencyRecognition: () => {
+    if (emergency.emergencyRecognition && emergency.isEmergencyListening) {
+      try {
+        emergency.emergencyRecognition.stop();
+      } catch (e) {}
+    }
+    emergency.isEmergencyListening = false;
+  },
 
   /**
    * Initiates emergency phone call with spoken confirmation
@@ -22,6 +126,8 @@ export const emergency = {
   initiateEmergencyCall: (phone = null) => {
     const targetPhone = phone || emergency.activePhoneNumber || '112';
     console.log('[Emergency Action]: Initiating emergency call to', targetPhone);
+
+    emergency.stopEmergencyRecognition();
 
     if (typeof window !== 'undefined' && window.voice) {
       window.voice.stopGlobalRecognition(false);
@@ -59,6 +165,8 @@ export const emergency = {
    */
   dismissEmergencyModal: () => {
     console.log('[Emergency Action]: Dismissing emergency modal');
+    emergency.stopEmergencyRecognition();
+
     const modal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
     if (modal) {
       modal.style.display = 'none';
@@ -156,8 +264,8 @@ export const emergency = {
             window.voice.isSpeaking = false;
             window.voice.voiceOwner = 'emergency';
             window.voice.isVoicePortalActive = true;
-            window.voice.startStandbyListening();
           }
+          emergency.startEmergencyRecognition();
         };
         utterance.onend = startEmergencyListening;
         utterance.onerror = startEmergencyListening;
