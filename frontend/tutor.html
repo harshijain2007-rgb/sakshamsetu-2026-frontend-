@@ -169,11 +169,7 @@
         tutor.state = TUTOR_STATES.PLAYING_LESSON;
         tutor.currentTopic = topic;
         tutor.appendUserMessage(topic);
-        const prepMsg = `Preparing your lesson on ${topic}. Please wait a moment.`;
-        tutor.updateStatusText(prepMsg);
-        tutor.speak(prepMsg, 0.95, async () => {
-          await tutor.generateAndStartLesson(topic);
-        });
+        tutor.generateAndStartLesson(topic);
       });
 
       document.querySelectorAll('.quick-prompt').forEach(btn => {

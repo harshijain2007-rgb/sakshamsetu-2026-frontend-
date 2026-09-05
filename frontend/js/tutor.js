@@ -218,8 +218,16 @@ export class TutorVoiceController {
       this.isRecognizing = false;
       console.log('[VOICE] recognition ended, mode:', this.state, 'shouldBeActive:', this.recognitionShouldBeActive);
       
-      // CRITICAL: Do NOT flip UI badge to Standby on browser onend if state expects voice!
-      if (this.recognitionShouldBeActive && !this.isSpeaking && !this.hasPermissionError) {
+      const shouldRestart = (
+        (this.state === TUTOR_STATES.LISTENING_FOR_TOPIC ||
+         this.state === TUTOR_STATES.LISTENING_FOR_COMMAND ||
+         this.state === TUTOR_STATES.LISTENING_FOR_DOUBT) &&
+        this.recognitionShouldBeActive &&
+        !this.isSpeaking &&
+        !this.hasPermissionError
+      );
+
+      if (shouldRestart) {
         this.scheduleRestart();
       } else if (!this.recognitionShouldBeActive) {
         this.updateStatusBadge(false);
@@ -228,11 +236,21 @@ export class TutorVoiceController {
   }
 
   scheduleRestart() {
-    if (this.hasPermissionError || this.isSpeaking || !this.recognitionShouldBeActive) return;
+    if (this.hasPermissionError || this.isSpeaking || !this.recognitionShouldBeActive || this.isRecognizing) return;
 
     clearTimeout(this.restartTimer);
     this.restartTimer = setTimeout(() => {
-      if (this.recognitionShouldBeActive && !this.isSpeaking && !this.isRecognizing && !this.hasPermissionError) {
+      const canStart = (
+        (this.state === TUTOR_STATES.LISTENING_FOR_TOPIC ||
+         this.state === TUTOR_STATES.LISTENING_FOR_COMMAND ||
+         this.state === TUTOR_STATES.LISTENING_FOR_DOUBT) &&
+        this.recognitionShouldBeActive &&
+        !this.isSpeaking &&
+        !this.isRecognizing &&
+        !this.hasPermissionError
+      );
+
+      if (canStart) {
         try {
           if (this.tutorSpeechRecognition) {
             this.tutorSpeechRecognition.start();
@@ -259,6 +277,10 @@ export class TutorVoiceController {
     }
   }
 
+  startRecognition() {
+    this.startRecognitionSafely();
+  }
+
   stopRecognitionSafely(disableLogical = true) {
     clearTimeout(this.restartTimer);
     if (disableLogical) {
@@ -271,6 +293,10 @@ export class TutorVoiceController {
       } catch (e) {}
     }
     this.isRecognizing = false;
+  }
+
+  stopRecognition() {
+    this.stopRecognitionSafely(true);
   }
 
   setupUserInteractionUnlock() {
@@ -352,13 +378,8 @@ export class TutorVoiceController {
           topicInput.value = cleanTopic;
         }
 
-        const prepMsg = `Preparing your lesson on ${cleanTopic}. Please wait a moment.`;
-        this.updateStatusText(prepMsg);
         this.appendUserMessage(cleanTopic);
-
-        this.speak(prepMsg, 0.95, async () => {
-          await this.generateAndStartLesson(cleanTopic);
-        });
+        this.generateAndStartLesson(cleanTopic);
       }
       return;
     }

@@ -39,7 +39,7 @@ it('1. AI Tutor initial welcome prompt speaks greeting & plays 500ms chime', () 
 
 it('2. Spoken topic capture populates #topicInput and calls /api/tutor/generate', () => {
   assert(tutorJs.includes("document.getElementById('topicInput')"), 'Must populate #topicInput');
-  assert(tutorJs.includes("Preparing your lesson on"), 'Must announce preparation message');
+  assert(tutorJs.includes('generateAndStartLesson'), 'Must call generateAndStartLesson');
   assert(tutorJs.includes('api.tutor.generate'), 'Must call api.tutor.generate');
   assert(apiJs.includes('/api/tutor/generate'), 'API must have /api/tutor/generate');
 });

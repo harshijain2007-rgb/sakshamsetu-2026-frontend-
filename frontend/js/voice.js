@@ -96,7 +96,7 @@ class VoiceController {
 
   canGlobalRecognize() {
     return this.hasRecognition &&
-      (this.voiceOwner === 'global' || this.voiceOwner === null) &&
+      (this.voiceOwner === 'global' || this.voiceOwner === 'emergency' || this.voiceOwner === 'status' || this.voiceOwner === null) &&
       !this.isModalOpen &&
       !this.isSpeaking;
   }
@@ -446,19 +446,22 @@ class VoiceController {
     if (statusEl) statusEl.textContent = msg;
     if (globalStatusEl) globalStatusEl.textContent = msg;
 
-    // 1. EMERGENCY MODAL VOICE COMMANDS (TOP PRIORITY - Checked anytime #emergencyModal is open)
+    // 1. EMERGENCY MODAL VOICE COMMANDS (TOP PRIORITY - Checked anytime emergency is active, or modal/banner is present)
     const emergencyModal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
-    const isEmergencyActive = emergencyModal && emergencyModal.style.display !== 'none' && !emergencyModal.classList.contains('hidden');
+    const emergencyBanner = document.getElementById('emergency-banner');
+    const isEmergencyActive = this.voiceOwner === 'emergency' ||
+      (emergencyModal && emergencyModal.style.display !== 'none' && !emergencyModal.classList.contains('hidden')) ||
+      (emergencyBanner && emergencyBanner.style.display !== 'none');
 
     if (isEmergencyActive) {
       console.log('[EMERGENCY] command received:', command);
-      if (/\b(call|dial|call emergency|make a call|make emergency call|dial emergency)\b/i.test(command) || command.includes('call') || command.includes('dial')) {
+      if (/\b(call|dial|make a call|make the call|call emergency|dial emergency|please call)\b/i.test(command) || command.includes('call') || command.includes('dial')) {
         console.log('[EMERGENCY] executing action: CALL');
         emergency.initiateEmergencyCall();
         return;
       }
 
-      if (/\b(dismiss|close|cancel|dismiss emergency|close emergency|cancel emergency)\b/i.test(command) || command.includes('dismiss') || command.includes('close') || command.includes('cancel')) {
+      if (/\b(dismiss|close|cancel|dismiss emergency|close emergency|cancel emergency|dismiss this|cancel this|close this|exit|leave)\b/i.test(command) || command.includes('dismiss') || command.includes('close') || command.includes('cancel')) {
         console.log('[EMERGENCY] executing action: DISMISS');
         emergency.dismissEmergencyModal();
         return;

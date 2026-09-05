@@ -25,7 +25,8 @@ export const emergency = {
 
     if (typeof window !== 'undefined' && window.voice) {
       window.voice.stopGlobalRecognition(false);
-      window.voice.releaseMicrophoneOwnership('emergency');
+      window.voice.isSpeaking = true;
+      window.voice.voiceOwner = 'emergency_call';
     }
 
     if ('speechSynthesis' in window) {
@@ -33,12 +34,22 @@ export const emergency = {
       const utterance = new SpeechSynthesisUtterance("Initiating emergency call.");
       utterance.rate = 0.95;
       const dial = () => {
+        if (typeof window !== 'undefined' && window.voice) {
+          window.voice.isSpeaking = false;
+          window.voice.releaseMicrophoneOwnership('emergency');
+          window.voice.releaseMicrophoneOwnership('emergency_call');
+        }
         window.location.href = `tel:${targetPhone}`;
       };
       utterance.onend = dial;
       utterance.onerror = dial;
       window.speechSynthesis.speak(utterance);
     } else {
+      if (typeof window !== 'undefined' && window.voice) {
+        window.voice.isSpeaking = false;
+        window.voice.releaseMicrophoneOwnership('emergency');
+        window.voice.releaseMicrophoneOwnership('emergency_call');
+      }
       window.location.href = `tel:${targetPhone}`;
     }
   },
@@ -60,9 +71,11 @@ export const emergency = {
       try { banner.remove(); } catch (e) {}
     }
 
-    // Stop active recognition
+    // Stop active recognition and prevent auto-restart during closing TTS
     if (typeof window !== 'undefined' && window.voice) {
       window.voice.stopGlobalRecognition(false);
+      window.voice.isSpeaking = true;
+      window.voice.voiceOwner = 'emergency_closing';
     }
 
     // Spoken confirmation: only resume global voice AFTER TTS finishes
@@ -72,7 +85,9 @@ export const emergency = {
       utterance.rate = 0.95;
       const restoreGlobal = () => {
         if (typeof window !== 'undefined' && window.voice) {
+          window.voice.isSpeaking = false;
           window.voice.releaseMicrophoneOwnership('emergency');
+          window.voice.releaseMicrophoneOwnership('emergency_closing');
           window.voice.voiceOwner = 'global';
           window.voice.isVoicePortalActive = true;
           window.voice.startGlobalRecognition(false);
@@ -84,7 +99,9 @@ export const emergency = {
       window.speechSynthesis.speak(utterance);
     } else {
       if (typeof window !== 'undefined' && window.voice) {
+        window.voice.isSpeaking = false;
         window.voice.releaseMicrophoneOwnership('emergency');
+        window.voice.releaseMicrophoneOwnership('emergency_closing');
         window.voice.voiceOwner = 'global';
         window.voice.isVoicePortalActive = true;
         window.voice.startGlobalRecognition(false);
@@ -101,6 +118,7 @@ export const emergency = {
       if (typeof window !== 'undefined' && window.voice) {
         window.voice.requestMicrophoneOwnership('emergency');
         window.voice.stopGlobalRecognition(false);
+        window.voice.isSpeaking = true;
       }
 
       const requestRes = await api.emergency.request();
@@ -135,6 +153,7 @@ export const emergency = {
         utterance.pitch = 1.0;
         const startEmergencyListening = () => {
           if (typeof window !== 'undefined' && window.voice) {
+            window.voice.isSpeaking = false;
             window.voice.voiceOwner = 'emergency';
             window.voice.isVoicePortalActive = true;
             window.voice.startStandbyListening();

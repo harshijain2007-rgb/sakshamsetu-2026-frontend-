@@ -67,7 +67,7 @@ console.log('\n--- 2. AI Tutor Navigation Commands & Doubt Flow ---');
 it('5. Topic capture populates #topicInput and calls api.tutor.generate', () => {
   assert(tutorJs.includes("document.getElementById('topicInput')"), 'Must populate #topicInput in DOM');
   assert(tutorJs.includes('api.tutor.generate'), 'Must call api.tutor.generate');
-  assert(tutorJs.includes('Preparing your lesson on'), 'Must announce lesson preparation');
+  assert(tutorJs.includes('generateAndStartLesson'), 'Must call generateAndStartLesson');
 });
 
 it('6. Step narration uses slow, clear rate 0.9 and advances through steps', () => {
