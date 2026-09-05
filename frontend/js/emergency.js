@@ -13,13 +13,53 @@
 
 import { api } from './api.js';
 
+export function processEmergencyVoice(transcript) {
+  const text = (transcript || '').toLowerCase().trim();
+  console.log('[Emergency Voice]: Processing transcript:', text);
+
+  if (text.includes("dismiss") || text.includes("close") || text.includes("cancel") || text.includes("exit") || text.includes("leave")) {
+    // 1. Force hide modal
+    const modal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.classList.add('hidden');
+    }
+    const banner = document.getElementById('emergency-banner');
+    if (banner) {
+      try { banner.remove(); } catch (e) {}
+    }
+    // 2. Speak confirmation and restore main portal state
+    const engine = typeof window !== 'undefined' && (window.voiceEngine || window.voice);
+    if (engine && typeof engine.speak === 'function') {
+      engine.speak("Emergency modal closed. Returning to main portal.", () => {
+        if (typeof engine.setState === 'function') {
+          engine.setState('MAIN');
+        } else {
+          emergency.dismissEmergencyModal();
+        }
+      });
+    } else {
+      emergency.dismissEmergencyModal();
+    }
+  } else if (text.includes("call") || text.includes("dial") || text.includes("make a call") || text.includes("make the call")) {
+    const engine = typeof window !== 'undefined' && (window.voiceEngine || window.voice);
+    if (engine && typeof engine.speak === 'function') {
+      engine.speak("Initiating emergency call.", () => {
+        window.location.href = `tel:${emergency.activePhoneNumber || '112'}`;
+      });
+    } else {
+      emergency.initiateEmergencyCall();
+    }
+  }
+}
+
 export const emergency = {
   activePhoneNumber: '112',
   emergencyRecognition: null,
   isEmergencyListening: false,
 
   /**
-   * Initializes dedicated Emergency SpeechRecognition instance
+   * Initializes dedicated Emergency SpeechRecognition instance (Single-Shot)
    */
   initEmergencyRecognition: () => {
     if (emergency.emergencyRecognition) return;
@@ -27,68 +67,29 @@ export const emergency = {
     if (!SpeechRecognition) return;
 
     emergency.emergencyRecognition = new SpeechRecognition();
-    emergency.emergencyRecognition.continuous = true;
+    emergency.emergencyRecognition.continuous = false; // Single-shot capture matching Grievance logic
     emergency.emergencyRecognition.interimResults = false;
     emergency.emergencyRecognition.lang = 'en-IN';
     emergency.emergencyRecognition.maxAlternatives = 3;
 
     emergency.emergencyRecognition.onstart = () => {
       emergency.isEmergencyListening = true;
-      console.log('[Emergency Recognition]: Active and listening for Call/Dismiss');
+      console.log('[Emergency Recognition]: Started single-shot listening for Call/Dismiss');
     };
 
     emergency.emergencyRecognition.onresult = (event) => {
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (!event.results[i].isFinal) continue;
-
-        const rawTranscript = event.results[i][0].transcript;
-        const command = rawTranscript.toLowerCase().trim().replace(/[.,!?]/g, '');
-        console.log('[Emergency Recognition]: Final command heard:', command);
-
-        // Check CALL commands: "call", "dial", "make the call", "call emergency", "please make the call"
-        if (/\b(call|dial|make a call|make the call|call emergency|dial emergency|please call|please make the call)\b/i.test(command) || command.includes('call') || command.includes('dial')) {
-          console.log('[Emergency Recognition]: Executing CALL action');
-          emergency.stopEmergencyRecognition();
-          emergency.initiateEmergencyCall();
-          return;
-        }
-
-        // Check DISMISS commands: "dismiss", "close", "cancel", "close emergency", "I want to dismiss this"
-        if (/\b(dismiss|close|cancel|dismiss emergency|close emergency|cancel emergency|dismiss this|cancel this|close this|exit|leave|i want to dismiss this|i want to close this)\b/i.test(command) || command.includes('dismiss') || command.includes('close') || command.includes('cancel')) {
-          console.log('[Emergency Recognition]: Executing DISMISS action');
-          emergency.stopEmergencyRecognition();
-          emergency.dismissEmergencyModal();
-          return;
-        }
-      }
+      const transcript = event.results[0][0].transcript;
+      processEmergencyVoice(transcript);
     };
 
     emergency.emergencyRecognition.onerror = (e) => {
       console.warn('[Emergency Recognition] Error:', e.error);
       emergency.isEmergencyListening = false;
-      const modal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
-      const banner = document.getElementById('emergency-banner');
-      if ((modal || banner) && typeof window !== 'undefined' && window.voice?.voiceOwner === 'emergency') {
-        setTimeout(() => {
-          if (!emergency.isEmergencyListening && typeof window !== 'undefined' && window.voice?.voiceOwner === 'emergency') {
-            emergency.startEmergencyRecognition();
-          }
-        }, 400);
-      }
     };
 
     emergency.emergencyRecognition.onend = () => {
       emergency.isEmergencyListening = false;
-      console.log('[Emergency Recognition]: Ended');
-      const modal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
-      const banner = document.getElementById('emergency-banner');
-      if ((modal || banner) && typeof window !== 'undefined' && window.voice?.voiceOwner === 'emergency' && !window.voice?.isSpeaking) {
-        setTimeout(() => {
-          if (!emergency.isEmergencyListening && typeof window !== 'undefined' && window.voice?.voiceOwner === 'emergency' && !window.voice?.isSpeaking) {
-            emergency.startEmergencyRecognition();
-          }
-        }, 400);
-      }
+      console.log('[Emergency Recognition]: Single-shot capture ended');
     };
   },
 
@@ -350,11 +351,11 @@ export const emergency = {
         </div>
 
         <div class="flex flex-col sm:flex-row gap-3 pt-2">
-          <button type="button" id="btn-emergency-call" style="background-color: #dc2626 !important; color: #ffffff !important;" class="flex-1 text-center font-extrabold py-3.5 px-6 rounded-xl shadow-lg hover:opacity-95 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer">
+          <button type="button" id="emergencyCallBtn" style="background-color: #dc2626 !important; color: #ffffff !important;" class="flex-1 text-center font-extrabold py-3.5 px-6 rounded-xl shadow-lg hover:opacity-95 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer">
             <span class="material-symbols-outlined text-xl">call</span>
             <span>CALL EMERGENCY (${phone})</span>
           </button>
-          <button type="button" id="close-emergency-modal" style="background-color: #f1f5f9; color: #334155;" class="font-bold py-3.5 px-6 rounded-xl hover:bg-slate-200 transition-all text-sm cursor-pointer">
+          <button type="button" id="emergencyDismissBtn" style="background-color: #f1f5f9; color: #334155;" class="font-bold py-3.5 px-6 rounded-xl hover:bg-slate-200 transition-all text-sm cursor-pointer">
             Dismiss
           </button>
         </div>
@@ -363,7 +364,24 @@ export const emergency = {
 
     document.body.appendChild(modal);
 
-    // Normal Click & Key Events
+    // Bind direct click listeners for dual-modality (Mouse + Voice)
+    document.getElementById('emergencyCallBtn')?.addEventListener('click', () => {
+      window.location.href = `tel:${phone}`;
+    });
+    document.getElementById('emergencyDismissBtn')?.addEventListener('click', () => {
+      const m = document.getElementById('emergencyModal');
+      if (m) {
+        m.style.display = 'none';
+        m.classList.add('hidden');
+      }
+      const engine = typeof window !== 'undefined' && (window.voiceEngine || window.voice);
+      if (engine && typeof engine.speak === 'function') {
+        engine.speak("Emergency modal closed.");
+      }
+      emergency.dismissEmergencyModal();
+    });
+
+    // Backward compatible IDs
     document.getElementById('btn-emergency-call')?.addEventListener('click', () => {
       emergency.initiateEmergencyCall(phone);
     });

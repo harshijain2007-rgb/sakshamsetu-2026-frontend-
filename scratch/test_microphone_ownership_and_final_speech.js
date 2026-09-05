@@ -61,15 +61,14 @@ it('4. voice.js rejects interim speech and triggers commands ONLY on isFinal ===
   assert(voiceJs.includes('this.processVoiceCommand(activeText)'), 'voice.js executes command on final text');
 });
 
-it('5. tutor.js rejects interim speech and triggers topic/commands ONLY on isFinal === true', () => {
-  assert(tutorJs.includes('if (interimTranscript && !finalTranscript)'), 'tutor.js must check for interim-only transcript');
-  assert(tutorJs.includes('return; // Reject interim command execution!'), 'tutor.js must return without executing command on interim');
-  assert(tutorJs.includes('this.handleTutorSpeech(activeText, true);'), 'tutor.js executes speech handler on final text');
+it('5. tutor.js uses single-shot capture (interimResults=false) and processes final speech', () => {
+  assert(tutorJs.includes('this.tutorSpeechRecognition.interimResults = false;'), 'tutor.js must set interimResults=false');
+  assert(tutorJs.includes('this.handleTutorSpeech(activeText, true);'), 'tutor.js executes speech handler on final captured text');
 });
 
-it('6. status.html processes voice navigation ONLY on isFinal === true', () => {
-  assert(statusHtml.includes('if (event.results[i].isFinal)'), 'status.html must check isFinal');
-  assert(statusHtml.includes('if (!finalText.trim()) return;'), 'status.html must return on empty final text');
+it('6. status.html uses single-shot capture (interimResults=false) and processes final speech', () => {
+  assert(statusHtml.includes('statusRecognition.interimResults = false;'), 'status.html must set interimResults=false');
+  assert(statusHtml.includes('event.results[0][0].transcript'), 'status.html must process final captured transcript');
 });
 
 // ---------------------------------------------------------------------------

@@ -26,7 +26,8 @@ class VoiceController {
     this.isModalOpen = false;
     this.isDictationPaused = false;
     
-    // Strict Wake-Word State Machine (STANDBY by default)
+    // Explicit State Model: 'IDLE' | 'MAIN' | 'EMERGENCY' | 'TUTOR_TOPIC' | 'TUTOR_COMMAND' | 'TUTOR_DOUBT'
+    this.state = 'IDLE';
     this.isVoicePortalActive = false;
     this.restartTimer = null;
     this.voiceOwner = 'global'; // 'global' | 'grievance' | 'emergency' | 'status' | null
@@ -91,6 +92,30 @@ class VoiceController {
     console.log(`[VOICE LOCK] Ownership released by: "${featureName}"`);
     if (this.voiceOwner === featureName) {
       this.voiceOwner = null;
+    }
+  }
+
+  setState(newState) {
+    console.log(`[VOICE ENGINE] Transitioning state: "${this.state}" -> "${newState}"`);
+    this.state = newState;
+    if (newState === 'IDLE') {
+      this.stopSpeaking();
+      this.stopGlobalRecognition(false);
+      this.isVoicePortalActive = false;
+      this.updateUiState(false);
+    } else if (newState === 'MAIN') {
+      this.voiceOwner = 'global';
+      this.isVoicePortalActive = true;
+      this.updateUiState(true);
+      if (!this.isSpeaking && this.canGlobalRecognize()) {
+        this.startGlobalRecognition(false);
+      }
+    } else if (newState === 'EMERGENCY') {
+      this.voiceOwner = 'emergency';
+      this.stopGlobalRecognition(false);
+    } else if (typeof newState === 'string' && newState.startsWith('TUTOR')) {
+      this.voiceOwner = 'tutor';
+      this.stopGlobalRecognition(false);
     }
   }
 
@@ -1055,8 +1080,10 @@ class VoiceController {
 }
 
 export const voice = new VoiceController();
+export const voiceEngine = voice;
 if (typeof window !== 'undefined') {
   window.voice = voice;
+  window.voiceEngine = voice;
 }
 
 if (typeof document !== 'undefined') {

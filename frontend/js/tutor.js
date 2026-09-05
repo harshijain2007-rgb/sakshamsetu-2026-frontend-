@@ -150,58 +150,37 @@ export class TutorVoiceController {
   }
 
   // =========================================================================
-  // 3. Isolated Tutor Speech Recognition Lifecycle & Recovery
+  // 3. Isolated Tutor Speech Recognition Lifecycle (Single-Shot)
   // =========================================================================
   initTutorRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.tutorSpeechRecognition = new SpeechRecognition();
-    this.tutorSpeechRecognition.continuous = true;
-    this.tutorSpeechRecognition.interimResults = true;
+    this.tutorSpeechRecognition.continuous = false; // Single-shot capture matching Grievance logic
+    this.tutorSpeechRecognition.interimResults = false;
     this.tutorSpeechRecognition.lang = 'en-IN';
     this.tutorSpeechRecognition.maxAlternatives = 3;
 
     this.tutorSpeechRecognition.onstart = () => {
       this.tutorRecognitionRunning = true;
       this.updateStatusBadge(true);
-      console.log('[TUTOR MIC]: Recognition started in state:', this.state);
+      console.log('[TUTOR MIC]: Single-shot recognition started in state:', this.state);
     };
 
     this.tutorSpeechRecognition.onresult = (event) => {
-      let interimTranscript = '';
-      let finalTranscript = '';
-
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        const item = event.results[i][0];
-        if (event.results[i].isFinal) {
-          finalTranscript += item.transcript;
-        } else {
-          interimTranscript += item.transcript;
-        }
-      }
-
-      // Display live interim speech in the status UI without triggering any action!
-      if (interimTranscript && !finalTranscript) {
-        const trimmedInterim = interimTranscript.trim();
-        if (trimmedInterim) {
-          this.updateStatusText(`Hearing: "${trimmedInterim}..."`);
-        }
-        return; // Reject interim command execution!
-      }
-
-      const activeText = finalTranscript.trim();
+      const activeText = event.results[0][0].transcript.trim();
       if (!activeText) return;
 
-      // ONLY process final speech!
+      console.log('[TUTOR MIC]: Single-shot captured:', activeText);
       this.handleTutorSpeech(activeText, true);
     };
 
     this.tutorSpeechRecognition.onerror = (e) => {
       console.warn('[TUTOR MIC] error in state:', this.state, e.error);
       this.tutorRecognitionRunning = false;
+      this.updateStatusBadge(false);
 
       if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
         this.hasPermissionError = true;
-        this.updateStatusBadge(false);
         const permMsg = "Microphone access is required for voice control. Please allow microphone access in your browser.";
         this.updateStatusText(permMsg);
         this.speak(permMsg);
@@ -212,32 +191,12 @@ export class TutorVoiceController {
         this.updateStatusText("No usable microphone was found. Please check your audio settings.");
         return;
       }
-
-      // Safe debounced recovery only if still in a valid listening state and not speaking
-      if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.hasPermissionError) {
-        clearTimeout(this.restartTimer);
-        this.restartTimer = setTimeout(() => {
-          if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.tutorRecognitionRunning && !this.hasPermissionError) {
-            this.startRecognition();
-          }
-        }, 400);
-      }
     };
 
     this.tutorSpeechRecognition.onend = () => {
       this.tutorRecognitionRunning = false;
       this.updateStatusBadge(false);
-      console.log('[TUTOR MIC]: onend in state:', this.state, 'isSpeaking:', this.isSpeaking);
-
-      // Controlled state-based restart: ONLY restart if in a listening state and not speaking
-      if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.hasPermissionError) {
-        clearTimeout(this.restartTimer);
-        this.restartTimer = setTimeout(() => {
-          if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.tutorRecognitionRunning && !this.hasPermissionError) {
-            this.startRecognition();
-          }
-        }, 400);
-      }
+      console.log('[TUTOR MIC]: Single-shot capture ended in state:', this.state);
     };
   }
 
@@ -305,15 +264,15 @@ export class TutorVoiceController {
       return;
     }
 
-    const welcomeText = "Welcome to AI Tutor! What topic would you like to learn today? Say a topic name after the tone.";
-    this.updateStatusText('Welcome to AI Tutor! Say a topic name after the tone.');
+    const welcomeText = "Welcome to AI Tutor! Say a topic name like Stacks after the chime.";
+    this.updateStatusText('Welcome to AI Tutor! Say a topic name like Stacks after the chime.');
     
     this.speak(welcomeText, 0.95, () => {
       this.playChime(660, 0.5);
       setTimeout(() => {
         this.state = TUTOR_STATES.LISTENING_FOR_TOPIC;
-        this.startRecognition();
         this.updateStatusText('Listening for your study topic... Speak freely.');
+        this.startRecognition();
       }, 550);
     });
   }
@@ -468,9 +427,12 @@ export class TutorVoiceController {
     this.updateStatusText(`Reading: ${stepTitle}`);
 
     this.speak(spokenText, 0.9, () => {
-      this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
-      this.startRecognition();
-      this.updateStatusText(`Step ${this.currentStepIndex + 1} complete. Say "Next", "Back", "Repeat", or "Question".`);
+      this.playChime(660, 0.35);
+      setTimeout(() => {
+        this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
+        this.updateStatusText(`Step ${this.currentStepIndex + 1} complete. Say "Next", "Back", "Repeat", or "Question".`);
+        this.startRecognition();
+      }, 400);
     });
   }
 
@@ -483,8 +445,11 @@ export class TutorVoiceController {
       const finishText = "You are already on the final step. Say Repeat to hear it again, or say Question to ask anything.";
       this.updateStatusText(finishText);
       this.speak(finishText, 0.9, () => {
-        this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
-        this.startRecognition();
+        this.playChime(660, 0.35);
+        setTimeout(() => {
+          this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
+          this.startRecognition();
+        }, 400);
       });
     }
   }
@@ -498,8 +463,11 @@ export class TutorVoiceController {
       const firstText = "You are already on the first step.";
       this.updateStatusText(firstText);
       this.speak(firstText, 0.9, () => {
-        this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
-        this.startRecognition();
+        this.playChime(660, 0.35);
+        setTimeout(() => {
+          this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
+          this.startRecognition();
+        }, 400);
       });
     }
   }
@@ -514,15 +482,15 @@ export class TutorVoiceController {
   startDoubtFlow() {
     this.stopRecognition();
     this.state = TUTOR_STATES.GENERATING;
-    const promptText = "What is your question about this step? Speak after the tone.";
+    const promptText = "What is your question? Speak after the chime.";
     this.updateStatusText(promptText);
 
     this.speak(promptText, 0.95, () => {
       this.playChime(660, 0.5);
       setTimeout(() => {
         this.state = TUTOR_STATES.LISTENING_FOR_DOUBT;
-        this.startRecognition();
         this.updateStatusText('Listening for your question... Ask freely.');
+        this.startRecognition();
       }, 550);
     });
   }
@@ -541,9 +509,12 @@ export class TutorVoiceController {
 
       this.updateStatusText('Reading answer...');
       this.speak(answer, 0.95, () => {
-        this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
-        this.startRecognition();
-        this.updateStatusText(`Answer complete. Say "Next", "Back", "Repeat", or "Question".`);
+        this.playChime(660, 0.35);
+        setTimeout(() => {
+          this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
+          this.updateStatusText(`Answer complete. Say "Next", "Back", "Repeat", or "Question".`);
+          this.startRecognition();
+        }, 400);
       });
     } catch (err) {
       console.error('[Tutor Doubt Error]:', err);

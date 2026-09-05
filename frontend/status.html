@@ -177,14 +177,16 @@
 
     let lastStatusSummary = '';
     let statusRecognition = null;
-    let isStatusListening = true;
+    let isSpeaking = false;
 
     function speakStatus(text, onComplete = null) {
       if (statusRecognition) {
         try { statusRecognition.stop(); } catch (e) {}
       }
+      isSpeaking = true;
 
       if (!('speechSynthesis' in window)) {
+        isSpeaking = false;
         if (onComplete) setTimeout(onComplete, 300);
         return;
       }
@@ -194,19 +196,14 @@
       utterance.rate = 0.9;
       utterance.pitch = 1.0;
 
-      utterance.onend = () => {
+      const finish = () => {
+        isSpeaking = false;
         if (onComplete) onComplete();
-        if (isStatusListening && statusRecognition) {
-          try { statusRecognition.start(); } catch (e) {}
-        }
+        startStatusListening();
       };
 
-      utterance.onerror = () => {
-        if (onComplete) onComplete();
-        if (isStatusListening && statusRecognition) {
-          try { statusRecognition.start(); } catch (e) {}
-        }
-      };
+      utterance.onend = finish;
+      utterance.onerror = finish;
 
       window.speechSynthesis.speak(utterance);
     }
@@ -216,25 +213,13 @@
       if (!SpeechRecognition) return;
 
       statusRecognition = new SpeechRecognition();
-      statusRecognition.continuous = true;
-      statusRecognition.interimResults = true;
+      statusRecognition.continuous = false; // Single-shot capture matching Grievance logic
+      statusRecognition.interimResults = false;
       statusRecognition.lang = 'en-IN';
       statusRecognition.maxAlternatives = 3;
 
       statusRecognition.onresult = (event) => {
-        let interimText = '';
-        let finalText = '';
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            finalText += event.results[i][0].transcript + ' ';
-          } else {
-            interimText += event.results[i][0].transcript + ' ';
-          }
-        }
-
-        if (!finalText.trim()) return;
-
-        const text = finalText.toLowerCase().trim().replace(/[.,!?]/g, '');
+        const text = event.results[0][0].transcript.toLowerCase().trim().replace(/[.,!?]/g, '');
         console.log('[Status Page Final Heard]:', text);
 
         if (/\b(repeat|again|replay|read again)\b/i.test(text) || text.includes('repeat') || text.includes('again')) {
@@ -264,13 +249,12 @@
       };
 
       statusRecognition.onend = () => {
-        if (isStatusListening) {
-          setTimeout(() => {
-            try { statusRecognition.start(); } catch (e) {}
-          }, 300);
-        }
+        console.log('[Status Recognition]: Single-shot ended');
       };
+    }
 
+    function startStatusListening() {
+      if (isSpeaking || !statusRecognition) return;
       try {
         statusRecognition.start();
       } catch (e) {}

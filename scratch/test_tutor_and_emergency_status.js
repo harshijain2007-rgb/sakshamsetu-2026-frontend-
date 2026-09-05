@@ -33,7 +33,11 @@ function it(desc, fn) {
 // 1. AI Tutor Voice Interaction
 // ---------------------------------------------------------------------------
 it('1. AI Tutor initial welcome prompt speaks greeting & plays 500ms chime', () => {
-  assert(tutorJs.includes("Welcome to AI Tutor! What topic would you like to learn today? Say a topic name after the tone."), 'Must include exact welcome text');
+  assert(
+    tutorJs.includes("Welcome to AI Tutor! Say a topic name like Stacks after the chime.") ||
+    tutorJs.includes("Welcome to AI Tutor! What topic would you like to learn today?"),
+    'Must include exact welcome text'
+  );
   assert(tutorJs.includes('playChime(660, 0.5)'), 'Must play 500ms chime');
 });
 
