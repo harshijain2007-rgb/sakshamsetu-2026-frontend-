@@ -1,16 +1,20 @@
 /**
  * Saksham Setu AI Tutor — 100% Voice-Driven & Accessible Controller
- * Implements isolated voice state machine for hands-free interactive study:
- * 1. Initial Spoken Prompt + 500ms Chime
- * 2. Spoken Topic Capture -> /api/tutor/generate
- * 3. Automatic Step-by-Step Lesson Narration (rate = 0.9)
- * 4. Voice Navigation ("Next", "More", "Back", "Previous", "Repeat", "Again")
- * 5. Voice Doubt Flow ("Question", "Doubt", "Help") -> /api/tutor/doubt -> Spoken Answer
  * 
- * Strict isolation: Does not interfere with globalRecognition, modalRecognition, or grievance flows.
+ * Implements an isolated, audio-first state machine for hands-free interactive study:
+ * 1. Initial Spoken Welcome + 500ms Chime -> TUTOR_TOPIC_LISTENING
+ * 2. Spoken Topic Capture (e.g. "stacks", "binary search") -> /api/tutor/generate
+ * 3. Automatic Step-by-Step Educational Lesson Narration (rate = 0.9)
+ * 4. Resilient Command Listening ("Next", "Back", "Repeat", "Question")
+ * 5. Integrated Doubt Flow ("Question", "Doubt") -> /api/tutor/doubt -> Spoken Answer -> Resume Command Listening
+ * 
+ * Strict isolation rules:
+ * - NEVER runs simultaneously with globalRecognition or modalRecognition.
+ * - Stops recognition before any TTS speech synthesis to eliminate audio feedback loops.
+ * - Handles all microphone permission and lifecycle states safely.
  */
 
-import { api, apiFetch } from './api.js';
+import { api } from './api.js';
 
 export const TUTOR_STATES = {
   IDLE: 'IDLE',
@@ -30,11 +34,13 @@ export class TutorVoiceController {
 
     this.tutorSpeechRecognition = null;
     this.isTutorListening = false;
+    this.isSpeaking = false;
     this.state = TUTOR_STATES.IDLE;
     this.restartTimer = null;
     this.audioCtx = null;
+    this.hasPermissionError = false;
 
-    // Active lesson data
+    // Active lesson state
     this.currentTopic = '';
     this.currentLesson = null;
     this.currentStepIndex = 0;
@@ -50,11 +56,16 @@ export class TutorVoiceController {
 
     if (this.hasRecognition) {
       this.initTutorRecognition();
+      this.setupUserInteractionUnlock();
+    } else {
+      console.warn('[Tutor Voice]: SpeechRecognition is not supported in this browser.');
     }
+
+    this.setupLifecycleCleanups();
   }
 
   // =========================================================================
-  // 1. Audio Chime / Tone Generator (500ms tone)
+  // 1. Audio Chime / Tone Generator (500ms tone via Web Audio API)
   // =========================================================================
   playChime(frequency = 660, duration = 0.5) {
     try {
@@ -83,14 +94,20 @@ export class TutorVoiceController {
   }
 
   // =========================================================================
-  // 2. Speech Synthesis Helper with Overlap Prevention
+  // 2. Speech Synthesis Helper with Microphone Isolation
   // =========================================================================
   speak(text, rate = 0.9, onComplete = null) {
+    // 1. Immediately stop recognition while speech synthesis is active
+    this.stopRecognition();
+    this.isSpeaking = true;
+
     if (!this.hasSynthesis) {
+      this.isSpeaking = false;
       if (onComplete) setTimeout(onComplete, 300);
       return;
     }
-    this.synth.cancel(); // Prevent overlapping speech
+
+    this.synth.cancel(); // Clear any pending speech
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = rate; // 0.9 for slow, clear lesson reading
@@ -98,11 +115,18 @@ export class TutorVoiceController {
     if (this.activeVoice) utterance.voice = this.activeVoice;
 
     utterance.onend = () => {
-      if (onComplete) onComplete();
+      this.isSpeaking = false;
+      if (onComplete) {
+        onComplete();
+      }
     };
 
-    utterance.onerror = () => {
-      if (onComplete) onComplete();
+    utterance.onerror = (e) => {
+      console.warn('[Tutor TTS Error]:', e);
+      this.isSpeaking = false;
+      if (onComplete) {
+        onComplete();
+      }
     };
 
     this.synth.speak(utterance);
@@ -112,6 +136,7 @@ export class TutorVoiceController {
     if (this.hasSynthesis) {
       this.synth.cancel();
     }
+    this.isSpeaking = false;
   }
 
   // =========================================================================
@@ -127,23 +152,48 @@ export class TutorVoiceController {
     this.tutorSpeechRecognition.onstart = () => {
       this.isTutorListening = true;
       this.updateStatusBadge(true);
-      console.log('[Tutor Speech Recognition]: Active in state', this.state);
+      console.log('[Tutor Voice]: Recognition active in state', this.state);
     };
 
     this.tutorSpeechRecognition.onresult = (event) => {
-      const lastIndex = event.results.length - 1;
-      const transcript = event.results[lastIndex][0].transcript.trim();
-      console.log(`[Tutor Heard (${this.state})]:`, transcript);
+      let transcript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal || event.results[i][0].confidence > 0) {
+          transcript += event.results[i][0].transcript;
+        }
+      }
+      if (!transcript.trim()) {
+        const last = event.results[event.results.length - 1];
+        if (last && last[0]) {
+          transcript = last[0].transcript;
+        }
+      }
+
+      transcript = transcript.trim();
+      if (!transcript) return;
+
+      console.log(`[Tutor Voice Heard (${this.state})]:`, transcript);
       this.handleTutorSpeech(transcript);
     };
 
     this.tutorSpeechRecognition.onerror = (e) => {
-      console.warn('[Tutor Recognition Error]:', e.error);
-      if (e.error === 'not-allowed') {
+      console.warn('[Tutor Voice Error]:', e.error);
+
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+        this.hasPermissionError = true;
         this.isTutorListening = false;
         this.updateStatusBadge(false);
+        const permMsg = "Microphone access is not allowed. Please grant microphone permission in your browser.";
+        this.updateStatusText(permMsg);
         return;
       }
+
+      if (e.error === 'audio-capture') {
+        this.updateStatusText("No microphone was detected. Please check your audio input.");
+        return;
+      }
+
+      // Safe debounced restart for temporary blips (no-speech, network, aborted)
       this.scheduleRestart();
     };
 
@@ -155,38 +205,77 @@ export class TutorVoiceController {
   }
 
   scheduleRestart() {
-    if (this.state !== TUTOR_STATES.IDLE) {
+    if (this.hasPermissionError) return;
+    if (this.isSpeaking) return; // Never restart while TTS is speaking
+
+    if (this.state !== TUTOR_STATES.IDLE && this.state !== TUTOR_STATES.PLAYING_LESSON) {
       clearTimeout(this.restartTimer);
       this.restartTimer = setTimeout(() => {
-        try {
-          if (this.state !== TUTOR_STATES.IDLE && this.tutorSpeechRecognition) {
-            this.tutorSpeechRecognition.start();
-          }
-        } catch (err) {}
+        if (!this.isSpeaking && this.state !== TUTOR_STATES.IDLE && this.state !== TUTOR_STATES.PLAYING_LESSON) {
+          try {
+            if (this.tutorSpeechRecognition && !this.isTutorListening) {
+              this.tutorSpeechRecognition.start();
+            }
+          } catch (err) {}
+        }
       }, 300);
     }
   }
 
   startRecognition() {
-    if (!this.hasRecognition) return;
+    if (!this.hasRecognition || this.hasPermissionError || this.isSpeaking) return;
     try {
-      this.tutorSpeechRecognition.start();
+      if (!this.isTutorListening) {
+        this.tutorSpeechRecognition.start();
+      }
     } catch (e) {}
   }
 
   stopRecognition() {
+    clearTimeout(this.restartTimer);
     if (this.tutorSpeechRecognition && this.isTutorListening) {
       try {
         this.tutorSpeechRecognition.stop();
       } catch (e) {}
     }
     this.isTutorListening = false;
+    this.updateStatusBadge(false);
+  }
+
+  setupUserInteractionUnlock() {
+    const unlock = () => {
+      if (this.audioCtx && this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+      if (this.hasRecognition && !this.isTutorListening && !this.isSpeaking && this.state !== TUTOR_STATES.IDLE) {
+        this.startRecognition();
+      }
+    };
+    window.addEventListener('click', unlock, { passive: true });
+    window.addEventListener('keydown', unlock, { passive: true });
+    window.addEventListener('touchstart', unlock, { passive: true });
+  }
+
+  setupLifecycleCleanups() {
+    const cleanup = () => {
+      this.stopSpeaking();
+      this.stopRecognition();
+    };
+    window.addEventListener('beforeunload', cleanup);
+    window.addEventListener('pagehide', cleanup);
   }
 
   // =========================================================================
-  // 4. Initial Welcome Flow on Page Load
+  // 4. Initial Spoken Welcome Flow on Page Load
   // =========================================================================
   startInitialWelcome() {
+    if (!this.hasRecognition) {
+      const unsupportedText = "Voice input is not supported in this browser. Please use Chrome or another supported browser, or use the text box below.";
+      this.updateStatusText(unsupportedText);
+      this.speak(unsupportedText, 0.95);
+      return;
+    }
+
     const welcomeText = "Welcome to AI Tutor! What topic would you like to learn today? Say a topic name after the tone.";
     this.updateStatusText('Welcome to AI Tutor! Say a topic name after the tone.');
     
@@ -207,26 +296,31 @@ export class TutorVoiceController {
     const text = transcript.toLowerCase().trim();
 
     // -----------------------------------------------------------------------
-    // State 1: Capturing Study Topic
+    // State 1: Capturing Study Topic (e.g. "stacks", "queues", "binary search")
     // -----------------------------------------------------------------------
     if (this.state === TUTOR_STATES.LISTENING_FOR_TOPIC) {
       if (!transcript) return;
 
-      // Populate input field
+      // Extract cleaned topic name
+      let cleanTopic = text.replace(/^(learn|teach me|i want to learn|study|topic is|topic)\s+/i, '').trim();
+      if (!cleanTopic) cleanTopic = text;
+
+      // Populate topic input in DOM
       const topicInput = document.getElementById('topicInput') || document.getElementById('tutor-input');
       if (topicInput) {
-        topicInput.value = transcript;
+        topicInput.value = cleanTopic;
       }
 
-      this.currentTopic = transcript;
+      this.currentTopic = cleanTopic;
       this.state = TUTOR_STATES.PLAYING_LESSON;
+      this.stopRecognition();
 
-      const prepMsg = `Preparing your lesson on ${transcript}. Please wait a moment.`;
+      const prepMsg = `Preparing your lesson on ${cleanTopic}. Please wait a moment.`;
       this.updateStatusText(prepMsg);
-      this.appendUserMessage(transcript);
+      this.appendUserMessage(cleanTopic);
 
       this.speak(prepMsg, 0.95, async () => {
-        await this.generateAndStartLesson(transcript);
+        await this.generateAndStartLesson(cleanTopic);
       });
       return;
     }
@@ -236,42 +330,43 @@ export class TutorVoiceController {
     // -----------------------------------------------------------------------
     if (this.state === TUTOR_STATES.LISTENING_FOR_DOUBT) {
       if (!transcript) return;
+      this.stopRecognition();
       this.appendUserMessage(`Question: ${transcript}`);
       this.processDoubtQuestion(transcript);
       return;
     }
 
     // -----------------------------------------------------------------------
-    // State 3: Listening for Navigation Commands
+    // State 3: Listening for Navigation & Doubt Commands
     // -----------------------------------------------------------------------
     if (this.state === TUTOR_STATES.LISTENING_FOR_COMMAND || this.state === TUTOR_STATES.PLAYING_LESSON) {
-      // 1. Next / More
-      if (text.includes('next') || text.includes('more') || text.includes('continue') || text.includes('proceed') || text.includes('next step')) {
+      // 1. Next / More / Continue / Proceed
+      if (/\b(next|more|continue|proceed|go next|next step|move next)\b/i.test(text) || text.includes('next') || text.includes('more')) {
         this.goToNextStep();
         return;
       }
 
-      // 2. Previous / Back
-      if (text.includes('back') || text.includes('previous') || text.includes('prior') || text.includes('prev')) {
+      // 2. Previous / Back / Prior
+      if (/\b(back|previous|prev|prior|go back|previous step)\b/i.test(text) || text.includes('back') || text.includes('previous')) {
         this.goToPreviousStep();
         return;
       }
 
-      // 3. Repeat / Again
-      if (text.includes('repeat') || text.includes('again') || text.includes('read again') || text.includes('replay')) {
+      // 3. Repeat / Again / Say that again
+      if (/\b(repeat|again|say that again|repeat this|repeat step|read again|replay)\b/i.test(text) || text.includes('repeat') || text.includes('again')) {
         this.repeatCurrentStep();
         return;
       }
 
-      // 4. Question / Doubt / Help
-      if (text.includes('question') || text.includes('doubt') || text.includes('help') || text.includes('ask question') || text.includes('explain')) {
+      // 4. Question / Doubt / Help / Explain
+      if (/\b(question|doubt|ask question|help|i have a question|explain)\b/i.test(text) || text.includes('question') || text.includes('doubt')) {
         this.startDoubtFlow();
         return;
       }
 
-      // 5. New Topic
-      if (text.startsWith('learn ') || text.startsWith('study ') || text.startsWith('topic ')) {
-        const newTopic = text.replace(/^(learn|study|topic)\s+/i, '').trim();
+      // 5. Explicit New Topic Request
+      if (text.startsWith('learn ') || text.startsWith('study ') || text.startsWith('topic ') || text.startsWith('teach me ')) {
+        const newTopic = text.replace(/^(learn|study|topic|teach me)\s+/i, '').trim();
         if (newTopic) {
           this.state = TUTOR_STATES.LISTENING_FOR_TOPIC;
           this.handleTutorSpeech(newTopic);
@@ -301,10 +396,11 @@ export class TutorVoiceController {
       }
     } catch (err) {
       console.error('[Tutor Generation Error]:', err);
-      const errorMsg = "Sorry, I could not prepare your lesson right now. Please try again.";
+      const errorMsg = "Sorry, I could not create the lesson right now. Please try again.";
       this.updateStatusText(errorMsg);
       this.speak(errorMsg, 0.9, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_TOPIC;
+        this.startRecognition();
         this.updateStatusText('Say any study topic to try again.');
       });
     }
@@ -326,6 +422,7 @@ export class TutorVoiceController {
 
     this.speak(spokenText, 0.9, () => {
       this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
+      this.startRecognition();
       this.updateStatusText(`Step ${this.currentStepIndex + 1} complete. Say "Next", "Back", "Repeat", or "Question".`);
     });
   }
@@ -340,6 +437,7 @@ export class TutorVoiceController {
       this.updateStatusText(finishText);
       this.speak(finishText, 0.9, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
+        this.startRecognition();
       });
     }
   }
@@ -352,6 +450,7 @@ export class TutorVoiceController {
     } else {
       this.speak("You are at the first step of this lesson.", 0.9, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
+        this.startRecognition();
       });
     }
   }
@@ -365,12 +464,14 @@ export class TutorVoiceController {
   // =========================================================================
   startDoubtFlow() {
     this.state = TUTOR_STATES.LISTENING_FOR_DOUBT;
+    this.stopRecognition();
     const promptText = "What is your question about this step? Speak after the tone.";
     this.updateStatusText(promptText);
 
     this.speak(promptText, 0.95, () => {
       this.playChime(660, 0.5);
       setTimeout(() => {
+        this.startRecognition();
         this.updateStatusText('Listening for your question... Ask freely.');
       }, 550);
     });
@@ -390,6 +491,7 @@ export class TutorVoiceController {
       this.updateStatusText('Reading answer...');
       this.speak(answer, 0.95, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
+        this.startRecognition();
         this.updateStatusText(`Answer complete. Say "Next", "Back", "Repeat", or "Question".`);
       });
     } catch (err) {
@@ -398,6 +500,7 @@ export class TutorVoiceController {
       this.updateStatusText(errorMsg);
       this.speak(errorMsg, 0.9, () => {
         this.state = TUTOR_STATES.LISTENING_FOR_COMMAND;
+        this.startRecognition();
       });
     }
   }
@@ -475,7 +578,7 @@ export class TutorVoiceController {
 
       <div id="lesson-steps-wrapper" class="space-y-3">
         ${lesson.steps.map((step, idx) => `
-          <div id="lesson-step-item-${idx}" class="lesson-step-item p-4 rounded-xl border transition-all ${idx === 0 ? 'bg-white border-blue-500 shadow-sm' : 'bg-white/60 border-slate-200 opacity-70'}">
+          <div id="lesson-step-item-${idx}" class="lesson-step-item p-4 rounded-xl border transition-all ${idx === 0 ? 'bg-white border-blue-500 shadow-sm ring-2 ring-blue-100' : 'bg-white/60 border-slate-200 opacity-60'}">
             <div class="flex items-center justify-between mb-1">
               <h4 class="text-xs font-bold text-navy-brand font-heading">${step.title || 'Step ' + (idx + 1)}</h4>
               <span class="text-[10px] font-bold text-slate-400">Step ${idx + 1}</span>
@@ -487,17 +590,17 @@ export class TutorVoiceController {
 
       <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-blue-200/80">
         <div class="flex gap-2">
-          <button type="button" id="btn-tutor-prev" class="px-3.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1">
+          <button type="button" id="btn-tutor-prev" class="px-3.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1 cursor-pointer">
             <span class="material-symbols-outlined text-sm">arrow_back</span> Back
           </button>
-          <button type="button" id="btn-tutor-repeat" class="px-3.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1">
+          <button type="button" id="btn-tutor-repeat" class="px-3.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1 cursor-pointer">
             <span class="material-symbols-outlined text-sm">replay</span> Repeat
           </button>
-          <button type="button" id="btn-tutor-next" class="px-3.5 py-1.5 bg-navy-brand text-white rounded-lg text-xs font-bold hover:bg-navy-dark flex items-center gap-1">
+          <button type="button" id="btn-tutor-next" class="px-3.5 py-1.5 bg-navy-brand text-white rounded-lg text-xs font-bold hover:bg-navy-dark flex items-center gap-1 cursor-pointer">
             <span>Next</span> <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
         </div>
-        <button type="button" id="btn-tutor-question" class="px-3.5 py-1.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg text-xs font-bold hover:bg-indigo-100 flex items-center gap-1">
+        <button type="button" id="btn-tutor-question" class="px-3.5 py-1.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg text-xs font-bold hover:bg-indigo-100 flex items-center gap-1 cursor-pointer">
           <span class="material-symbols-outlined text-sm">help</span> Ask Question
         </button>
       </div>
@@ -506,7 +609,7 @@ export class TutorVoiceController {
     container.appendChild(lessonCard);
     container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
 
-    // Wire up button click controls as fallback for voice
+    // Wire up button click controls to the exact same underlying logic as voice commands
     document.getElementById('btn-tutor-prev')?.addEventListener('click', () => this.goToPreviousStep());
     document.getElementById('btn-tutor-repeat')?.addEventListener('click', () => this.repeatCurrentStep());
     document.getElementById('btn-tutor-next')?.addEventListener('click', () => this.goToNextStep());

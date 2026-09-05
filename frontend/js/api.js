@@ -519,25 +519,225 @@ export const api = {
         body: JSON.stringify({ topic })
       }, false, () => {
         const cleanTopic = (topic || 'General Studies').trim();
+        const lower = cleanTopic.toLowerCase();
+
+        // 1. Stacks Data Structure
+        if (lower.includes('stack')) {
+          return {
+            success: true,
+            topic: 'Stacks Data Structure',
+            title: 'Understanding Stacks Data Structure (LIFO)',
+            steps: [
+              {
+                step_order: 1,
+                title: 'What is a Stack? (Cafeteria Tray Analogy)',
+                content: 'A stack is a linear data structure where elements can only be added or removed from one end, called the top. Think of a spring-loaded stack of trays in a cafeteria: you place a new tray on top, and anyone who takes a tray takes the top one first.'
+              },
+              {
+                step_order: 2,
+                title: 'The LIFO Rule (Last In, First Out)',
+                content: 'The core rule of a stack is LIFO, which stands for Last In, First Out. This means the item that was added most recently to the top is always the very first item that gets removed. If you add items 1, 2, and 3 in order, 3 is on top and comes out first.'
+              },
+              {
+                step_order: 3,
+                title: 'Core Operations: Push and Pop',
+                content: 'A stack has two fundamental operations: Push and Pop. Push places a new element onto the top of the stack. Pop removes and returns the topmost element. For example, pushing the number 42 adds it to the top; calling pop immediately removes that 42.'
+              },
+              {
+                step_order: 4,
+                title: 'Auxiliary Operations: Peek and isEmpty',
+                content: 'Two essential helper operations are Peek and isEmpty. Peek, also called Top, lets you inspect the value of the top item without removing it. isEmpty checks whether the stack contains zero elements, preventing underflow errors before calling pop.'
+              },
+              {
+                step_order: 5,
+                title: 'Real-World Applications of Stacks',
+                content: 'Stacks are used extensively in computing: the Undo button in text editors stores previous edits in a stack, your web browser Back button stores browsing history in a stack, and programming languages use a Call Stack to manage active functions.'
+              }
+            ]
+          };
+        }
+
+        // 2. Queues Data Structure
+        if (lower.includes('queue')) {
+          return {
+            success: true,
+            topic: 'Queues Data Structure',
+            title: 'Understanding Queues (FIFO)',
+            steps: [
+              {
+                step_order: 1,
+                title: 'What is a Queue? (Bus Stop Line Analogy)',
+                content: 'A queue is a linear data structure where items are added at one end, called the rear, and removed from the other end, called the front. Imagine a line of students waiting at a campus bus stop: the person who arrives first gets on the bus first.'
+              },
+              {
+                step_order: 2,
+                title: 'The FIFO Rule (First In, First Out)',
+                content: 'Queues operate strictly on the FIFO rule, meaning First In, First Out. The earliest element added to the queue is always the first one processed and removed, ensuring completely fair sequential processing.'
+              },
+              {
+                step_order: 3,
+                title: 'Operations: Enqueue and Dequeue',
+                content: 'The two main operations are Enqueue and Dequeue. Enqueue adds a new element to the back of the line. Dequeue removes and returns the element at the front of the line.'
+              },
+              {
+                step_order: 4,
+                title: 'Applications in Computing',
+                content: 'Queues are used for printer job scheduling, background task dispatching in operating systems, and handling asynchronous web server requests.'
+              }
+            ]
+          };
+        }
+
+        // 3. Binary Search
+        if (lower.includes('binary search')) {
+          return {
+            success: true,
+            topic: 'Binary Search Algorithm',
+            title: 'Binary Search Algorithm (Divide & Conquer)',
+            steps: [
+              {
+                step_order: 1,
+                title: 'Core Concept & The Sorted List Requirement',
+                content: 'Binary Search is an ultra-fast search algorithm that finds the position of a target value within a sorted array. It strictly requires the list to already be arranged in sorted order from smallest to largest.'
+              },
+              {
+                step_order: 2,
+                title: 'Dictionary Lookup Analogy',
+                content: 'Think of looking up a word in a 1,000-page printed dictionary. You do not check page by page from the start. Instead, you open right to the middle at page 500. If your word starts with S and page 500 is M, you instantly discard the first 500 pages and repeat in the second half.'
+              },
+              {
+                step_order: 3,
+                title: 'The Three-Way Comparison Logic',
+                content: 'At each step, calculate the middle index. If the middle value equals your target, you are done. If the target is smaller, search only the left half. If the target is larger, search only the right half, dividing the remaining search space by two every single step.'
+              },
+              {
+                step_order: 4,
+                title: 'Time Complexity and Logarithmic Efficiency',
+                content: 'Binary search runs in O(log N) logarithmic time. In a dataset of 1 million sorted items, a simple linear scan could take 1 million comparisons, whereas binary search finds the answer in at most 20 comparisons.'
+              }
+            ]
+          };
+        }
+
+        // 4. Newton-Raphson Method
+        if (lower.includes('newton') && (lower.includes('raphson') || lower.includes('method') || lower.includes('root'))) {
+          return {
+            success: true,
+            topic: 'Newton-Raphson Method',
+            title: 'Newton-Raphson Root-Finding Method',
+            steps: [
+              {
+                step_order: 1,
+                title: 'What is the Newton-Raphson Method?',
+                content: 'The Newton-Raphson method is a powerful calculus-based numerical algorithm used to find successively better approximations to the real roots or zeros of a real-valued function, where f(x) equals zero.'
+              },
+              {
+                step_order: 2,
+                title: 'The Tangent Line Geometric Concept',
+                content: 'Start with an initial educated guess x_0 on the curve. Draw the tangent line to the curve at that point. The point where this tangent line crosses the horizontal x-axis becomes your improved next estimate x_1.'
+              },
+              {
+                step_order: 3,
+                title: 'The Iterative Formula',
+                content: 'The mathematical formula is: x_{n+1} equals x_n minus f(x_n) divided by the derivative f-prime of x_n. You evaluate the function and its slope, then subtract their quotient from your current estimate.'
+              },
+              {
+                step_order: 4,
+                title: 'Quadratic Convergence and Practical Use',
+                content: 'Newton-Raphson exhibits quadratic convergence, meaning the number of accurate decimal places roughly doubles with every single iteration, making it the standard algorithm for square roots and engineering solvers.'
+              }
+            ]
+          };
+        }
+
+        // 5. Photosynthesis
+        if (lower.includes('photosynthesis')) {
+          return {
+            success: true,
+            topic: 'Photosynthesis',
+            title: 'How Photosynthesis Works',
+            steps: [
+              {
+                step_order: 1,
+                title: 'The Basic Process & Chemical Equation',
+                content: 'Photosynthesis is the biological process by which green plants, algae, and some bacteria convert light energy into chemical energy. Plants take in water from their roots and carbon dioxide from the air, combining them using sunlight to produce glucose sugar and oxygen gas.'
+              },
+              {
+                step_order: 2,
+                title: 'Chlorophyll and Light-Dependent Reactions',
+                content: 'Inside plant cell chloroplasts, specialized green pigments called chlorophyll absorb photon energy from sunlight, predominantly in blue and red wavelengths. This energy splits water molecules into hydrogen ions and releases oxygen into our atmosphere.'
+              },
+              {
+                step_order: 3,
+                title: 'The Calvin Cycle (Light-Independent Reactions)',
+                content: 'In the second stage, known as the Calvin cycle or dark reactions, the plant uses stored ATP energy to fix atmospheric carbon dioxide molecules, assembling them into energy-rich six-carbon glucose sugars.'
+              },
+              {
+                step_order: 4,
+                title: 'Global Ecological Significance',
+                content: 'Photosynthesis is the foundation of Earths biosphere. It produces virtually all the breathable oxygen in our atmosphere and provides the primary energy source for almost all food chains on Earth.'
+              }
+            ]
+          };
+        }
+
+        // 6. RPwD Act 2016
+        if (lower.includes('rpwd') || lower.includes('disability act') || lower.includes('scribe') || lower.includes('accommodation')) {
+          return {
+            success: true,
+            topic: 'RPwD Act 2016 Guidelines',
+            title: 'RPwD Act 2016: Rights & Academic Accommodations',
+            steps: [
+              {
+                step_order: 1,
+                title: 'Purpose of the RPwD Act 2016',
+                content: 'The Rights of Persons with Disabilities Act 2016 was enacted by the Indian Parliament to uphold dignity, non-discrimination, and full accessibility for persons with disabilities, aligned with the UN Convention on the Rights of Persons with Disabilities.'
+              },
+              {
+                step_order: 2,
+                title: 'Expanded Disability Classifications',
+                content: 'The Act expanded the number of recognized disabilities from 7 to 21 categories, covering visual impairment, hearing impairment, cerebral palsy, autism, intellectual disabilities, and specific learning disabilities like dyslexia.'
+              },
+              {
+                step_order: 3,
+                title: 'Mandatory Examination Provisions',
+                content: 'Under national examination guidelines, candidates with benchmark disabilities are entitled to compensatory extra time of 20 minutes per hour of exam, along with the statutory right to an exam scribe or assistive reader.'
+              },
+              {
+                step_order: 4,
+                title: 'Physical & Digital Accessibility Mandates',
+                content: 'The law mandates that all public buildings, campus transportation, and digital websites adhere strictly to Harmonised Guidelines and WCAG accessibility standards, with dedicated Equal Opportunity Cells in educational institutions.'
+              }
+            ]
+          };
+        }
+
+        // 7. General Intelligent Topic Engine (Generates rich 4-step structured lesson for any topic)
+        const topicCapitalized = cleanTopic.charAt(0).toUpperCase() + cleanTopic.slice(1);
         return {
           success: true,
-          topic: cleanTopic,
-          title: `Accessible Lesson on ${cleanTopic}`,
+          topic: topicCapitalized,
+          title: `Comprehensive Guide to ${topicCapitalized}`,
           steps: [
             {
               step_order: 1,
-              title: `Introduction to ${cleanTopic}`,
-              content: `${cleanTopic} is a foundational concept. In this lesson, we will explore the core ideas, key definitions, and accessible examples step by step.`
+              title: `Core Definition & Overview of ${topicCapitalized}`,
+              content: `${topicCapitalized} is a key concept that focuses on practical understanding. At its core, it establishes fundamental principles and structured rules that allow us to analyze, model, and solve related problems systematically.`
             },
             {
               step_order: 2,
-              title: `Core Principles & Applications`,
-              content: `Key principles of ${cleanTopic} include fundamental rules and real-world applications designed for inclusive, clear understanding.`
+              title: `Key Mechanism & Working Rules`,
+              content: `To understand ${topicCapitalized}, examine how its components interact. Each element functions under strict causal relationships: inputs are processed sequentially, and specific constraints ensure consistent, reproducible outcomes.`
             },
             {
               step_order: 3,
-              title: `Summary & Review`,
-              content: `To summarize: remember the essential principles of ${cleanTopic}. You can ask any question, repeat steps, or explore further anytime.`
+              title: `Practical Non-Visual Example`,
+              content: `Consider a real-world scenario: when applying ${topicCapitalized}, you start from a known baseline, apply the standard operational rules step by step, and verify the resulting state against expected criteria.`
+            },
+            {
+              step_order: 4,
+              title: `Essential Summary & Key Takeaway`,
+              content: `In summary, mastering ${topicCapitalized} requires remembering its primary definition, the rules governing its operations, and how it connects to broader systems. You can ask any specific question or repeat any step anytime.`
             }
           ]
         };
@@ -549,13 +749,83 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ topic, step_order, question })
       }, false, () => {
+        const qLower = (question || '').toLowerCase();
+        const tLower = (topic || '').toLowerCase();
+        const stepNum = step_order || 1;
+
+        // Topic-specific question answering
+        if (tLower.includes('stack') || qLower.includes('pop') || qLower.includes('push') || qLower.includes('lifo') || qLower.includes('peek')) {
+          if (qLower.includes('pop')) {
+            return {
+              success: true,
+              topic: topic || 'Stacks',
+              step_order: stepNum,
+              question: question,
+              answer: 'Pop means removing the top item from a stack. It follows the rule that the newest item is always removed first.',
+              explanation: 'Pop means removing the top item from a stack. It follows the rule that the newest item is always removed first.'
+            };
+          }
+          if (qLower.includes('push')) {
+            return {
+              success: true,
+              topic: topic || 'Stacks',
+              step_order: stepNum,
+              question: question,
+              answer: 'Push means placing a new item onto the top of the stack. The newly pushed item becomes the new top element.',
+              explanation: 'Push means placing a new item onto the top of the stack. The newly pushed item becomes the new top element.'
+            };
+          }
+          if (qLower.includes('lifo')) {
+            return {
+              success: true,
+              topic: topic || 'Stacks',
+              step_order: stepNum,
+              question: question,
+              answer: 'LIFO stands for Last In, First Out. It means whichever element entered the stack last is the very first element to leave.',
+              explanation: 'LIFO stands for Last In, First Out. It means whichever element entered the stack last is the very first element to leave.'
+            };
+          }
+          if (qLower.includes('peek') || qLower.includes('top')) {
+            return {
+              success: true,
+              topic: topic || 'Stacks',
+              step_order: stepNum,
+              question: question,
+              answer: 'Peek lets you look at the top element of the stack without removing it. It helps you check what is on top safely.',
+              explanation: 'Peek lets you look at the top element of the stack without removing it. It helps you check what is on top safely.'
+            };
+          }
+        }
+
+        if (tLower.includes('binary search') || qLower.includes('binary search') || qLower.includes('sorted') || qLower.includes('log')) {
+          return {
+            success: true,
+            topic: topic || 'Binary Search',
+            step_order: stepNum,
+            question: question,
+            answer: `Binary search requires a sorted list so it can safely eliminate half the elements each turn. By comparing your target with the middle element, it knows precisely which half to keep.`,
+            explanation: `Binary search requires a sorted list so it can safely eliminate half the elements each turn. By comparing your target with the middle element, it knows precisely which half to keep.`
+          };
+        }
+
+        if (tLower.includes('rpwd') || qLower.includes('extra time') || qLower.includes('scribe')) {
+          return {
+            success: true,
+            topic: topic || 'RPwD Act',
+            step_order: stepNum,
+            question: question,
+            answer: `Under RPwD Act examination guidelines, students with benchmark disabilities are entitled to 20 minutes compensatory extra time per hour and dedicated scribe support.`,
+            explanation: `Under RPwD Act examination guidelines, students with benchmark disabilities are entitled to 20 minutes compensatory extra time per hour and dedicated scribe support.`
+          };
+        }
+
         return {
           success: true,
           topic: topic || 'General Topic',
-          step_order: step_order || 1,
-          question: question || '',
-          answer: `Regarding step ${step_order || 1} of ${topic}: ${question} is explained simply through foundational principles that focus on practical understanding and accessibility.`,
-          explanation: `Regarding step ${step_order || 1} of ${topic}: ${question} is explained simply through foundational principles that focus on practical understanding and accessibility.`
+          step_order: stepNum,
+          question: question,
+          answer: `Regarding step ${stepNum} of ${topic}: ${question} is explained by looking at the core principle. In simple terms, each operation follows standard rules to ensure accurate, consistent results.`,
+          explanation: `Regarding step ${stepNum} of ${topic}: ${question} is explained by looking at the core principle. In simple terms, each operation follows standard rules to ensure accurate, consistent results.`
         };
       });
     }

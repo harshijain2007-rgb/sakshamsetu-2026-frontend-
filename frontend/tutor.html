@@ -149,7 +149,7 @@
 
   <script type="module">
     import { auth } from './js/auth.js';
-    import { tutor } from './js/tutor.js';
+    import { tutor, TUTOR_STATES } from './js/tutor.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       auth.initAccessibility();
@@ -165,6 +165,8 @@
         const topic = topicInput?.value.trim();
         if (!topic) return;
 
+        tutor.stopRecognition();
+        tutor.state = TUTOR_STATES.PLAYING_LESSON;
         tutor.currentTopic = topic;
         tutor.appendUserMessage(topic);
         const prepMsg = `Preparing your lesson on ${topic}. Please wait a moment.`;

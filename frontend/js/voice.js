@@ -47,6 +47,12 @@ class VoiceController {
       'other': { code: 'other', name: 'Other Campus Redressal' }
     };
 
+    // Guard: Do not initialize globalRecognition or mount listeners on tutor.html to prevent competing microphones
+    const isTutorPage = typeof window !== 'undefined' && (window.location.pathname.includes('tutor.html') || window.location.href.includes('tutor.html'));
+    if (isTutorPage) {
+      return;
+    }
+
     if (this.hasSynthesis) {
       const updateVoices = () => {
         const voices = this.synth.getVoices();
@@ -378,24 +384,12 @@ class VoiceController {
     const emergencyModal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
     if (emergencyModal && emergencyModal.style.display !== 'none' && !emergencyModal.classList.contains('hidden')) {
       if (text.includes('call') || text.includes('dial')) {
-        this.speak('Initiating emergency call.');
-        const callBtn = emergencyModal.querySelector('a[href^="tel:"]');
-        if (callBtn) {
-          callBtn.click();
-        } else {
-          window.location.href = 'tel:112';
-        }
+        emergency.initiateEmergencyCall();
         return;
       }
 
       if (text.includes('dismiss') || text.includes('cancel') || text.includes('close')) {
-        emergencyModal.style.display = 'none';
-        emergencyModal.classList.add('hidden');
-        try { emergencyModal.remove(); } catch (e) {}
-        this.speak('Emergency modal closed. Returning to voice portal.');
-        this.isVoicePortalActive = true;
-        this.startGlobalRecognition(false);
-        this.updateUiState(true);
+        emergency.dismissEmergencyModal();
         return;
       }
     }
