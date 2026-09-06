@@ -614,9 +614,9 @@ class VoiceController {
     const intent = matchingNames[0]?.name;
     this.trace('command matched', intent || 'NONE');
     if (intent === 'STATUS') { this.triggerStatusFlow(); return; }
-    if (intent === 'GRIEVANCE') { this.triggerGrievanceFlow(); return; }
+    if (intent === 'GRIEVANCE' || command.includes('complain')) { this.triggerGrievanceFlow(); return; }
     if (intent === 'ALERTS') { this.triggerAlertsFlow(); return; }
-    if (intent === 'EMERGENCY') { this.triggerEmergencyFlow(); return; }
+    if (intent === 'EMERGENCY' || command.includes('help')) { this.triggerEmergencyFlow(); return; }
     if (intent === 'TUTOR') { this.speak('Opening AI Tutor.'); window.location.href = 'tutor.html'; return; }
     if (intent === 'HOME') { this.speak('Navigating to portal home.'); window.location.href = 'index.html'; return; }
     if (intent === 'DASHBOARD') { this.speak('Opening student visual dashboard.'); window.location.href = 'student-hearing-physical.html'; return; }
