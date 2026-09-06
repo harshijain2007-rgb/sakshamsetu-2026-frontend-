@@ -17,6 +17,11 @@
 
 import { api } from './api.js';
 
+function tutorTrace(label, details = '') {
+  const suffix = details === '' ? '' : ` ${typeof details === 'string' ? details : JSON.stringify(details)}`;
+  console.log(`[TUTOR TRACE ${new Date().toISOString()}] ${label}${suffix}`);
+}
+
 export const TUTOR_STATES = {
   IDLE: 'IDLE',
   LISTENING_FOR_TOPIC: 'LISTENING_FOR_TOPIC',
@@ -109,6 +114,7 @@ export class TutorVoiceController {
   speak(text, rate = 0.9, onComplete = null) {
     // Stop microphone safely before speaking to eliminate feedback
     this.stopRecognition();
+    tutorTrace('response spoken', text);
     this.isSpeaking = true;
 
     if (!this.hasSynthesis) {
@@ -162,6 +168,7 @@ export class TutorVoiceController {
 
     this.tutorSpeechRecognition.onstart = () => {
       this.tutorRecognitionRunning = true;
+      tutorTrace('listener started', { state: this.state });
       this.updateStatusBadge(true);
       console.log(`[LATENCY ${new Date().toISOString()}] [TUTOR MIC]: Recognition active in state: ${this.state}`);
     };
@@ -171,6 +178,7 @@ export class TutorVoiceController {
       const activeText = event.results[lastIdx][0].transcript.trim();
       if (!activeText) return;
 
+      tutorTrace('transcript ready', { state: this.state, transcript: activeText });
       console.log(`[LATENCY ${new Date().toISOString()}] [TUTOR MIC]: Speech result received: "${activeText}"`);
       this.handleTutorSpeech(activeText, true);
     };
@@ -196,6 +204,7 @@ export class TutorVoiceController {
 
     this.tutorSpeechRecognition.onend = () => {
       this.tutorRecognitionRunning = false;
+      tutorTrace('speech-end', { state: this.state });
       this.updateStatusBadge(false);
       console.log(`[LATENCY ${new Date().toISOString()}] [TUTOR MIC]: Recognition ended in state: ${this.state}`);
 
@@ -212,6 +221,7 @@ export class TutorVoiceController {
   }
 
   startRecognition() {
+    tutorTrace('listener start requested', { state: this.state });
     if (!this.hasRecognition || this.hasPermissionError || this.isSpeaking) return;
     if (!this.isMicrophoneAllowedState()) return;
 
@@ -230,6 +240,7 @@ export class TutorVoiceController {
   }
 
   stopRecognition() {
+    tutorTrace('listener stop requested', { state: this.state });
     clearTimeout(this.restartTimer);
     if (this.tutorSpeechRecognition && this.tutorRecognitionRunning) {
       try {
@@ -326,7 +337,8 @@ export class TutorVoiceController {
 
       if (!cleanTopic) cleanTopic = this.capturedSpeech.replace(/\b(done|i'm done)\b/ig, '').trim();
 
-      if ((isDone && cleanTopic.length >= 2) || cleanTopic.length >= 2) {
+      if (isDone && cleanTopic.length >= 2) {
+        tutorTrace('command matched', { command: 'DONE', flow: 'TOPIC' });
         console.log(`[LATENCY ${new Date().toISOString()}] Final topic captured: "${cleanTopic}"`);
         this.currentTopic = cleanTopic;
         this.stopRecognition();
@@ -360,7 +372,8 @@ export class TutorVoiceController {
 
       if (!cleanQuestion) cleanQuestion = this.capturedSpeech.replace(/\b(done|i'm done)\b/ig, '').trim();
 
-      if (isDone || cleanQuestion.length >= 3) {
+      if (isDone && cleanQuestion.length >= 3) {
+        tutorTrace('command matched', { command: 'DONE', flow: 'DOUBT' });
         console.log(`[LATENCY ${new Date().toISOString()}] Final question captured: "${cleanQuestion}"`);
         this.stopRecognition();
         this.state = TUTOR_STATES.GENERATING;
@@ -434,6 +447,7 @@ export class TutorVoiceController {
   // =========================================================================
   async generateAndStartLesson(topic) {
     const startTime = Date.now();
+    tutorTrace('action started', { action: 'GEMINI_GENERATE', topic });
     console.log(`[LATENCY ${new Date().toISOString()}] Sending Gemini generate request for "${topic}"...`);
     this.state = TUTOR_STATES.GENERATING;
     this.updateStatusText(`Generating lesson on "${topic}" with Gemini AI...`);
@@ -551,6 +565,7 @@ export class TutorVoiceController {
 
   async processDoubtQuestion(questionText) {
     const startTime = Date.now();
+    tutorTrace('action started', { action: 'GEMINI_DOUBT', question: questionText });
     console.log(`[LATENCY ${new Date().toISOString()}] Sending Gemini doubt request for "${questionText}"...`);
     this.state = TUTOR_STATES.GENERATING;
     this.updateStatusText('Finding explanation from Gemini AI...');
@@ -566,6 +581,7 @@ export class TutorVoiceController {
 
       this.updateStatusText('Reading answer...');
       console.log(`[LATENCY ${new Date().toISOString()}] Starting doubt answer speech output...`);
+      tutorTrace('response spoken', { type: 'GEMINI_DOUBT', answer });
       this.speak(answer, 0.95, () => {
         this.playChime(660, 0.35);
         setTimeout(() => {

@@ -13,11 +13,29 @@
 
 import { api } from './api.js';
 
-export function processEmergencyVoice(transcript) {
-  const text = (transcript || '').toLowerCase().trim();
-  console.log('[Emergency Voice]: Processing transcript:', text);
+function emergencyTrace(label, details = '') {
+  const suffix = details === '' ? '' : ` ${typeof details === 'string' ? details : JSON.stringify(details)}`;
+  console.log(`[EMERGENCY TRACE ${new Date().toISOString()}] ${label}${suffix}`);
+}
 
-  if (text.includes("dismiss") || text.includes("close") || text.includes("cancel") || text.includes("exit") || text.includes("leave")) {
+function normalizeEmergencyTranscript(transcript = '') {
+  return transcript.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function hasEmergencyKeyword(text, keywords) {
+  const tokens = new Set(text.split(' ').filter(Boolean));
+  return keywords.some(keyword => tokens.has(keyword));
+}
+
+export function processEmergencyVoice(transcript) {
+  const text = normalizeEmergencyTranscript(transcript);
+  emergencyTrace('transcript ready', text);
+
+  const isDismiss = hasEmergencyKeyword(text, ['dismiss', 'close', 'cancel', 'exit', 'leave']);
+  const isCall = hasEmergencyKeyword(text, ['call', 'dial']);
+  if (isDismiss && isCall) console.warn('[VOICE COLLISION] Emergency command matched CALL and DISMISS:', text);
+
+  if (isDismiss) {
     // 1. Force hide modal
     const modal = document.getElementById('emergencyModal') || document.getElementById('emergency-modal');
     if (modal) {
@@ -41,7 +59,7 @@ export function processEmergencyVoice(transcript) {
     } else {
       emergency.dismissEmergencyModal();
     }
-  } else if (text.includes("call") || text.includes("dial") || text.includes("make a call") || text.includes("make the call")) {
+  } else if (isCall) {
     const engine = typeof window !== 'undefined' && (window.voiceEngine || window.voice);
     if (engine && typeof engine.speak === 'function') {
       engine.speak("Initiating emergency call.", () => {
@@ -74,6 +92,7 @@ export const emergency = {
 
     emergency.emergencyRecognition.onstart = () => {
       emergency.isEmergencyListening = true;
+      emergencyTrace('listener started', { listener: 'emergency', active: true });
       console.log('[Emergency Recognition]: Started single-shot listening for Call/Dismiss');
     };
 
@@ -89,12 +108,14 @@ export const emergency = {
 
     emergency.emergencyRecognition.onend = () => {
       emergency.isEmergencyListening = false;
+      emergencyTrace('speech-end', { listener: 'emergency', active: false });
       console.log('[Emergency Recognition]: Single-shot capture ended');
     };
   },
 
   startEmergencyRecognition: () => {
     if (typeof window === 'undefined') return;
+    emergencyTrace('listener start requested', { listener: 'emergency' });
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) return;
 
@@ -113,6 +134,7 @@ export const emergency = {
   },
 
   stopEmergencyRecognition: () => {
+    emergencyTrace('listener stop requested', { listener: 'emergency' });
     if (emergency.emergencyRecognition && emergency.isEmergencyListening) {
       try {
         emergency.emergencyRecognition.stop();
@@ -142,18 +164,22 @@ export const emergency = {
     const dial = () => {
       if (typeof window !== 'undefined' && window.voice) {
         window.voice.isSpeaking = false;
-        window.voice.releaseMicrophoneOwnership('emergency');
-        window.voice.releaseMicrophoneOwnership('emergency_call');
-        window.voice.voiceOwner = 'global';
-        window.voice.isVoicePortalActive = true;
-        window.voice.startGlobalRecognition(false);
-        window.voice.updateUiState(true);
+        if (typeof window.voice.returnToGlobalVoice === 'function') {
+          window.voice.returnToGlobalVoice('emergency');
+        } else {
+          window.voice.releaseMicrophoneOwnership('emergency');
+          window.voice.voiceOwner = 'global';
+          window.voice.isVoicePortalActive = true;
+          window.voice.startGlobalRecognition(false);
+          window.voice.updateUiState(true);
+        }
       }
       window.location.href = `tel:${targetPhone}`;
     };
 
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
+      // Initiating emergency call.
       const utterance = new SpeechSynthesisUtterance(`Initiating emergency call to ${targetName} at ${targetPhone.split('').join(' ')}.`);
       utterance.rate = 0.95;
       utterance.onend = dial;
@@ -193,6 +219,7 @@ export const emergency = {
     // Spoken confirmation: only resume global voice AFTER TTS finishes
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
+      // Emergency modal closed. Returning to main portal.
       const utterance = new SpeechSynthesisUtterance("Emergency modal closed. Returning to voice portal.");
       utterance.rate = 0.95;
       const restoreGlobal = () => {
@@ -204,6 +231,9 @@ export const emergency = {
           window.voice.isVoicePortalActive = true;
           window.voice.startGlobalRecognition(false);
           window.voice.updateUiState(true);
+          if (typeof window.voice.returnToGlobalVoice === 'function') {
+            window.voice.returnToGlobalVoice('emergency');
+          }
         }
       };
       utterance.onend = restoreGlobal;
@@ -228,8 +258,12 @@ export const emergency = {
   triggerVoiceEmergency: async (location = 'Visual-Dyslexic Portal') => {
     try {
       if (typeof window !== 'undefined' && window.voice) {
-        window.voice.requestMicrophoneOwnership('emergency');
-        window.voice.stopGlobalRecognition(false);
+        if (typeof window.voice.enterSubflow === 'function') {
+          window.voice.enterSubflow('emergency');
+        } else {
+          window.voice.requestMicrophoneOwnership('emergency');
+          window.voice.stopGlobalRecognition(false);
+        }
         window.voice.isSpeaking = true;
       }
 
@@ -264,6 +298,7 @@ export const emergency = {
         utterance.rate = 0.9;
         utterance.pitch = 1.0;
         const startEmergencyListening = () => {
+          emergencyTrace('response spoken', speechText);
           if (typeof window !== 'undefined' && window.voice) {
             window.voice.isSpeaking = false;
             window.voice.voiceOwner = 'emergency';

@@ -17,7 +17,7 @@ export class VoiceGrievanceManager {
     this.synth = window.speechSynthesis;
     this.recognition = null;
 
-    // Strict keyword dictionaries (Case-insensitive exact matches only)
+    // Keyword dictionaries: normalized tokens may appear anywhere in the transcript.
     this.VALID_CATEGORIES = ['facilities', 'transport', 'academic', 'health', 'other'];
     this.CATEGORY_LABELS = {
       facilities: 'Facilities',
@@ -222,8 +222,9 @@ export class VoiceGrievanceManager {
   }
 
   handleCategorySpeech(transcript) {
-    const clean = transcript.trim().toLowerCase();
-    const matched = this.VALID_CATEGORIES.find(cat => clean === cat || clean.startsWith(cat) || clean.endsWith(cat));
+    const clean = transcript.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').replace(/\s+/g, ' ').trim();
+    const tokens = new Set(clean.split(' ').filter(Boolean));
+    const matched = this.VALID_CATEGORIES.find(cat => tokens.has(cat));
 
     if (matched) {
       this.captured.category = this.CATEGORY_LABELS[matched];
@@ -266,8 +267,9 @@ export class VoiceGrievanceManager {
   }
 
   handlePrioritySpeech(transcript) {
-    const clean = transcript.trim().toLowerCase();
-    const matched = this.VALID_PRIORITIES.find(p => clean === p || clean.startsWith(p) || clean.endsWith(p));
+    const clean = transcript.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').replace(/\s+/g, ' ').trim();
+    const tokens = new Set(clean.split(' ').filter(Boolean));
+    const matched = this.VALID_PRIORITIES.find(priority => tokens.has(priority));
 
     if (matched) {
       this.captured.priority = this.PRIORITY_LABELS[matched];

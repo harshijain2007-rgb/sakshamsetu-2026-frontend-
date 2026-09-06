@@ -179,8 +179,24 @@
     let statusRecognition = null;
     let isSpeaking = false;
 
+    function statusTrace(label, details = '') {
+      const suffix = details === '' ? '' : ` ${typeof details === 'string' ? details : JSON.stringify(details)}`;
+      console.log(`[STATUS TRACE ${new Date().toISOString()}] ${label}${suffix}`);
+    }
+
+    function normalizeStatusTranscript(text = '') {
+      return text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function hasStatusKeyword(text, keywords) {
+      const tokens = new Set(text.split(' ').filter(Boolean));
+      return keywords.some(keyword => keyword.length <= 3 && keyword.every(token => tokens.has(token)));
+    }
+
     function speakStatus(text, onComplete = null) {
+      statusTrace('response spoken', text);
       if (statusRecognition) {
+        statusTrace('listener stop requested', 'status');
         try { statusRecognition.stop(); } catch (e) {}
       }
       isSpeaking = true;
@@ -199,7 +215,7 @@
       const finish = () => {
         isSpeaking = false;
         if (onComplete) onComplete();
-        startStatusListening();
+        if (!isSpeaking) startStatusListening();
       };
 
       utterance.onend = finish;
@@ -218,30 +234,37 @@
       statusRecognition.lang = 'en-IN';
       statusRecognition.maxAlternatives = 3;
 
+      statusRecognition.onstart = () => statusTrace('listener started', { active: true });
+
       statusRecognition.onresult = (event) => {
-        const text = event.results[0][0].transcript.toLowerCase().trim().replace(/[.,!?]/g, '');
+        const text = normalizeStatusTranscript(event.results[0][0].transcript);
+        statusTrace('transcript ready', text);
         console.log('[Status Page Final Heard]:', text);
 
-        if (/\b(repeat|again|replay|read again)\b/i.test(text) || text.includes('repeat') || text.includes('again')) {
+        if (hasStatusKeyword(text, [['repeat'], ['again'], ['replay'], ['read', 'again']])) {
+          statusTrace('command matched', 'REPEAT');
           if (lastStatusSummary) {
             speakStatus(lastStatusSummary);
           }
           return;
         }
 
-        if (/\b(back|close|return|exit|main portal)\b/i.test(text) || text.includes('back') || text.includes('close') || text.includes('return')) {
+        if (hasStatusKeyword(text, [['back'], ['close'], ['return'], ['exit'], ['main', 'portal']])) {
+          statusTrace('command matched', 'BACK');
           window.speechSynthesis.cancel();
           window.location.href = 'student-visual-dyslexic.html';
           return;
         }
 
-        if (text.includes('home') || text.includes('portal home') || text.includes('index')) {
+        if (hasStatusKeyword(text, [['home'], ['portal', 'home'], ['index']])) {
+          statusTrace('command matched', 'HOME');
           window.speechSynthesis.cancel();
           window.location.href = 'index.html';
           return;
         }
 
-        if (text.includes('tutor') || text.includes('study')) {
+        if (hasStatusKeyword(text, [['tutor'], ['study']])) {
+          statusTrace('command matched', 'TUTOR');
           window.speechSynthesis.cancel();
           window.location.href = 'tutor.html';
           return;
@@ -249,12 +272,14 @@
       };
 
       statusRecognition.onend = () => {
+        statusTrace('speech-end', { listener: 'status', active: false });
         console.log('[Status Recognition]: Single-shot ended');
       };
     }
 
     function startStatusListening() {
       if (isSpeaking || !statusRecognition) return;
+      statusTrace('listener start requested', { listener: 'status' });
       try {
         statusRecognition.start();
       } catch (e) {}
@@ -267,6 +292,7 @@
       const statusText = document.getElementById('status-reading-text');
 
       try {
+        statusTrace('action started', 'STATUS API');
         const res = await api.grievances.getMyGrievances();
         const grievances = res?.grievances || res || [];
 
