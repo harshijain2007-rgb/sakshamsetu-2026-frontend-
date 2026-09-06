@@ -232,7 +232,7 @@ export class TutorVoiceController {
       if (!activeText) return;
 
       tutorTrace('transcript ready', { state: this.state, transcript: activeText });
-      console.log(`[LATENCY ${new Date().toISOString()}] [TUTOR MIC]: Speech result received: "${activeText}"`);
+      console.log(`[LATENCY ${new Date().toISOString()}] [TUTOR MIC onresult]: Transcript received: "${activeText}" (State: ${this.state})`);
       this.handleTutorSpeech(activeText, true);
     };
 
@@ -276,16 +276,45 @@ export class TutorVoiceController {
 
   startRecognition() {
     tutorTrace('listener start requested', { state: this.state, intended: this.isListeningIntended });
-    if (!this.hasRecognition || this.hasPermissionError || this.isSpeaking) return;
-    if (!this.isMicrophoneAllowedState()) return;
+    if (!this.hasRecognition || this.hasPermissionError || this.isSpeaking) {
+      this.updateStatusBadge(false);
+      return;
+    }
+    if (!this.isMicrophoneAllowedState()) {
+      this.updateStatusBadge(false);
+      return;
+    }
 
     clearTimeout(this.restartTimer);
-    if (this.tutorRecognitionRunning) return; // Do not call start if already running
 
     try {
-      this.tutorSpeechRecognition.start();
+      if (!this.tutorRecognitionRunning) {
+        this.tutorSpeechRecognition.start();
+        this.tutorRecognitionRunning = true;
+      }
+      this.updateStatusBadge(true);
     } catch (e) {
-      console.warn('[Tutor Voice] start error:', e);
+      console.warn('[Tutor Voice] SpeechRecognition start encountered state error, resetting stale instance:', e);
+      // If start() throws InvalidStateError or is already running, abort the stale instance and restart fresh
+      try {
+        this.tutorSpeechRecognition.abort();
+      } catch (abortErr) {}
+      this.tutorRecognitionRunning = false;
+
+      setTimeout(() => {
+        if (this.isMicrophoneAllowedState() && !this.isSpeaking && !this.hasPermissionError) {
+          try {
+            this.tutorSpeechRecognition.start();
+            this.tutorRecognitionRunning = true;
+            this.updateStatusBadge(true);
+            console.log('[Tutor Voice] Fresh SpeechRecognition session successfully started after reset.');
+          } catch (retryErr) {
+            console.warn('[Tutor Voice] Failed to start recognition after reset:', retryErr);
+            this.tutorRecognitionRunning = false;
+            this.updateStatusBadge(false);
+          }
+        }
+      }, 100);
     }
   }
 
@@ -296,9 +325,11 @@ export class TutorVoiceController {
   stopRecognition() {
     tutorTrace('listener stop requested', { state: this.state });
     clearTimeout(this.restartTimer);
-    if (this.tutorSpeechRecognition && this.tutorRecognitionRunning) {
+    clearTimeout(this.topicAutoSubmitTimer);
+    clearTimeout(this.doubtAutoSubmitTimer);
+    if (this.tutorSpeechRecognition) {
       try {
-        this.tutorSpeechRecognition.stop();
+        this.tutorSpeechRecognition.abort();
       } catch (e) {}
     }
     this.tutorRecognitionRunning = false;
@@ -404,6 +435,8 @@ export class TutorVoiceController {
     if (this.state === TUTOR_STATES.LISTENING_FOR_TOPIC) {
       if (!chunk) return;
 
+      clearTimeout(this.topicAutoSubmitTimer);
+
       // Append speech chunk to continuous buffer
       this.capturedSpeech = this.capturedSpeech ? `${this.capturedSpeech} ${chunk}` : chunk;
 
@@ -412,7 +445,7 @@ export class TutorVoiceController {
       if (topicInput) {
         topicInput.value = this.capturedSpeech;
       }
-      this.updateStatusText(`Hearing: "${this.capturedSpeech}" (Say "Done" to submit)...`);
+      this.updateStatusText(`Hearing: "${this.capturedSpeech}"...`);
 
       // Check for explicit "done" keyword or clean topic candidate
       const isDone = /\b(done|i'm done|finish|finished|completed|that's all|submit)\b/i.test(lower) || lower.endsWith('done');
@@ -423,8 +456,11 @@ export class TutorVoiceController {
 
       if (!cleanTopic) cleanTopic = this.capturedSpeech.replace(/\b(done|i'm done)\b/ig, '').trim();
 
-      if (isDone && cleanTopic.length >= 2) {
-        tutorTrace('command matched', { command: 'DONE', flow: 'TOPIC' });
+      const executeTopicGeneration = () => {
+        if (this.state !== TUTOR_STATES.LISTENING_FOR_TOPIC) return;
+        if (!cleanTopic || cleanTopic.length < 2) return;
+
+        tutorTrace('command matched', { command: isDone ? 'DONE' : 'TOPIC_AUTO_SUBMIT', flow: 'TOPIC', topic: cleanTopic });
         console.log(`[LATENCY ${new Date().toISOString()}] Final topic captured: "${cleanTopic}"`);
         this.currentTopic = cleanTopic;
         this.state = TUTOR_STATES.GENERATING;
@@ -436,6 +472,15 @@ export class TutorVoiceController {
 
         this.appendUserMessage(cleanTopic);
         this.generateAndStartLesson(cleanTopic);
+      };
+
+      if (isDone && cleanTopic.length >= 2) {
+        executeTopicGeneration();
+      } else if (cleanTopic.length >= 2) {
+        // Natural pause auto-submit: If user speaks topic without saying "Done", automatically submit after 1.5s
+        this.topicAutoSubmitTimer = setTimeout(() => {
+          executeTopicGeneration();
+        }, 1500);
       }
       return;
     }
@@ -446,9 +491,11 @@ export class TutorVoiceController {
     if (this.state === TUTOR_STATES.LISTENING_FOR_DOUBT) {
       if (!chunk) return;
 
+      clearTimeout(this.doubtAutoSubmitTimer);
+
       // Append speech chunk to continuous buffer
       this.capturedSpeech = this.capturedSpeech ? `${this.capturedSpeech} ${chunk}` : chunk;
-      this.updateStatusText(`Hearing question: "${this.capturedSpeech}" (Say "Done" when finished)...`);
+      this.updateStatusText(`Hearing question: "${this.capturedSpeech}"...`);
 
       const isDone = /\b(done|i'm done|finish|finished|completed|that's all|submit)\b/i.test(lower) || lower.endsWith('done');
       let cleanQuestion = this.capturedSpeech
@@ -458,13 +505,25 @@ export class TutorVoiceController {
 
       if (!cleanQuestion) cleanQuestion = this.capturedSpeech.replace(/\b(done|i'm done)\b/ig, '').trim();
 
-      if (isDone && cleanQuestion.length >= 3) {
-        tutorTrace('command matched', { command: 'DONE', flow: 'DOUBT' });
+      const executeDoubtProcessing = () => {
+        if (this.state !== TUTOR_STATES.LISTENING_FOR_DOUBT) return;
+        if (!cleanQuestion || cleanQuestion.length < 3) return;
+
+        tutorTrace('command matched', { command: isDone ? 'DONE' : 'DOUBT_AUTO_SUBMIT', flow: 'DOUBT' });
         console.log(`[LATENCY ${new Date().toISOString()}] Final question captured: "${cleanQuestion}"`);
         this.state = TUTOR_STATES.GENERATING;
         this.setListeningIntended(false, 'Finding explanation from Gemini AI...');
         this.appendUserMessage(`Question: ${cleanQuestion}`);
         this.processDoubtQuestion(cleanQuestion);
+      };
+
+      if (isDone && cleanQuestion.length >= 3) {
+        executeDoubtProcessing();
+      } else if (cleanQuestion.length >= 3) {
+        // Natural pause auto-submit after 1.5s
+        this.doubtAutoSubmitTimer = setTimeout(() => {
+          executeDoubtProcessing();
+        }, 1500);
       }
       return;
     }
@@ -805,7 +864,7 @@ export class TutorVoiceController {
       if (el) {
         if (idx === stepIndex) {
           el.className = 'lesson-step-item p-4 rounded-xl border transition-all bg-white border-blue-500 shadow-sm ring-2 ring-blue-100';
-          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          if (typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else {
           el.className = 'lesson-step-item p-4 rounded-xl border transition-all bg-white/60 border-slate-200 opacity-60';
         }
