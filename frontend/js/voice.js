@@ -588,7 +588,11 @@ class VoiceController {
         this.isVoicePortalActive = true;
         this.updateUiState(true);
         this.playTone(660, 0.25);
-        this.speak('Voice portal activated.');
+        this.speak('Voice portal activated.', () => {
+          if (this.canGlobalRecognize() && !this.isGlobalListening) {
+            this.startStandbyListening();
+          }
+        });
         console.log('[Voice Portal]: Woken up via wake-word "Start"');
       } else {
         console.log('[Voice Portal Standby]: Ignored input while in standby:', rawTranscript);
@@ -628,7 +632,11 @@ class VoiceController {
     if (intent === 'TEXT_SIZE') { auth.cycleTextSize(); this.speak('Text size adjusted.'); return; }
     if (intent === 'LOGOUT') { this.speak('Signing out from portal.'); auth.logout(); return; }
 
-    this.speak(`Heard ${rawTranscript}. Say File a grievance, Track status, Read notifications, Emergency, Tutor, or Stop.`);
+    this.speak(`Heard ${rawTranscript}. Say File a grievance, Track status, Read notifications, Emergency, Tutor, or Stop.`, () => {
+      if (this.canGlobalRecognize() && !this.isGlobalListening) {
+        this.startStandbyListening();
+      }
+    });
   }
 
   // =========================================================================
@@ -997,6 +1005,10 @@ class VoiceController {
       this.isSpeaking = false;
       if (onComplete) {
         onComplete();
+      } else {
+        if (this.canGlobalRecognize() && !this.isGlobalListening) {
+          this.startStandbyListening();
+        }
       }
     };
     utterance.onerror = () => {
@@ -1004,6 +1016,10 @@ class VoiceController {
       this.isSpeaking = false;
       if (onComplete) {
         onComplete();
+      } else {
+        if (this.canGlobalRecognize() && !this.isGlobalListening) {
+          this.startStandbyListening();
+        }
       }
     };
     this.synth.speak(utterance);
