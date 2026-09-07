@@ -159,6 +159,10 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   position: relative;
   animation: pulse-ring 3s infinite ease-in-out;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .voice-hero-ring-inner {
@@ -170,6 +174,9 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: center;
   box-shadow: 0 0 40px rgba(34, 197, 94, 0.3);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .voice-mic-core {
@@ -185,11 +192,9 @@ h1, h2, h3, h4, h5, h6 {
   border: none;
   box-shadow: 0 10px 25px rgba(22, 101, 52, 0.4);
   transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.voice-mic-core:hover {
-  transform: scale(1.05);
-  background-color: #166534;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .voice-listening-pill {
@@ -208,12 +213,15 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 @keyframes pulse-ring {
-  0% { transform: scale(0.98); opacity: 0.85; }
-  50% { transform: scale(1.04); opacity: 1; }
-  100% { transform: scale(0.98); opacity: 0.85; }
+  0% { transform: scale(0.98) translateZ(0); opacity: 0.85; }
+  50% { transform: scale(1.04) translateZ(0); opacity: 1; }
+  100% { transform: scale(0.98) translateZ(0); opacity: 0.85; }
 }
 
 /* Badge Utilities */
@@ -463,6 +471,10 @@ body.mode-high-contrast {
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   outline-offset: 3px;
+  transform: translateZ(0);
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .voice-fab-btn .material-symbols-outlined {
@@ -471,7 +483,7 @@ body.mode-high-contrast {
 }
 
 .voice-fab-btn:hover {
-  transform: scale(1.08);
+  transform: scale(1.08) translateZ(0);
   background-color: #07193b;
   box-shadow: 0 6px 22px rgba(13, 40, 89, 0.4);
 }
@@ -485,6 +497,7 @@ body.mode-high-contrast {
   border-color: #dcfce7;
   box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.35), 0 4px 18px rgba(22, 163, 74, 0.45);
   animation: pulse-fab 1.5s infinite ease-in-out;
+  will-change: transform, box-shadow;
 }
 
 .voice-fab-dot {
@@ -498,17 +511,32 @@ body.mode-high-contrast {
   border: 2.5px solid #ffffff;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   transition: background-color 0.2s ease, transform 0.2s ease;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .voice-fab-dot.dot-active {
   background-color: #22c55e;
-  transform: scale(1.1);
+  transform: scale(1.1) translateZ(0);
 }
 
 @keyframes pulse-fab {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-  100% { transform: scale(1); }
+  0% { transform: scale(1) translateZ(0); }
+  50% { transform: scale(1.06) translateZ(0); }
+  100% { transform: scale(1) translateZ(0); }
+}
+
+/* Hardware-accelerated pulse indicators to eliminate mobile/Safari viewport redraw flickering */
+.animate-pulse,
+#tutor-mic-dot,
+#voice-pulse-dot,
+#status-mic-dot,
+#modal-listening-dot {
+  transform: translateZ(0);
+  will-change: opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .mode-high-contrast .voice-fab-btn {

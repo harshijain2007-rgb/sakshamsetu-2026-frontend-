@@ -215,7 +215,7 @@ export class TutorVoiceController {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.tutorSpeechRecognition = new SpeechRecognition();
     this.tutorSpeechRecognition.continuous = true; // Continuous multi-sentence capture until "Done"
-    this.tutorSpeechRecognition.interimResults = false;
+    this.tutorSpeechRecognition.interimResults = true; // Stream interim results for immediate responsive feedback
     this.tutorSpeechRecognition.lang = 'en-IN';
     this.tutorSpeechRecognition.maxAlternatives = 3;
 
@@ -227,8 +227,36 @@ export class TutorVoiceController {
     };
 
     this.tutorSpeechRecognition.onresult = (event) => {
-      const lastIdx = event.results.length - 1;
-      const activeText = event.results[lastIdx][0].transcript.trim();
+      let interimTranscript = '';
+      let finalTranscript = '';
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const item = event.results[i][0];
+        if (event.results[i].isFinal) {
+          finalTranscript += item.transcript;
+        } else {
+          interimTranscript += item.transcript;
+        }
+      }
+
+      // Live streaming preview in DOM for immediate responsive visual feedback
+      if (interimTranscript && !finalTranscript) {
+        const trimmedInterim = interimTranscript.trim();
+        if (trimmedInterim) {
+          const topicInput = document.getElementById('topicInput') || document.getElementById('tutor-input');
+          if (this.state === TUTOR_STATES.LISTENING_FOR_TOPIC) {
+            const preview = this.capturedSpeech ? `${this.capturedSpeech} ${trimmedInterim}` : trimmedInterim;
+            if (topicInput) topicInput.value = preview;
+            this.updateStatusText(`Hearing: "${preview}"...`);
+          } else if (this.state === TUTOR_STATES.LISTENING_FOR_DOUBT) {
+            const preview = this.capturedSpeech ? `${this.capturedSpeech} ${trimmedInterim}` : trimmedInterim;
+            this.updateStatusText(`Hearing question: "${preview}"...`);
+          }
+        }
+        return;
+      }
+
+      const activeText = finalTranscript.trim();
       if (!activeText) return;
 
       tutorTrace('transcript ready', { state: this.state, transcript: activeText });
@@ -342,7 +370,14 @@ export class TutorVoiceController {
   setupUserInteractionUnlock() {
     const unlock = () => {
       if (this.audioCtx && this.audioCtx.state === 'suspended') {
-        this.audioCtx.resume();
+        try { this.audioCtx.resume(); } catch (e) {}
+      }
+      if (window.speechSynthesis && window.speechSynthesis.paused) {
+        try { window.speechSynthesis.resume(); } catch (e) {}
+      }
+      // If currently intended to listen but recognition was blocked by autoplay/gesture policy, start it safely
+      if (this.isMicrophoneAllowedState() && !this.tutorRecognitionRunning && !this.isSpeaking) {
+        this.startRecognitionSafely();
       }
     };
     window.addEventListener('click', unlock, { passive: true });
@@ -370,17 +405,36 @@ export class TutorVoiceController {
       return;
     }
 
+    this.state = TUTOR_STATES.LISTENING_FOR_TOPIC;
     const welcomeText = "Welcome to AI Tutor! What topic would you like to learn today? Say a topic name after the chime, then say Done.";
     this.updateStatusText('Welcome to AI Tutor! Say a topic name after the chime, then say Done.');
-    
-    this.speak(welcomeText, 0.95, () => {
-      console.log(`[LATENCY ${new Date().toISOString()}] Initial welcome TTS finished. Playing chime and starting topic capture.`);
+
+    let welcomeStarted = false;
+    const triggerTopicListening = () => {
+      if (welcomeStarted) return;
+      welcomeStarted = true;
+      this.isSpeaking = false;
+      console.log(`[LATENCY ${new Date().toISOString()}] Initial welcome finished/ready. Playing chime and starting topic capture.`);
       this.playChime(660, 0.5);
       setTimeout(() => {
         this.capturedSpeech = '';
         this.state = TUTOR_STATES.LISTENING_FOR_TOPIC;
         this.setListeningIntended(true, 'Listening for your study topic... Speak freely and say "Done" when finished.');
       }, 550);
+    };
+
+    // Autoplay Safety Watchdog: If browser blocks or suspends speech synthesis on load without gesture,
+    // ensure listening initiates automatically within 3.5 seconds so user is never blocked!
+    const watchdogTimer = setTimeout(() => {
+      if (!welcomeStarted && this.state === TUTOR_STATES.LISTENING_FOR_TOPIC && !this.isListeningIntended) {
+        console.warn('[Tutor Autoplay Watchdog] Speech autoplay blocked or delayed; activating topic listener.');
+        triggerTopicListening();
+      }
+    }, 3500);
+
+    this.speak(welcomeText, 0.95, () => {
+      clearTimeout(watchdogTimer);
+      triggerTopicListening();
     });
   }
 
@@ -451,7 +505,8 @@ export class TutorVoiceController {
       const isDone = /\b(done|i'm done|finish|finished|completed|that's all|submit)\b/i.test(lower) || lower.endsWith('done');
       let cleanTopic = this.capturedSpeech
         .replace(/\b(done|i'm done|finish|finished|completed|that's all|submit)\b[.! ]*$/i, '')
-        .replace(/^(learn|teach me|i want to learn|study|topic is|topic)\s+/i, '')
+        .replace(/^(learn|teach me|i want to learn|study|topic is|topic|can you teach me|tell me about|explain|what is|how does)\s+/i, '')
+        .replace(/[?.!]+$/, '')
         .trim();
 
       if (!cleanTopic) cleanTopic = this.capturedSpeech.replace(/\b(done|i'm done)\b/ig, '').trim();
@@ -477,10 +532,10 @@ export class TutorVoiceController {
       if (isDone && cleanTopic.length >= 2) {
         executeTopicGeneration();
       } else if (cleanTopic.length >= 2) {
-        // Natural pause auto-submit: If user speaks topic without saying "Done", automatically submit after 1.5s
+        // Natural pause auto-submit: If user speaks topic without saying "Done", automatically submit after 1.4s
         this.topicAutoSubmitTimer = setTimeout(() => {
           executeTopicGeneration();
-        }, 1500);
+        }, 1400);
       }
       return;
     }
@@ -500,7 +555,8 @@ export class TutorVoiceController {
       const isDone = /\b(done|i'm done|finish|finished|completed|that's all|submit)\b/i.test(lower) || lower.endsWith('done');
       let cleanQuestion = this.capturedSpeech
         .replace(/\b(done|i'm done|finish|finished|completed|that's all|submit)\b[.! ]*$/i, '')
-        .replace(/^(i have a question|my question is|question is|question)\s+/i, '')
+        .replace(/^(i have a question|my question is|question is|question|can you explain|explain)\s+/i, '')
+        .replace(/[?.!]+$/, '')
         .trim();
 
       if (!cleanQuestion) cleanQuestion = this.capturedSpeech.replace(/\b(done|i'm done)\b/ig, '').trim();
@@ -520,10 +576,10 @@ export class TutorVoiceController {
       if (isDone && cleanQuestion.length >= 3) {
         executeDoubtProcessing();
       } else if (cleanQuestion.length >= 3) {
-        // Natural pause auto-submit after 1.5s
+        // Natural pause auto-submit after 1.4s
         this.doubtAutoSubmitTimer = setTimeout(() => {
           executeDoubtProcessing();
-        }, 1500);
+        }, 1400);
       }
       return;
     }
